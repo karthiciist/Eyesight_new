@@ -1,0 +1,8 @@
+<pdfxml Producer="PyPDF2" NeedAppearances="true">
+  <LTPage y0="0" y1="84" x0="0" x1="450" width="450" height="84" bbox="[0, 0, 450, 84]" pageid="1" rotate="0" page_index="0" page_label="">
+    <LTTextLineHorizontal y0="18.545" y1="84.656" x0="164.0" x1="443.001" width="279.001" height="66.111" bbox="[164.0, 18.545, 443.001, 84.656]" word_margin="0.1"><LTTextBoxHorizontal y0="18.545" y1="84.656" x0="164.0" x1="443.001" width="279.001" height="66.111" bbox="[164.0, 18.545, 443.001, 84.656]" index="0">-2,/96.12 </LTTextBoxHorizontal></LTTextLineHorizontal>
+    <LTImage y0="0.0" y1="84.0" x0="0.0" x1="449.999" width="449.999" height="84.0" bbox="[0.0, 0.0, 449.999, 84.0]" name="Im1" colorspace="[&quot;/DeviceRGB&quot;]" bits="8" imagemask="null" srcsize="[450, 84]" stream="&lt;PDFStream(6): raw=5827, {'Subtype': /'Image', 'ColorSpace': /'DeviceRGB', 'Width': 450, 'Height': 84, 'BitsPerComponent': 8, 'Filter': /'DCTDecode', 'DecodeParms': {'Predictor': 1, 'Colors': 3, 'Columns': 450, 'BitsPerComponent': 8}, 'Length': 5826}&gt;">
+      <LTFigure y0="0.0" y1="84.0" x0="0.0" x1="449.999" width="449.999" height="84.0" bbox="[0.0, 0.0, 449.999, 84.0]" name="Im1" matrix="[449.999, 0.0, 0.0, 84.0, 0.0, 0.0]"/>
+    </LTImage>
+  </LTPage>
+</pdfxml>
