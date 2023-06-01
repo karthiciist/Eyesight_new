@@ -1,0 +1,35 @@
+ACME LTD 
+INvoIcE 
+ACME LTD 
+. 
+859 Neil Roads, Frankside 
+Invoice Number: 3124 
+CF48 2SR 
+Tax point: 13-2-2019 
+Port Henry 
+Company Reg. No.: 
+7149820 
+Contact Number: 
+01632 960448 
+Contact Email: 
+sales@acme.com 
+Bill To: 
+White IT International 
+45 Edmund Street 
+Sutton 
+ST3 1HA 
+Please make payment payable to ACME LTD 
+Barclays 
+—- A/C No: 12345678 
+Sort Code: 
+10-11-12 
+Services provided 
+TOTAL(E£) 
+Consultancy 17 days 
+£4,250 
+VAT 20% 
+£850 
+TOTAL DUE 
+£5,100.00 
+Payment terms: Please pay in 15 days.
+

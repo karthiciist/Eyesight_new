@@ -1,0 +1,240 @@
+Circle
+PALGHAR MINI CIRCLE
+Consumer Name
+Consumer Number
+003019004642
+Email ID
+Tariff
+Bill Month
+OA Type
+Total Contract Demand  (KVA)
+OA CD Conventional (KVA)
+MSEDCL CD (KVA)
+Bill Date
+Meter Number       :
+Make               :
+Voltage Level      :
+Summary Of Energy Drawal
+All Figures in KWH
+Total
+Drawal
+Units
+Total
+Injection
+Units
+Units @
+MSEDCL
+Tariff
+Units @
+Temp
+Tariff
+Units Offset Against Drawal
+Over
+Injected
+Units
+Billed Demand
+Highest Recorded Demand
+Period
+P.F.
+PARTICULARS
+PARTICULARS
+RATE
+RATE
+AMOUNT Rs.
+AMOUNT Rs.
+Demand Charges
+Demand Charges
+Solar Rooftop Credit 
+Electricity Duty 
+Electricity Duty 
+Tax On Sale
+Tax On Sale
+Incremental Consumption Rebate
+Incremental Consumption Rebate
+Cross Subsidy Surcharge 
+Cross Subsidy Surcharge 
+Transmission Charges 
+Transmission Charges 
+Operating Charges
+Operating Charges
+M/S JSW STEEL COATED PRODUCTS LTD.
+***ramveer.sharma@jsw.in
+APR-2020
+01/04/2020 TO 30/04/2020
+40000
+14900
+27000
+            0.00
+            0.00
+               0.00
+               0.00
+     5,07,541.98
+    66,97,594.92
+     1,41,436.82
+            0.00
+            0.00
+  1,11,07,947.52
+ 0.00
+            0.00
+            0.00
+            0.00
+            0.00
+            0.00
+    71,82,000.00
+            0.00
+       28,000.00
+             0.00
+       60,07,772.25
+     2,50,15,542.44
+Total Bill for MSEDCL consumption (A)
+Total Bill for Open Access (B)
+Bill for MSEDCL consumption
+Bill for Open Access
+12-MAY-2020
+Maharashtra State Electricity Distribution Co. Ltd.
+Plot No. G-9, Prakashgad Bandra-400051
+Note :-
+1. Bill amount shall be paid within 15 days through RTGS only. In case of non payment of bill on due date the Electricity
+   supply will be laible for disconnection under Sec.56(1) of Elect. Act 2003
+2. This bill is prepared as per the existing provisions of the EA 2003, subordinate regulation and the circulars issued in this regard and which is in
+force.
+3. MSEDCL reserves right to modify/alter/amend the said bill in case it deems fit, subject to the provisions as above.
+4. E & O.E. and Subject to conditions overleaf.
+   For any clarification please contact on our email id :- cecomm@mahadiscom.in
+132
+ 411.00
+14953707
+A.B.B
+     7,85,760
+            0
+    84,95,844
+8195
+23688
+  .979
+    87,32,074
+    92,81,604
+     2,36,230
+Energy Charges
+Energy Charges
+       56,34,357.30
+               0.00
+  7.02
+ 14.34
+Demand Penalty
+Demand Penalty
+            0.00
+            0.00
+TOD Tariff EC
+TOD Tariff EC
+-    1,76,916.70
+            0.00
+9.3%
+Partial Open Access
+A Zone
+     2,68,094
+     2,75,375
+     1,25,270
+     1,17,022
+B Zone
+C Zone
+D Zone
+Zone :
+Units 
+FAC Charges @ 0
+FAC Charges @ 0
+HT-I A
+Due Date
+31-MAY-2020
+If Paid after 31-MAY-2020
+    6,85,26,320.00
+    6,89,14,110.00
+(In words) Rupees :  SIX CRORE EIGHTY -FIVE LAKH
+TWENTY -SIX THOUSAND THREE HUNDRED TWENTY  ONLY
+     3,10,23,314.69
+Delayed Payment Charges Rs.
+     3,87,791.43
+Amount (Rounded) Payable After
+     6,89,14,110.00
+31-MAY-2020
+Due to Covid-19 pandemic lockdown (from Dt.22.03.2020),
+# Demand/Fixed charges for three months w.e.f. 22.03.2020 has been deferred.
+# Unpaid amount of bills issued in Mar-20 & Apr-20, if any, is shown as part of arrears in this bill. The interest and DPC on this unpaid amount will not be
+charged till due date of respective bills.
+# Tariff Revised w.e.f. 01.04.2020. Tariff Order is available at Mahavitaran Portal.
+# Physical Bills are not served. You can view and pay bill online at portal https://wss.mahadiscom.in/wss/wss
+# Consumer can pay bill through portal using various online modes.
+# Stay Home - Stay Safe.
+ ---------------------------------------------------------------------------------------------------
+ Dispute Amount Rs. 50750505.62
+(Dispute amount would be realised as per order/direction of Court.)
+-------------------------------------------------------------------------------------------------
+In case of energy bill paid through NEFT / RTGS, date of amount credited in MSEDCL bank account will be considered as bill payment date.
+Total Bill Amount (Rounded) Rs.
+     6,85,26,320.00
+1917894
+RKVAH
+If Paid Upto 18-MAY-2020     6,84,72,730.00
+Last Rcpt Dt/No
+16-MAR-2020 0000108580
+Last Month Payment
+            0
+Current Interest
+          718.88
+Principle Arrears
+     3,75,02,285.86
+Interest Arrears
+            0.00
+-98,647.15
+L.F.
+7
+Address
+B-6 MIDC , INDUSTRIAL AREA
+NAVAPUR ROAD
+BOISAR
+401506
+ Security Deposit Held Rs.
+    10,73,36,023.00
+ Addl S.D. Demanded Rs.
+            0.00
+ S.D. Arrears Rs.
+            0.00
+KVAH Units: 802615
+KVAH Units: 0
+Express feeder flag:
+YES
+Area Type
+All Area other than MNC and MM
+Highest Inj.power schedule
+21000
+OA CD Non Conventional Non Solar (KVA)
+0
+OA CD Non Conventional Solar (KVA)
+Wheeling charges 
+Wheeling charges 
+   .1800
+   .1800
+Urban Rural flag   :
+R
+Highest Recorded 
+MSEDCL Demand
+5292
+Additional surcharge
+Additional surcharge
+(8678084@1.28)
+Total Current Bill (A+B)
+BILL OF SUPPLY
+HSN Code 27160000 & GSTIN of MSEDCL 27AAECM2933K1ZB
+28-MAY-1973
+Date of Connection :
+(@3.79)
+            0.00
+Debit Adjustments
+Current Month
+Generation
+Last Month
+Banked
+            0
+KVAH Units: 273845+281282+127957+119532
+Bulk Consumption Rebate
+Bulk Consumption Rebate
+

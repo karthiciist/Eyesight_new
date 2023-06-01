@@ -1,0 +1,536 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="static/styles/cropper.css">
+{{ super() }}
+<style>
+  table,
+  th,
+  td {
+    border: solid 1px #CCC;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 0;
+    text-align: center;
+  }
+
+  .tags-input-wrapper {
+    /* background: #f9f9f9; */
+    padding: 10px;
+    border-radius: 4px;
+    width: 700px;
+    border: 1px solid #ccc
+  }
+
+  .tags-input-wrapper input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 300px;
+  }
+
+  .tags-input-wrapper .tag {
+    display: inline-block;
+    background-color: #ffe600;
+    color: rgb(32, 32, 32);
+    border-radius: 40px;
+    padding: 5px 5px 5px 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+
+  .tags-input-wrapper .tag a {
+    margin: 0 7px 3px;
+    display: inline-block;
+    cursor: pointer;
+    /* color: #f9f9f9; */
+  }
+
+  button,
+  input,
+  textarea {
+    color: white;
+  }
+</style>
+{% endblock%}
+
+{% block body %}
+
+<center>
+  <input type="text" class="form-control" id="classifiernametxtfield" placeholder="Enter Classifier Name"
+    style="width: 700px; margin-top: 20px; background: #232323; color: white;">
+</center>
+
+<center>
+  <div>
+    <button id="btn" onclick="createclassifier()" class="btn-consumenow" style="width: 200px; margin-top: 20px;">Create
+      classifier</button>
+    <button id="btn" onclick="addcondition()" class="btn-consumenow" style="width: 200px; margin-top: 20px;">Add
+      condition</button>
+  </div>
+</center>
+
+<center>
+  <div style="width: 700px; margin-top: 20px; border: #CCC;" id="conditionblock1">
+    <div>
+      <div><select id="modelSelect" 
+          style="width: 250px; margin-top: 20px; margin-bottom: 10px; margin-right: 450px;">
+        </select>
+      </div>
+    </div>
+    <input type="text" id="tag-input1" style="width: 700px; margin-top: 20px; color: white;" placeholder="Enter tags">
+    <!-- <div id="removecondition1" style="cursor: pointer; margin-left: 550px; margin-top: 5px;">remove this condition</div> -->
+  </div>
+</center>
+
+<center>
+  <div style="width: 700px; margin-top: 20px;" id="conditionblock2">
+    <select id="modelSelect1" 
+      style="width: 250px; margin-top: 20px; margin-bottom: 10px; margin-right: 450px;"></select>
+    <input type="text" id="tag-input2" style="width: 700px; margin-top: 20px; color: white;" placeholder="Enter tags">
+    <div id="removecondition1" style="cursor: pointer; margin-left: 550px; margin-top: 5px;"
+      onclick="removecondition(1)">remove this condition</div>
+  </div>
+</center>
+
+<center>
+  <div style="width: 700px; margin-top: 20px;" id="conditionblock3">
+    <select id="modelSelect2" 
+      style="width: 250px; margin-top: 20px; margin-bottom: 10px; margin-right: 450px;"></select>
+    <input type="text" id="tag-input3" style="width: 700px; margin-top: 20px; color: white;" placeholder="Enter tags">
+    <div id="removecondition2" style="cursor: pointer; margin-left: 550px; margin-top: 5px;"
+      onclick="removecondition(2)">remove this condition</div>
+  </div>
+</center>
+
+<center>
+  <div style="width: 700px; margin-top: 20px;" id="conditionblock4">
+    <select id="modelSelect3" 
+      style="width: 250px; margin-top: 20px; margin-bottom: 10px; margin-right: 450px;"></select>
+    <input type="text" id="tag-input4" style="width: 700px; margin-top: 20px; color: white;" placeholder="Enter tags">
+    <div id="removecondition3" style="cursor: pointer; margin-left: 550px; margin-top: 5px;"
+      onclick="removecondition(3)">remove this condition</div>
+  </div>
+</center>
+
+<center>
+  <div style="width: 700px; margin-top: 20px;" id="conditionblock5">
+    <select id="modelSelect4" 
+      style="width: 250px; margin-top: 20px; margin-bottom: 10px; margin-right: 450px;"></select>
+    <input type="text" id="tag-input5" style="width: 700px; margin-top: 20px; color: white;" placeholder="Enter tags">
+    <div id="removecondition4" style="cursor: pointer; margin-left: 550px; margin-top: 5px;"
+      onclick="removecondition(4)">remove this condition</div>
+  </div>
+</center>
+
+<center>
+  <div style="width: 700px; margin-top: 20px;" id="conditionblock6">
+    <select id="modelSelect5" 
+      style="width: 250px; margin-top: 20px; margin-bottom: 10px; margin-right: 450px;"></select>
+    <input type="text" id="tag-input6" style="width: 700px; margin-top: 20px; color: white;" placeholder="Enter tags">
+    <div id="removecondition5" style="cursor: pointer; margin-left: 550px; margin-top: 5px;"
+      onclick="removecondition(5)">remove this condition</div>
+  </div>
+</center>
+
+<center>
+  <div style="width: 700px; margin-top: 20px;" id="conditionblock7">
+    <select id="modelSelect6" 
+      style="width: 250px; margin-top: 20px; margin-bottom: 10px; margin-right: 450px;"></select>
+    <input type="text" id="tag-input7" style="width: 700px; margin-top: 20px; color: white;" placeholder="Enter tags">
+    <div id="removecondition6" style="cursor: pointer; margin-left: 550px; margin-top: 5px;"
+      onclick="removecondition(6)">remove this condition</div>
+  </div>
+</center>
+
+<center>
+  <div style="width: 700px; margin-top: 20px;" id="conditionblock8">
+    <select id="modelSelect7" 
+      style="width: 250px; margin-top: 20px; margin-bottom: 10px; margin-right: 450px;"></select>
+    <input type="text" id="tag-input8" style="width: 700px; margin-top: 20px; color: white;" placeholder="Enter tags">
+    <div id="removecondition7" style="cursor: pointer; margin-left: 550px; margin-top: 5px;"
+      onclick="removecondition(7)">remove this condition</div>
+  </div>
+</center>
+
+<center>
+  <div style="width: 700px; margin-top: 20px;" id="conditionblock9">
+    <select id="modelSelect8" 
+      style="width: 250px; margin-top: 20px; margin-bottom: 10px; margin-right: 450px;"></select>
+    <input type="text" id="tag-input9" style="width: 700px; margin-top: 20px; color: white;" placeholder="Enter tags">
+    <div id="removecondition8" style="cursor: pointer; margin-left: 550px; margin-top: 5px;"
+      onclick="removecondition(8)">remove this condition</div>
+  </div>
+</center>
+
+<center>
+  <div style="width: 700px; margin-top: 20px;" id="conditionblock10">
+    <select id="modelSelect9" 
+      style="width: 250px; margin-top: 20px; margin-bottom: 10px; margin-right: 450px;"></select>
+    <input type="text" id="tag-input10" style="width: 700px; margin-top: 20px; color: white;" placeholder="Enter tags">
+    <div id="removecondition9" style="cursor: pointer; margin-left: 550px; margin-top: 5px;"
+      onclick="removecondition(9)">remove this condition</div>
+  </div>
+</center>
+
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="static/lib/custom-file-input.js"></script>
+<script src="static/lib/cropper.js"></script>
+<script src="static/lib/canvas2image.js"></script>
+<script src="static/lib/tagsinputscript.js"></script>
+{{ super() }}
+
+<script type="application/javascript">
+
+  conditionscount = 1;
+
+  fetchmodels();
+
+  document.getElementById("conditionblock2").style.display = "none";
+  document.getElementById("conditionblock3").style.display = "none";
+  document.getElementById("conditionblock4").style.display = "none";
+  document.getElementById("conditionblock5").style.display = "none";
+  document.getElementById("conditionblock6").style.display = "none";
+  document.getElementById("conditionblock7").style.display = "none";
+  document.getElementById("conditionblock8").style.display = "none";
+  document.getElementById("conditionblock9").style.display = "none";
+  document.getElementById("conditionblock10").style.display = "none";
+
+
+
+
+  var tagInput1 = new TagsInput({
+    selector: 'tag-input1',
+    duplicate: false,
+    max: 10
+  });
+
+  var tagInput2 = new TagsInput({
+    selector: 'tag-input2',
+    duplicate: false,
+    max: 10
+  });
+
+  var tagInput3 = new TagsInput({
+    selector: 'tag-input3',
+    duplicate: false,
+    max: 10
+  });
+
+  var tagInput4 = new TagsInput({
+    selector: 'tag-input4',
+    duplicate: false,
+    max: 10
+  });
+
+  var tagInput5 = new TagsInput({
+    selector: 'tag-input5',
+    duplicate: false,
+    max: 10
+  });
+
+  var tagInput6 = new TagsInput({
+    selector: 'tag-input6',
+    duplicate: false,
+    max: 10
+  });
+
+  var tagInput7 = new TagsInput({
+    selector: 'tag-input7',
+    duplicate: false,
+    max: 10
+  });
+
+  var tagInput8 = new TagsInput({
+    selector: 'tag-input8',
+    duplicate: false,
+    max: 10
+  });
+
+  var tagInput9 = new TagsInput({
+    selector: 'tag-input9',
+    duplicate: false,
+    max: 10
+  });
+
+  var tagInput10 = new TagsInput({
+    selector: 'tag-input10',
+    duplicate: false,
+    max: 10
+  });
+
+  function addcondition() {
+
+    if (conditionscount == 1) {
+      document.getElementById("conditionblock2").style.display = "inline";
+      conditionscount = 2;
+    } else if (conditionscount == 2) {
+      document.getElementById("conditionblock3").style.display = "inline";
+      conditionscount = 3;
+    } else if (conditionscount == 3) {
+      document.getElementById("conditionblock4").style.display = "inline";
+      conditionscount = 4;
+    } else if (conditionscount == 4) {
+      document.getElementById("conditionblock5").style.display = "inline";
+      conditionscount = 5;
+    } else if (conditionscount == 5) {
+      document.getElementById("conditionblock6").style.display = "inline";
+      conditionscount = 6;
+    } else if (conditionscount == 6) {
+      document.getElementById("conditionblock7").style.display = "inline";
+      conditionscount = 7;
+    } else if (conditionscount == 7) {
+      document.getElementById("conditionblock8").style.display = "inline";
+      conditionscount = 8;
+    } else if (conditionscount == 8) {
+      document.getElementById("conditionblock9").style.display = "inline";
+      conditionscount = 9;
+    } else if (conditionscount == 9) {
+      document.getElementById("conditionblock10").style.display = "inline";
+      conditionscount = 10;
+    } else if (conditionscount == 10) {
+      alert("Maximum conditions reached");
+    }
+  }
+
+  // tagInput1.addData(["Python","Rubi","Go"])
+
+  function fetch() {
+    alert(tagInput1.getInputString());
+  }
+
+  function fetchmodels() {
+
+    var modelSelect = document.getElementById("modelSelect");
+    var modelSelect1 = document.getElementById("modelSelect1");
+    var modelSelect2 = document.getElementById("modelSelect2");
+    var modelSelect3 = document.getElementById("modelSelect3");
+    var modelSelect4 = document.getElementById("modelSelect4");
+    var modelSelect5 = document.getElementById("modelSelect5");
+    var modelSelect6 = document.getElementById("modelSelect6");
+    var modelSelect7 = document.getElementById("modelSelect7");
+    var modelSelect8 = document.getElementById("modelSelect8");
+    var modelSelect9 = document.getElementById("modelSelect9");
+
+    list = ["Select model and enter keywords"];
+
+
+    var data = "";
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        var jsonobj = JSON.parse(this.responseText);
+        var length = jsonobj.length;
+
+        for (i = 0; i < length; i++) {
+          var modelname = jsonobj[i];
+          console.log(modelname[0]);
+          list.push(modelname[0]);
+        }
+        console.log(list);
+
+        for (i in list) {
+          var c = document.createElement("option");
+          c.text = list[i];
+          modelSelect.options.add(c, i);
+        }
+
+        for (i in list) {
+          var c = document.createElement("option");
+          c.text = list[i];
+          modelSelect1.options.add(c, i);
+        }
+
+        for (i in list) {
+          var c = document.createElement("option");
+          c.text = list[i];
+          modelSelect2.options.add(c, i);
+        }
+
+        for (i in list) {
+          var c = document.createElement("option");
+          c.text = list[i];
+          modelSelect3.options.add(c, i);
+        }
+
+        for (i in list) {
+          var c = document.createElement("option");
+          c.text = list[i];
+          modelSelect4.options.add(c, i);
+        }
+
+        for (i in list) {
+          var c = document.createElement("option");
+          c.text = list[i];
+          modelSelect5.options.add(c, i);
+        }
+
+        for (i in list) {
+          var c = document.createElement("option");
+          c.text = list[i];
+          modelSelect6.options.add(c, i);
+        }
+
+        for (i in list) {
+          var c = document.createElement("option");
+          c.text = list[i];
+          modelSelect7.options.add(c, i);
+        }
+
+        for (i in list) {
+          var c = document.createElement("option");
+          c.text = list[i];
+          modelSelect8.options.add(c, i);
+        }
+
+        for (i in list) {
+          var c = document.createElement("option");
+          c.text = list[i];
+          modelSelect9.options.add(c, i);
+        }
+
+      }
+    });
+
+    xhr.open("POST", "fetchmodelsforclassifiers");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(data);
+
+ }
+
+  function removecondition(index) {
+    if (index == 1) {
+      document.getElementById("conditionblock2").style.display = "none";
+      conditionscount = conditionscount - 1;
+    } else if (index == 2) {
+      document.getElementById("conditionblock3").style.display = "none";
+      conditionscount = conditionscount - 1;
+    } else if (index == 3) {
+      document.getElementById("conditionblock4").style.display = "none";
+      conditionscount = conditionscount - 1;
+    } else if (index == 4) {
+      document.getElementById("conditionblock5").style.display = "none";
+      conditionscount = conditionscount - 1;
+    } else if (index == 5) {
+      document.getElementById("conditionblock6").style.display = "none";
+      conditionscount = conditionscount - 1;
+    } else if (index == 6) {
+      document.getElementById("conditionblock7").style.display = "none";
+      conditionscount = conditionscount - 1;
+    } else if (index == 7) {
+      document.getElementById("conditionblock8").style.display = "none";
+      conditionscount = conditionscount - 1;
+    } else if (index == 8) {
+      document.getElementById("conditionblock9").style.display = "none";
+      conditionscount = conditionscount - 1;
+    } else if (index == 9) {
+      document.getElementById("conditionblock10").style.display = "none";
+      conditionscount = conditionscount - 1;
+    }
+  }
+
+  function createclassifier(){
+
+    var classifiername = document.getElementById("classifiernametxtfield").value;
+
+    classifierjson = {}; 
+
+    if ($(conditionblock1).is(':visible')){
+      var selectedmodel = document.getElementById("modelSelect");
+      selectedmodel = selectedmodel.options[selectedmodel.selectedIndex].value;
+      var taglist = tagInput1.getInputString();
+      classifierjson[selectedmodel] = taglist;
+    }
+    if ($(conditionblock2).is(':visible')){
+      var selectedmodel = document.getElementById("modelSelect1");
+      selectedmodel = selectedmodel.options[selectedmodel.selectedIndex].value;
+      var taglist = tagInput2.getInputString();
+      classifierjson[selectedmodel] = taglist;
+    }
+    if ($(conditionblock3).is(':visible')){
+      var selectedmodel = document.getElementById("modelSelect2");
+      selectedmodel = selectedmodel.options[selectedmodel.selectedIndex].value;
+      var taglist = tagInput3.getInputString();
+      classifierjson[selectedmodel] = taglist;
+    }
+    if ($(conditionblock4).is(':visible')){
+      var selectedmodel = document.getElementById("modelSelect3");
+      selectedmodel = selectedmodel.options[selectedmodel.selectedIndex].value;
+      var taglist = tagInput4.getInputString();
+      classifierjson[selectedmodel] = taglist;
+    }
+    if ($(conditionblock5).is(':visible')){
+      var selectedmodel = document.getElementById("modelSelect4");
+      selectedmodel = selectedmodel.options[selectedmodel.selectedIndex].value;
+      var taglist = tagInput5.getInputString();
+      classifierjson[selectedmodel] = taglist;
+    }
+    if ($(conditionblock6).is(':visible')){
+      var selectedmodel = document.getElementById("modelSelect5");
+      selectedmodel = selectedmodel.options[selectedmodel.selectedIndex].value;
+      var taglist = tagInput6.getInputString();
+      classifierjson[selectedmodel] = taglist;
+    }
+    if ($(conditionblock7).is(':visible')){
+      var selectedmodel = document.getElementById("modelSelect6");
+      selectedmodel = selectedmodel.options[selectedmodel.selectedIndex].value;
+      var taglist = tagInput7.getInputString();
+      classifierjson[selectedmodel] = taglist;
+    }
+    if ($(conditionblock8).is(':visible')){
+      var selectedmodel = document.getElementById("modelSelect7");
+      selectedmodel = selectedmodel.options[selectedmodel.selectedIndex].value;
+      var taglist = tagInput8.getInputString();
+      classifierjson[selectedmodel] = taglist;
+    }
+    if ($(conditionblock9).is(':visible')){
+      var selectedmodel = document.getElementById("modelSelect8");
+      selectedmodel = selectedmodel.options[selectedmodel.selectedIndex].value;
+      var taglist = tagInput9.getInputString();
+      classifierjson[selectedmodel] = taglist;
+    }
+    if ($(conditionblock10).is(':visible')){
+      var selectedmodel = document.getElementById("modelSelect9");
+      selectedmodel = selectedmodel.options[selectedmodel.selectedIndex].value;
+      var taglist = tagInput10.getInputString();
+      classifierjson[selectedmodel] = taglist;
+    }
+    
+    // alert (classifierjson);
+    console.log(classifierjson);
+
+    var classifierjsonstring = JSON.stringify(classifierjson);
+
+    var xhr = new XMLHttpRequest();
+    var url = "createclassifier";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.setRequestHeader("classifiername", classifiername);
+    xhr.setRequestHeader("classifierjson", classifierjsonstring);
+    xhr.send();
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var output = xhr.response;
+        alert("Classifier created");
+        window.location.href = 'trainedclassifierspage'
+      }
+    }
+  }
+
+  setActiveMenuItem('#classifiers-model-menu')
+</script>
+{% endblock %}

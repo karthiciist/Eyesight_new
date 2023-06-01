@@ -1,0 +1,4 @@
+conda create --name eyesight python=3.7
+conda activate eyesight
+
+python eyesight_backend.py

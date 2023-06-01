@@ -1,0 +1,390 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<style>
+  .sliderWrapper {
+    display: inline-block;
+    /* margin: 24px 24px 24px 24px; */
+    postion: relative;
+  }
+
+  .sliderWrapper div {
+    display: inline-block;
+    /* line-height: 60px; */
+  }
+
+  /* The switch - the box around the slider */
+  .switch {
+    vertical-align: middle;
+    position: relative;
+    display: inline-block;
+    padding: 0px;
+    width: 44px;
+    height: 18px;
+  }
+
+  /* Hide default HTML checkbox */
+  .switch input {
+    display: none;
+  }
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #505050;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 1px;
+    bottom: 1px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked+.slider {
+    background-color: #ffe600;
+  }
+
+  input:focus+.slider {
+    box-shadow: 0 0 1px #ffe600;
+  }
+
+  input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  *,
+  *:after,
+  *:before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  table,
+  th,
+  td {
+    border: solid 1px #CCC;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 0;
+    text-align: center;
+  }
+</style>
+
+<!-- <div class="position-absolute h-100 w-100 d-flex align-items-center justify-content-center" id="emptyscreen">
+  <img src="static/images/loading.gif" alt="Loading..." width="150" height="150">
+</div> -->
+
+<!-- <div class="ml-0 pt-3 row" id="modelcontainer">
+
+  <div id="createflashcard" class="card d-flex flex-column mb-0" style="margin-right: 1%;">
+    <h3 class="text-uppercase">New model</h3>
+
+    <div class="d-flex justify-content-around align-items-center actions pt-2">
+
+      <div class="d-flex flex-column action" onclick="sendtonewmodel()" title="create" role="button">
+
+        <!-- <i id="plus" class="fa fa-plus" aria-hidden="true" title="Cretae"></i> -->
+
+        <!-- <div style="font-size: 24px;">
+          <i class="fa fa-plus fa-2x" style="font-size: 50px; margin-top: 30px;"></i>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+</div> -->
+
+<!-- DeleteModal -->
+<div class="modal fade" id="myModal2" role="dialog">
+  <div class="modal-dialog" style="width: 350px;">
+
+    <!-- DeleteModal content-->
+    <div class="modal-content">
+      <div class="modal-body" style="padding:30px 30px;">
+        <div>
+          <center>
+            <p id="deletetext">
+            </p>
+          </center>
+        </div>
+        <div>
+          <center>
+            <button class="btn-cardsave" id="cancelbtn" type="button" style="width:100px"
+              class="btn-consumenow">Cancel</button>
+            <button class="btn-cardsave" id="deletebtn" type="button" style="width:100px"
+              class="btn-consumenow">Delete</button>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- TestModal -->
+<div class="modal fade" id="testmodel" role="dialog">
+  <div class="modal-dialog" style="width: 550px;">
+
+    <!-- TestModal content-->
+    <div class="modal-content">
+      <div class="modal-body" style="padding:30px 30px;">
+        <div>
+          <center>
+            <h3 id="testtext">
+            </h3>
+          </center>
+        </div>
+
+        <form id="myform">
+          <div class="js" id="div1">
+            <center>
+              <div class="box">
+                <input type="file" name="filename[]" id="filename" class="inputfile inputfile-6"
+                  accept=".pdf,.jpg,.png,.jpeg" data-multiple-caption="{count} files selected" multiple accept="image/*"
+                  >
+                <label for="filename"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                      height="17" viewBox="0 0 20 17">
+                      <path
+                        d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                    </svg> Choose a file&hellip;</strong></label>
+              </div>
+            </center>
+          </div>
+
+        </form>
+
+
+        <div>
+          <center>
+            <button class="btn-cardsave" id="testcancelbtn" type="button" style="width:100px"
+              class="btn-consumenow">Cancel</button>
+            <button class="btn-cardsave" id="testbtn" type="button" style="width:100px"
+              class="btn-consumenow">Test</button>
+          </center>
+        </div>
+        <div id="loading" style="display: none;">
+          <center>
+            <img src="static/images/scan.gif" alt="Loading..." width=300px />
+            <p>Scanning your images. This will take some time. Please hold on...</p>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Model view Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+
+      <div class="modal-header" style="padding:10px 10px;">
+        <button type="button" class="close" data-dismiss="modal" id="closebtn">&times;</button>
+        <center>
+          <h4 style="color: white;" id="modaltitle">Model Details</h4>
+          <h5 style="color: white;" id="ocrtype">OCR details</h5>
+        </center>
+      </div>
+
+      <div class="modal-body" style="padding:10px 50px;">
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold;">Full Height :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputfullheight" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold;">Full Width :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputfullwidth" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Header Captured :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputheader" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Footer Captured :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputfooter" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Left Index Captured :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputleftindex" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Total Parameters :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputtotalparam" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Threshold Value :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefthre" placeholder="Extracting text...">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Colorcut Value :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefcolcut" placeholder="Extracting text...">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Eyesight Range (X) :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefeyerangex" placeholder="Extracting text...">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Eyesight Range (Y) :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefeyerangey" placeholder="Extracting text...">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Dilate:</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefdilate" placeholder="Extracting text...">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Erode:</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdeferode" placeholder="Extracting text...">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <div id="apiblock" style="border:1px solid gray; padding-left: 5px; margin-top: 10px;">
+          <div class="checkbox" id="thrediv">
+            <label><input type="checkbox" value="" onchange="showapioptions(this)" id="apicheckbox">Expose this model as
+              API</label>
+          </div>
+          <div id="apioptions">
+
+            <div style="margin-right: 5px; margin-bottom: 5px;">
+              <div>
+                <h5 style="font-weight: bold; margin-top: 5px;">URL :</h5>
+              </div>
+              <div style="font-weight:bolder; font-style: italic; display: inline-flex; width: 100%;">
+                <!-- <p id="foundtxt">Extracting text...</p> -->
+                <input type="text" class="form-control" id="apiurl" value="http://consumesampleocrmodel.eyesight.com"
+                  readonly="readonly">
+                <button type="button" class="apicopybtn" id="btncpyurl">Copy</button>
+              </div>
+
+              <div>
+                <h5 style="font-weight: bold; margin-top: 5px;">API Key :</h5>
+              </div>
+              <div style="font-weight:bolder; font-style: italic; display: inline-flex; width: 100%;">
+                <!-- <p id="foundtxt">Extracting text...</p> -->
+                <input type="text" class="form-control" id="apikey" value="A8JD93MFK3JMFIKK30058DJNMCK3"
+                  readonly="readonly">
+                <button type="button" class="apicopybtn" id="btncpykey">Copy</button>
+              </div>
+              <div style="margin-top: 5px;"><a href="abc.com">Learn more about how to consume this API</a></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div>
+          <div>
+            <center>
+              <button class="btn-cardsave" id="savedata" type="button" style="width:100px" class="btn-consumenow"
+                onclick="savedata()">Save</button>
+              <button class="btn-cardsave" id="close" type="button" style="width:100px" class="btn-consumenow"
+                data-dismiss="modal">Close</button>
+            </center>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="static/lib/custom-file-input.js"></script>
+<script type="application/javascript">
+
+
+  setActiveMenuItem('#custommodels-store-train-menu')
+</script>
+{% endblock %}

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>Welcome to EYESIGHT</title>
+
+  <!-- Favicons -->
+  <link href="img/favicon.png" rel="icon">
+  <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!--external css-->
+  <link href="lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="css/zabuto_calendar.css">
+  <link rel="stylesheet" type="text/css" href="lib/gritter/css/jquery.gritter.css" />
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/style-responsive.css" rel="stylesheet">
+  <script src="lib/chart-master/Chart.js"></script>
+
+</head>
+
+<body>
+  <section id="container">
+ 
+    <header class="header black-bg">
+      <div class="sidebar-toggle-box">
+        <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+      </div>
+      <!--logo start-->
+      <a href="index.html" class="logo"><b>EY<span>ESIGHT</span></b></a>
+      <!--logo end-->
+      <div class="top-menu">
+        <ul class="nav pull-right top-menu">
+          <li><a class="logout" href="/eyesight">Logout</a></li>
+        </ul>
+      </div>
+    </header>
+    <aside>
+      <div id="sidebar" class="nav-collapse " tabindex="5000" style="overflow: hidden; outline: none;">
+        <ul class="sidebar-menu" id="nav-accordion">
+          <li class="mt">
+            <a href="dashboard.html">
+              <i class="fa fa-dashboard"></i>
+              <span>Dashboard</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a class="active" href="trainedmodels.html">
+              <i class="fa fa-th"></i>
+              <span>Trained models</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="createamodel.html">
+              <i class="fa fa-th"></i>
+              <span>Create a model</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="javascript:;">
+              <i class="fa fa-book"></i>
+              <span>Help center</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="javascript:;">
+              <i class="fa fa-cogs"></i>
+              <span>Settings</span>
+              </a>
+          </li>
+      </ul></div>
+    </aside>
+
+<!--     <div style="margin-left:16%; padding-top: 5%; padding-right: 1%" id = "good">
+      <div class="row">
+        <div class="column">
+          <div class="card">
+            <h3 id ="modelname">Model 2</h3>
+            <p>Description</p>
+            <button class="btn-consumenow">Consume now</button>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+
+  <script src="lib/jquery/jquery.min.js"></script>
+  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+  <script class="include" type="text/javascript" src="lib/jquery.dcjqaccordion.2.7.js"></script>
+  <script src="lib/jquery.scrollTo.min.js"></script>
+  <script src="lib/jquery.nicescroll.js" type="text/javascript"></script>
+  <script src="lib/jquery.sparkline.js"></script>
+  <!--common script for all pages-->
+  <script src="lib/common-scripts.js"></script>
+  <script type="text/javascript" src="lib/gritter/js/jquery.gritter.js"></script>
+  <script type="text/javascript" src="lib/gritter-conf.js"></script>
+  <!--script for this page-->
+  <script src="lib/sparkline-chart.js"></script>
+  <script src="lib/zabuto_calendar.js"></script>
+  <script type="application/javascript">
+
+  fetchmodels();
+
+  $(document).ready(function() {
+      $("#good").hide();
+  });
+
+   
+
+  function formcard(modelnames){
+    // alert (modelnames);
+    var count = 0;
+
+    // alert (modelnames);
+
+    // var modelcontainer = document.createElement('div');
+    // modelcontainer.setAttribute('id', "container");
+
+    // document.getElementById("container").style.marginleft = "16%";
+    // document.getElementById("container").style.paddingtop = "5%";
+    // document.getElementById("container").style.paddingright = "1%";
+
+
+    var modelcontainer = '<div style="margin-left:16%; padding-top: 5%; padding-right: 1%" id = "modelcontainer"><div class="row"><div class="column"></div></div></div>'
+    var container = document.createElement('div');
+    container.innerHTML = modelcontainer;
+    // var row = document.getElementById("good")
+    // btn.appendTo(row);
+    // row.appendChild(btn);
+    // modelcontainer.setAttribute('margin-left', '16%');
+    // modelcontainer.setAttribute('padding-top', '5%');
+    // modelcontainer.setAttribute('padding-right', '1%');
+    // modelcontainer.id = 'container'; //you can assign property to your element.
+    // modelcontainer.margin-left = 16%;
+    // modelcontainer.padding-top = 5%;
+    // modelcontainer.padding-right = 1%;
+
+    for (modelname in modelnames){
+      alert(modelnames);
+
+      var html = '<div class="card"><h3 id ="modelname">Model 2</h3><p>Description</p><button>Consume now</button></div>'
+      var btn = document.createElement('div');
+      btn.innerHTML = html;
+      // var row = document.getElementById("good")
+      // btn.appendTo(row);
+      // row.appendChild(btn);
+      container.appendChild(btn);
+      // document.getElementById("botcards").innerHTML = botcards;
+
+
+      // $(document).ready(function() {
+      // $("#good").hide();
+      // });
+      // alert(modelnames[modelname]);
+
+      // if (count == 0){
+      //   $("#good").show();
+      // } else {
+      // var stickyNote = $('.column')[0].outerHTML;
+      // // alert(modelnames[modelname]);
+      //   $stickyNote = $(stickyNote);
+      //   var x = document.getElementById("modelname");
+      //   x.setAttribute("value", modelnames[modelname]);
+      //   alert (x.getAttribute("value"))
+      //   $stickyNote.appendTo($('.row'));
+      // }
+      // count = 1;
+    }
+    document.body.appendChild(container);
+    
+  }
+
+
+
+
+
+
+
+
+    // $(document).ready(function() {
+    //   $("#date-popover").popover({
+    //     html: true,
+    //     trigger: "manual"
+    //   });
+    //   $("#date-popover").hide();
+    //   $("#date-popover").click(function(e) {
+    //     $(this).hide();
+    //   });
+
+    //   $("#my-calendar").zabuto_calendar({
+    //     action: function() {
+    //       return myDateFunction(this.id, false);
+    //     },
+    //     action_nav: function() {
+    //       return myNavFunction(this.id);
+    //     },
+    //     ajax: {
+    //       url: "show_data.php?action=1",
+    //       modal: true
+    //     },
+    //     legend: [{
+    //         type: "text",
+    //         label: "Special event",
+    //         badge: "00"
+    //       },
+    //       {
+    //         type: "block",
+    //         label: "Regular event",
+    //       }
+    //     ]
+    //   });
+    // });
+
+    function myNavFunction(id) {
+      $("#date-popover").hide();
+      var nav = $("#" + id).data("navigation");
+      var to = $("#" + id).data("to");
+      console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+    }
+
+
+    function fetchmodels(){
+
+        var data = "";
+        var xhr = new XMLHttpRequest();
+
+        xhr.addEventListener("readystatechange", function() {
+        if(this.readyState === 4) {
+          createnewrow(this.responseText)
+          // alert(this.responseText);
+        }
+      });
+
+      xhr.open("POST", "http://localhost:3000/fetchmodels");
+      xhr.setRequestHeader("Content-Type", "application/json");
+
+      xhr.send(data);
+      }
+
+
+      function createnewrow(response) {
+
+        var modelsarray = response.split(",");
+        var length = modelsarray.length;
+        var i;
+        var modelnames = [];
+        for (i = 0; i < length; i++) {
+          model = modelsarray[i];
+          model = model.replace("\"", "");
+          model = model.replace("[", "");
+          model = model.replace("]", "");
+          model = model.replace(" ", "");
+          model = model.replace("\"", "");
+          console.log(model);
+          if (model != "sysdiagrams") {
+            // formnewrow(model);
+            modelnames.push(model);
+            // alert(model);
+          }
+        }
+        formcard(modelnames);
+      }
+
+
+  </script>
+
+</section>
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>Welcome to EYESIGHT</title>
+
+  <!-- Favicons -->
+  <link href="img/favicon.png" rel="icon">
+  <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!--external css-->
+  <link href="lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="css/zabuto_calendar.css">
+  <link rel="stylesheet" type="text/css" href="lib/gritter/css/jquery.gritter.css" />
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/style-responsive.css" rel="stylesheet">
+  <script src="lib/chart-master/Chart.js"></script>
+
+</head>
+
+<body>
+  <section id="container">
+ 
+    <header class="header black-bg">
+      <div class="sidebar-toggle-box">
+        <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+      </div>
+      <!--logo start-->
+      <a href="dashboard.html" class="logo"><b>EY<span>ESIGHT</span></b></a>
+      <!--logo end-->
+      <div class="top-menu">
+        <ul class="nav pull-right top-menu">
+          <li><a class="logout" href="/eyesight">Logout</a></li>
+        </ul>
+      </div>
+    </header>
+    <!--header end-->
+    <!-- **********************************************************************************************************************************************************
+        MAIN SIDEBAR MENU
+        *********************************************************************************************************************************************************** -->
+    <!--sidebar start-->
+    <aside>
+      <div id="sidebar" class="nav-collapse ">
+        <!-- sidebar menu start-->
+        <ul class="sidebar-menu" id="nav-accordion">
+          <li class="mt">
+            <a class="active" href="dashboard.html">
+              <i class="fa fa-dashboard"></i>
+              <span>Dashboard</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="ocrsolutions.html">
+              <i class="fa fa-eye"></i>
+              <span>OCR Solutions</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="trainedmodels.html">
+              <i class="fa fa-th"></i>
+              <span>Trained models</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="createmodelwithmodal.html">
+              <i class="fa fa-plus-square-o"></i>
+              <span>Create a model</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="modelstoretrain.html">
+              <i class="fa fa-refresh"></i>
+              <span>Retrain a model</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="pdfoperations.html">
+              <i class="fa fa-cogs"></i>
+              <span>PDF Operations</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="trainedpdfmodels.html">
+              <i class="fa fa-cogs"></i>
+              <span>PDF Trained models</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="helpcenter.html">
+              <i class="fa fa-book"></i>
+              <span>Help center</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="javascript:;">
+              <i class="fa fa-cogs"></i>
+              <span>Settings</span>
+              </a>
+          </li>
+         
+      </div>
+    </aside>
+    <!--sidebar end-->
+    <!-- **********************************************************************************************************************************************************
+        MAIN CONTENT
+        *********************************************************************************************************************************************************** -->
+    <!--main content start-->
+    <section id="main-content">
+      <section class="wrapper">
+        <div class="row">
+          <div class="col-lg-9 main-chart">
+            <!--CUSTOM CHART START -->
+            <div class="row mt">
+              <!-- SERVER STATUS PANELS -->
+              <div class="col-md-4 col-sm-4 mb">
+                <div class="grey-panel pn donut-chart" height=200px>
+                  <div class="grey-header">
+                    <h5>Total Trained Models</h5>
+                  </div>
+                  <!-- <canvas id="serverstatus01" height="60" width="60"></canvas> -->
+                  <div>
+                      <h2>21</h2>
+                  </div>
+                </div>
+                <!-- /grey-panel -->
+              </div>
+              <div class="col-md-4 col-sm-4 mb">
+                <div class="grey-panel pn donut-chart" height=200px>
+                  <div class="grey-header">
+                    <h5>API calls today</h5>
+                  </div>
+                  <!-- <canvas id="serverstatus01" height="60" width="60"></canvas> -->
+                  <div>
+                      <h2>156</h2>
+                  </div>
+                </div>
+                <!-- /grey-panel -->
+              </div>
+              <div class="col-md-4 col-sm-4 mb">
+                <div class="grey-panel pn donut-chart" height=200px>
+                  <div class="grey-header">
+                    <h5>Shared models</h5>
+                  </div>
+                  <!-- <canvas id="serverstatus01" height="60" width="60"></canvas> -->
+                  <div>
+                      <h2>6</h2>
+                  </div>
+                </div>
+                <!-- /grey-panel -->
+              </div>
+              <!-- /col-md-4-->
+              <!-- <div class="col-md-4 col-sm-4 mb">
+                <div class="darkblue-panel pn">
+                  <div class="darkblue-header">
+                    <h5>DROPBOX STATICS</h5>
+                  </div>
+                  <canvas id="serverstatus02" height="120" width="120"></canvas>
+                  <script>
+                    var doughnutData = [{
+                        value: 60,
+                        color: "#1c9ca7"
+                      },
+                      {
+                        value: 40,
+                        color: "#f68275"
+                      }
+                    ];
+                    var myDoughnut = new Chart(document.getElementById("serverstatus02").getContext("2d")).Doughnut(doughnutData);
+                  </script>
+                  <p>April 17, 2014</p>
+                  <footer>
+                    <div class="pull-left">
+                      <h5><i class="fa fa-hdd-o"></i> 17 GB</h5>
+                    </div>
+                    <div class="pull-right">
+                      <h5>60% Used</h5>
+                    </div>
+                  </footer>
+                </div> -->
+                <!--  /darkblue panel -->
+              <!-- </div> -->
+              <!-- /col-md-4 -->
+              <!-- <div class="col-md-4 col-sm-4 mb">
+                <div class="green-panel pn">
+                  <div class="green-header">
+                    <h5>REVENUE</h5>
+                  </div>
+                  <div class="chart mt">
+                    <div class="sparkline" data-type="line" data-resize="true" data-height="75" data-width="90%" data-line-width="1" data-line-color="#fff" data-spot-color="#fff" data-fill-color="" data-highlight-line-color="#fff" data-spot-radius="4" data-data="[200,135,667,333,526,996,564,123,890,464,655]"></div>
+                  </div>
+                  <p class="mt"><b>$ 17,980</b><br/>Month Income</p>
+                </div>
+              </div> -->
+              <!-- /col-md-4 -->
+            </div>
+            <div class="border-head">
+              <h3>API calls</h3>
+            </div>
+            <div class="custom-bar-chart">
+              <ul class="y-axis">
+                <li><span>50</span></li>
+                <li><span>40</span></li>
+                <li><span>30</span></li>
+                <li><span>20</span></li>
+                <li><span>10</span></li>
+                <li><span>0</span></li>
+              </ul>
+              <div class="bar">
+                <div class="title">PAN</div>
+                <div class="value tooltips" data-original-title="42" data-toggle="tooltip" data-placement="top">85%</div>
+              </div>
+              <div class="bar ">
+                <div class="title">Aadhaar</div>
+                <div class="value tooltips" data-original-title="25" data-toggle="tooltip" data-placement="top">50%</div>
+              </div>
+              <div class="bar ">
+                <div class="title">Passport</div>
+                <div class="value tooltips" data-original-title="30" data-toggle="tooltip" data-placement="top">60%</div>
+              </div>
+              <div class="bar ">
+                <div class="title">Invoice</div>
+                <div class="value tooltips" data-original-title="23" data-toggle="tooltip" data-placement="top">45%</div>
+              </div>
+              <div class="bar">
+                <div class="title">Mark sheet</div>
+                <div class="value tooltips" data-original-title="17" data-toggle="tooltip" data-placement="top">32%</div>
+              </div>
+              <div class="bar ">
+                <div class="title">Tax bill</div>
+                <div class="value tooltips" data-original-title="31" data-toggle="tooltip" data-placement="top">62%</div>
+              </div>
+              <div class="bar">
+                <div class="title">DL</div>
+                <div class="value tooltips" data-original-title="38" data-toggle="tooltip" data-placement="top">75%</div>
+              </div>
+            </div>
+            <!--custom chart end-->
+            
+            <!-- /row -->
+            
+            
+            
+            <!-- /row -->
+          </div>
+          <!-- /col-lg-9 END SECTION MIDDLE -->
+          <!-- **********************************************************************************************************************************************************
+              RIGHT SIDEBAR CONTENT
+              *********************************************************************************************************************************************************** -->
+          <div class="col-lg-3 ds">
+            <!--COMPLETED ACTIONS DONUTS CHART-->
+            
+            
+            <!--new earning end-->
+            <!-- RECENT ACTIVITIES SECTION -->
+            <h3 class="centered mt">Available Pretrained Models</h4>
+            <div style="height:40px"></div>
+            <!-- First Activity -->
+            <div class="desc">
+              <div class="thumb">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">PAN card<br/>
+                </p>
+              </div>
+            </div>
+            <!-- Second Activity -->
+            <div class="desc">
+              <div class="thumb" align="center">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">12th Mark sheet<br/>
+                </p>
+              </div>
+            </div>
+            <div class="desc">
+              <div class="thumb">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">Aadhaar card<br/>
+                </p>
+              </div>
+            </div>
+            <div class="desc">
+              <div class="thumb">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">Indian passport<br/>
+                </p>
+              </div>
+            </div>
+            <div class="desc">
+              <div class="thumb">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">Hexaware invoice<br/>
+                </p>
+              </div>
+            </div>
+            <div class="desc">
+              <div class="thumb">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">Tidel invoice<br/>
+                </p>
+              </div>
+            </div>
+            <div class="desc">
+              <div class="thumb">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">Driving Licence<br/>
+                </p>
+              </div>
+            </div>
+            <div class="desc">
+              <div class="thumb">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">Reimbursement claim form<br/>
+                </p>
+              </div>
+            </div>
+            <div class="desc">
+              <div class="thumb">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">OLA invoice<br/>
+                </p>
+              </div>
+            </div>
+            <div class="desc">
+              <div class="thumb">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">Indigo boarding pass<br/>
+                </p>
+              </div>
+            </div>
+            <div class="desc">
+              <div class="thumb">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">10th Mark sheet<br/>
+                </p>
+              </div>
+            </div>
+            <div class="desc">
+              <div class="thumb">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">Anna University Provisional certificate<br/>
+                </p>
+              </div>
+            </div>
+            <div class="desc">
+              <div class="thumb">
+                <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
+              </div>
+              <div class="details">
+                <p>
+                  <a href="#">Full Aadhaar<br/>
+                </p>
+              </div>
+            </div>
+            
+            <!-- USERS ONLINE SECTION -->
+            
+            
+            <!-- / calendar -->
+          </div>
+          <!-- /col-lg-3 -->
+        </div>
+        <!-- /row -->
+      </section>
+    </section>
+    <!--main content end-->
+    <!--footer start-->
+    <!-- <footer class="site-footer">
+      <div class="text-center">
+        <p>
+          &copy; Copyrights <strong>EYESIGHT</strong>. All Rights Reserved
+        </p>
+    </footer> -->
+    <!--footer end-->
+  </section>
+  <!-- js placed at the end of the document so the pages load faster -->
+  <script src="lib/jquery/jquery.min.js"></script>
+
+  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+  <script class="include" type="text/javascript" src="lib/jquery.dcjqaccordion.2.7.js"></script>
+  <script src="lib/jquery.scrollTo.min.js"></script>
+  <script src="lib/jquery.nicescroll.js" type="text/javascript"></script>
+  <script src="lib/jquery.sparkline.js"></script>
+  <!--common script for all pages-->
+  <script src="lib/common-scripts.js"></script>
+  <script type="text/javascript" src="lib/gritter/js/jquery.gritter.js"></script>
+  <script type="text/javascript" src="lib/gritter-conf.js"></script>
+  <!--script for this page-->
+  <script src="lib/sparkline-chart.js"></script>
+  <script src="lib/zabuto_calendar.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var unique_id = $.gritter.add({
+        // (string | mandatory) the heading of the notification
+        title: 'Welcome to EYESIGHT !',
+        // (string | mandatory) the text inside the notification
+        text: 'Click here to learn more about this inteligent OCR platform from EY.',
+        // (string | optional) the image to display on the left
+        image: '',
+        // (bool | optional) if you want it to fade out on its own or just sit there
+        sticky: false,
+        // (int | optional) the time you want it to be alive for before fading out
+        time: 8000,
+        // (string | optional) the class name you want to apply to that specific message
+        class_name: 'my-sticky-class'
+      });
+
+      return false;
+    });
+  </script>
+  <script type="application/javascript">
+    $(document).ready(function() {
+      $("#date-popover").popover({
+        html: true,
+        trigger: "manual"
+      });
+      $("#date-popover").hide();
+      $("#date-popover").click(function(e) {
+        $(this).hide();
+      });
+
+      $("#my-calendar").zabuto_calendar({
+        action: function() {
+          return myDateFunction(this.id, false);
+        },
+        action_nav: function() {
+          return myNavFunction(this.id);
+        },
+        ajax: {
+          url: "show_data.php?action=1",
+          modal: true
+        },
+        legend: [{
+            type: "text",
+            label: "Special event",
+            badge: "00"
+          },
+          {
+            type: "block",
+            label: "Regular event",
+          }
+        ]
+      });
+    });
+
+    function myNavFunction(id) {
+      $("#date-popover").hide();
+      var nav = $("#" + id).data("navigation");
+      var to = $("#" + id).data("to");
+      console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+    }
+  </script>
+</body>
+
+</html>

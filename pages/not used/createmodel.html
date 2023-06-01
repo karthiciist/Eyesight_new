@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en" class="js">
+
+<head>
+  <link rel="stylesheet" href="C:\Users\ET437GL\Desktop\ahmed\cropperjs-master\cropperjs-master\dist\cropper.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>Welcome to EYESIGHT</title>
+
+  <!-- Favicons -->
+  <link href="img/favicon.png" rel="icon">
+  <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!--external css-->
+  <link href="lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="css/zabuto_calendar.css">
+  <link rel="stylesheet" type="text/css" href="lib/gritter/css/jquery.gritter.css" />
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/style-responsive.css" rel="stylesheet">
+  <script src="lib/chart-master/Chart.js"></script>
+
+  <style>
+    table, th, td {
+      border: solid 1px #CCC;
+    }
+
+    table {
+      width: 100%;
+    }
+
+    th, td {
+      padding: 0;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <script src="C:\Users\ET437GL\Desktop\ahmed\cropperjs-master\cropperjs-master\dist\cropper.js"></script>
+	<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+  <script src="canvas2image.js"></script>
+  
+  <section id="container">
+ 
+    <header class="header black-bg">
+      <div class="sidebar-toggle-box">
+        <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+      </div>
+      <!--logo start-->
+      <a href="dashboard.html" class="logo"><b>EY<span>ESIGHT</span></b></a>
+      <!--logo end-->
+      <div class="top-menu">
+        <ul class="nav pull-right top-menu">
+          <li><a class="logout" href="/eyesight">Logout</a></li>
+        </ul>
+      </div>
+    </header>
+    <aside>
+      <div id="sidebar" class="nav-collapse ">
+        <ul class="sidebar-menu" id="nav-accordion">
+          <li class="mt">
+            <a href="dashboard.html">
+              <i class="fa fa-dashboard"></i>
+              <span>Dashboard</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="trainedmodels.html">
+              <i class="fa fa-th"></i>
+              <span>Trained models</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a class="active" href="createmodel.html">
+              <i class="fa fa-th"></i>
+              <span>Create a model</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="javascript:;">
+              <i class="fa fa-book"></i>
+              <span>Help center</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="javascript:;">
+              <i class="fa fa-cogs"></i>
+              <span>Settings</span>
+              </a>
+          </li>
+      </div>
+    </aside>
+
+    <section id="main-content">
+      <section class="wrapper">
+        <div class="row">
+          <div class="col-lg-9 main-chart">
+            <!--CUSTOM CHART START -->
+            <div class="row mt">
+              <!-- SERVER STATUS PANELS -->
+              
+            </div>
+
+            <!-- <center>
+              <div>
+              <form method="post" enctype="multipart/form-data">
+                <input id="inputId" name="photo" type="file" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0]), updateImageDisplay()">
+              </form>
+            </div>
+            </center> -->
+
+            <center>
+              <div class="box">
+                <form method="post" enctype="multipart/form-data">
+                  <input type="file" name="filename[]" id="inputId" class="inputfile inputfile-6" data-multiple-caption="{count} files selected" multiple accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0]), updateImageDisplay()">
+                  <label for="inputId"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> Choose a file&hellip;</strong></label>  
+                </form>
+              </div>
+            </center>
+
+            <script src="custom-file-input.js"></script>
+
+            <!-- <form class="example" action="/action_page.php">
+              <input type="text" placeholder="Search.." name="search">
+              <button type="submit"><i class="fa fa-search"></i></button>
+            </form> -->
+
+
+
+
+            <!-- <center>
+              <div>
+              <img id="output">
+            </div>
+            </center> -->
+            
+            <center>
+              <div>
+                <input type="text" id="lable" style="width:300px" placeholder="Enter label"/>
+                <button id="btnCrop" type="button" style="width:100px">Crop & Scan</button>
+              </div>
+            </center>
+
+            <center>
+              <div style="margin-top:5px">
+                <input type="text" id="modelname" style="width:300px" placeholder="Enter model name"/>
+                <button id="btnCreateModel" type="button" onclick="createmodel()" style="width:100px">Create model</button>
+              </div>
+            </center>
+
+            <center>
+              <div style="margin: 5px;">
+                <img id="cropped">
+              </div>
+            </center>
+
+            <center>
+              <div>
+              <img id="output">
+            </div>
+            </center>
+
+            <div style="padding-top: 10px; display: none;">
+                  <table id="myTable" style="width:100%" align="center">
+                      <tr>
+                          <th COLSPAN="13">
+                              <h3 style="margin-top: 10px;">Results</h3>
+                          </th>
+                      </tr>
+                      <tr>
+                          <th>S.no</th>
+                          <th>x-axis</th>
+                          <th>y-axis</th>
+                          <th>width</th>
+                          <th>height</th>
+                          <th>rotate</th>
+                          <th>scaleX</th>
+                          <th>scaleY</th>
+                          <th>full width</th>
+                          <th>full height</th>
+                          <th>Lable</th>
+                          <th>Text from OCR</th>
+                          <th></th>
+                      </tr>
+                  </table>
+            </div>
+          </div>
+          <div class="col-lg-3 ds">
+            <!-- <h3 style="text-align: center;">Captured parameters</h4> -->
+            <!-- <div style="height:40px"></div> -->
+            <div style="padding-top: 2px;">
+              <table id="myTable1" style="width:100%" align="center">
+                <tr>
+                  <th COLSPAN="3" style="text-align:center;">
+                      <h3 style="text-align:center; margin-top: 10px;">Captured parameters</h3>
+                  </th>
+                  </tr>
+                  <tr>
+                      <th style="text-align:center;">Lable</th>
+                      <th style="text-align:center;">Text from OCR</th>
+                      <th></th>
+                  </tr>
+              </table>
+          </div>
+          </div>
+          <!-- /col-lg-3 -->
+        </div>
+        <!-- /row -->
+      </section>
+    </section>
+
+  <script src="lib/jquery/jquery.min.js"></script>
+  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+  <script class="include" type="text/javascript" src="lib/jquery.dcjqaccordion.2.7.js"></script>
+  <script src="lib/jquery.scrollTo.min.js"></script>
+  <script src="lib/jquery.nicescroll.js" type="text/javascript"></script>
+  <script src="lib/jquery.sparkline.js"></script>
+  <!--common script for all pages-->
+  <script src="lib/common-scripts.js"></script>
+  <script type="text/javascript" src="lib/gritter/js/jquery.gritter.js"></script>
+  <script type="text/javascript" src="lib/gritter-conf.js"></script>
+  <!--script for this page-->
+  <script src="lib/sparkline-chart.js"></script>
+  <script src="lib/zabuto_calendar.js"></script>
+  <script type="application/javascript">
+
+    var count = 2;
+		var xaxis;
+		var yaxis;
+		var width;
+		var heigth;
+		var rotate;
+		var scaleX;
+		var scaleY;
+		var fullheight;
+		var fullwidth;
+
+		function updateImageDisplay(){
+
+			var Cropper = window.Cropper;
+
+			var image = document.getElementById('output');
+
+			var cropper = new Cropper(image, {
+				crop(event) {
+				  xaxis = event.detail.x;
+				  yaxis = event.detail.y;
+				  width = event.detail.width;
+				  height = event.detail.height;
+				  rotate = event.detail.rotate;
+				  scaleX = event.detail.scaleX;
+				  scaleY = event.detail.scaleY;
+				}
+			});
+
+			document.getElementById("btnCrop").onclick = function (event) {
+
+	        // alert("x-axis - " + xaxis + "\n" + "y-axis - " + yaxis + "\n" + "width - " + width + "\n" + "height - " + height + "\n" + "rotate - " + rotate + "\n" + "scaleX - " + scaleX + "\n" + "scaleY - " + scaleY + "\n" + "full height - " + fullheight  + "\n" + "full width - " + fullwidth);
+
+			fullwidth = image.width;
+      fullheight = image.height;
+      // console.log(fullwidth + " " + fullheight);
+      updateTable(cropper, fullheight, fullwidth);
+      }
+    }
+    
+   
+    // function btncropclicked(){
+    //   try{
+    //     fullwidth = image.width;
+    //     fullheight = image.height;
+    //     updateTable(cropper, fullheight, fullwidth);
+    //   } catch{
+    //     console.log("error");
+    //   }
+      
+    // }
+
+		function updateTable(cropper, fullheight, fullwidth){
+
+			var inputs = document.getElementById('lable').value;
+
+			if (inputs == "") {
+              alert("Please enter the lable");
+            }
+            else {
+              createnewrow(count);
+              
+              var myTable1 = document.getElementById('myTable1');
+            	myTable1.rows[count].cells[0].innerHTML = inputs;
+              
+
+            	var myTable = document.getElementById('myTable');
+            	myTable.rows[count].cells[10].innerHTML = inputs;
+
+              xaxis = Math.round(xaxis);
+              yaxis = Math.round(yaxis);
+              width = Math.round(width);
+              height = Math.round(height);
+	            myTable.rows[count].cells[1].innerHTML = xaxis;
+	            myTable.rows[count].cells[2].innerHTML = yaxis;
+	            myTable.rows[count].cells[3].innerHTML = width;
+	            myTable.rows[count].cells[4].innerHTML = height;
+	            myTable.rows[count].cells[5].innerHTML = rotate;
+	            myTable.rows[count].cells[6].innerHTML = scaleX;
+	            myTable.rows[count].cells[7].innerHTML = scaleY;
+	            myTable.rows[count].cells[8].innerHTML = fullwidth;
+	            myTable.rows[count].cells[9].innerHTML = fullheight;
+
+	            var imageData = cropper.getCroppedCanvas();
+
+              var croppedimg = imageData.toDataURL("image/png");
+
+              document.getElementById('cropped').src = croppedimg;
+
+              const imgFile = document.getElementById('cropped').files;
+
+              var xhr = new XMLHttpRequest();
+
+              xhr.open('POST', 'http://localhost:3000/extracttext', true);
+              xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+              xhr.send(JSON.stringify({ "thumbnail": croppedimg}));
+              xhr.onreadystatechange = function(){
+                    if(xhr.readyState != 4) return;
+                    if(xhr.status != 200){
+                        console.log("Status: " + xhr.status);
+                    }else{
+                        console.log(xhr.responseText);
+                        response = xhr.responseText;
+                        str = response.substring(response.indexOf("string\":"));
+                        str1 = str.substring(str.indexOf(":")+3);
+                        str2 = str1.slice(0, -4);
+                        console.log(str2);
+                        myTable1.rows[count-1].cells[1].innerHTML = str2;
+                        myTable.rows[count-1].cells[11].innerHTML = str2;
+                    }
+                };
+
+              count = count + 1;
+              // console.log(count);
+              document.getElementById('lable').value = "";
+            }
+
+			
+		}
+
+		function createmodel(){
+
+			var modelname = document.getElementById('modelname').value;
+
+			if (modelname == "") {
+                alert("Please enter the model name");
+            }
+            else {
+
+            	var http = new XMLHttpRequest();
+				var url = 'http://localhost:3000/createmodel';
+				var params = 'modelname=' + modelname;
+				http.open('POST', url, true);
+
+				http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+				http.onreadystatechange = function() {
+				    if(http.readyState == 4 && http.status == 200) {
+				        // alert(http.status);
+				        if (http.status == 200){
+				        	trainmodel(modelname);
+				        } else {
+				        	alert("failed to create a model")
+				        }
+				    }
+				}
+				http.send(params);
+            }
+
+		}
+
+		function trainmodel(modelname){
+			var modelname = modelname;
+			var json = [];
+			var myTab = document.getElementById('myTable');
+	        for (i = 2; i < myTab.rows.length; i++) {
+	            var objCells = myTab.rows.item(i).cells;
+
+	            var sno = objCells.item(0).innerHTML;
+	            var xaxisl = objCells.item(1).innerHTML;
+	            var yaxisl = objCells.item(2).innerHTML;
+	            var widthl = objCells.item(3).innerHTML;
+	            var heightl = objCells.item(4).innerHTML;
+	            var rotatel = objCells.item(5).innerHTML;
+	            var scalexl = objCells.item(6).innerHTML;
+	            var scaleyl = objCells.item(7).innerHTML;
+	            var fullwidthl = objCells.item(8).innerHTML;
+	            var fullheightl = objCells.item(9).innerHTML;
+	            var labell = objCells.item(10).innerHTML;
+	            var textl = objCells.item(11).innerHTML;
+
+                builderstring = '"' + sno + '": {"xaxis":"' + xaxisl + '", "yaxis":"' + yaxisl + '", "width":"' + widthl + '", "height":"' + heightl + '", "rotate":"' + rotatel + '", "scalex":"' + scalexl + '", "scaley":"' + scaleyl + '", "fullwidth":"' + fullwidthl + '", "fullheight":"' + fullheightl + '", "lable":"' + labell + '", "text":"' + textl + '"}';
+
+                json.push(builderstring);
+	           
+	        }
+	        json = json.toString();
+	        json = "{" + json + "}"
+	        console.log(json);
+	        loaddata(json, modelname);
+		}
+
+		function loaddata(json, modelname){
+			var xhr = new XMLHttpRequest();
+			var url = "http://localhost:3000/trainmodel";
+			xhr.open("POST", url, true);
+			xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			xhr.setRequestHeader("modelname", modelname);
+			// xhr.send(JSON.stringify(json));
+			xhr.send(json);
+			xhr.onreadystatechange = function () {
+			    if (xhr.readyState === 4 && xhr.status === 200) {
+			        var json = JSON.parse(xhr.responseText);
+			        var output = xhr.response;
+			        alert ("Model created successfully")
+			    }
+			}
+		}
+
+		function createnewrow() {
+
+      var table1 = document.getElementById("myTable1");
+      var row = table1.insertRow(count);
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+
+      var button = document.createElement('input');
+
+      button.setAttribute('type', 'button');
+      button.setAttribute('value', 'X');
+      button.setAttribute('onclick', 'removeRow(this)');
+
+      cell3.appendChild(button);
+
+
+
+			var table = document.getElementById("myTable");
+			var row = table.insertRow(count);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			var cell3 = row.insertCell(2);
+			var cell4 = row.insertCell(3);
+			var cell5 = row.insertCell(4);
+			var cell6 = row.insertCell(5);
+			var cell7 = row.insertCell(6);
+			var cell8 = row.insertCell(7);
+			var cell9 = row.insertCell(8);
+			var cell10 = row.insertCell(9);
+			var cell11 = row.insertCell(10);
+			var cell12 = row.insertCell(11);
+			var cell13 = row.insertCell(12);
+
+      var button = document.createElement('input');
+
+      button.setAttribute('type', 'button');
+      button.setAttribute('value', 'Remove');
+      button.setAttribute('onclick', 'removeRow(this)');
+
+      cell13.appendChild(button);
+
+      cell1.innerHTML = count - 1;
+      
+    }
+
+
+    function removeRow(oButton) {
+
+	    var empTab = document.getElementById('myTable');
+      empTab.deleteRow(oButton.parentNode.parentNode.rowIndex);
+      
+      var empTab1 = document.getElementById('myTable1');
+      empTab1.deleteRow(oButton.parentNode.parentNode.rowIndex);
+      
+	    count = count - 1;
+    }
+
+  </script>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,290 @@
+{% extends "layout.html" %}
+{% block head%}
+{{ super() }}
+<script>
+  (function (e, t, n) {
+    var r = e.querySelectorAll("html")[0];
+    r.className = r.className.replace(/(^|\s)no-js(\s|$)/, "$1js$2")
+  })(document, window, 0);
+</script>
+<style type="text/css">
+  *,
+  *:after,
+  *:before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  table,
+  th,
+  td {
+    border: solid 1px #CCC;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 0;
+    text-align: center;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="js" id="div1">
+  <center>
+    <div>
+      <h3 id="title"></h3>
+    </div>
+  </center>
+  <div style="margin-top: 2%"></div>
+
+  <form id="myform">
+    <center>
+      <div class="box">
+        <input type="file" name="filename[]" id="filename" class="inputfile inputfile-6" accept="application/pdf"
+          data-multiple-caption="{count} files selected" multiple>
+        <label for="filename"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17"
+              viewBox="0 0 20 17">
+              <path
+                d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+            </svg> Choose a file&hellip;</strong></label>
+      </div>
+    </center>
+    <div style="margin: 10px;">
+      <center>
+        <label for="downloadtype" style="margin-right: 5px;">Choose download format</label>
+        <select id="downloadtype">
+          <option value="csv">CSV</option>
+          <option value="xlsx">Excel</option>
+          <option value="json">JSON</option>
+          <option value="html">HTML</option>
+        </select>
+      </center>
+    </div>
+
+    <!-- <div style="margin-top: 2%"></div> -->
+    <center><input type="button" name="button" value="Send" onclick="img()" class="btn-send"><input type="button"
+        id="tocsv" class="btn-send" value="Export to csv" onclick="formcsvheader()" align="center" /></center>
+
+  </form>
+
+  <div style="margin-top: 2%"></div>
+
+  <div id="loading" style="display: none;">
+    <center>
+      <img src="static/images/scan.gif" alt="Loading..." width=300px />
+      <p>Scanning your images. This will take some time. Please hold on...</p>
+    </center>
+  </div>
+
+  <div style="font-family: Arial, Helvetica, sans-serif">
+    <table id="myTable" style="width:90%" align="center">
+    </table>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="static/lib/custom-file-input.js"></script>
+<script type="text/javascript" src="static/lib/html2CSV.js"></script>
+<script type="application/javascript">
+  // fetchmodels();
+
+  var tableheaders = [];
+
+  setmodelname();
+
+  $(document).ready(function () {
+    $("#tocsv").css("display", "none");
+  });
+
+  function formcsvheader() {
+    $('#myTable').table2CSV({
+      header: tableheaders
+    });
+  }
+
+  let table = document.querySelector("table");
+  let count = 0;
+
+
+  function generateTableHead(table, data) {
+    let thead = table.createTHead();
+    let row = thead.insertRow();
+    for (let key of data) {
+      let th = document.createElement("th");
+      let text = document.createTextNode(key);
+      th.appendChild(text);
+      row.appendChild(th);
+    }
+    return
+  }
+
+
+  function generateTable(table, data) {
+    $("#loading").css("display", "none");
+    let row = table.insertRow();
+    for (let element of data) {
+      let cell = row.insertCell();
+      // let text = document.createTextNode(element);
+      // let text = document.innerHTML(element)
+      // cell.appendChild(text);
+      element = element.replace(/^\s*[\r\n]/gm, '');
+      cell.innerHTML = element
+    }
+    let buttoncell = row.insertCell();
+
+    var button = document.createElement('input');
+    button.setAttribute('type', 'button');
+    button.setAttribute('value', 'Retrain');
+    button.setAttribute('onclick', 'redirecttoretrain()');
+    buttoncell.appendChild(button);
+    $("#tocsv").css("display", "inline");
+    return
+  }
+
+
+  function redirecttoretrain() {
+    // alert("redirect to retrain window")
+    window.location.href = 'file:///C:/Users/ET437GL/Documents/EYESIGHT/EYESIGHT_final/ongoing/retrainwithmodal.html'
+  }
+
+  function wait(ms) {
+    const start = performance.now();
+    while (performance.now() - start < ms);
+  }
+
+  function img() {
+
+    $("#loading").css("display", "inline");
+
+    var modelname = localStorage.getItem("modelname");
+    var files = document.getElementById("filename").files;
+
+    for (var i = 0; i < files.length; i++) {
+      // wait(2000);
+      sendafile(files[i], modelname);
+      wait(2000);
+    }
+  }
+
+  function sendafile(file, modelname) {
+
+    var outputformat = $("#downloadtype option:selected").val();
+
+    var formdata = new FormData();
+    formdata.append('file', file);
+    formdata.append('model', modelname);
+    formdata.append('outputformat', outputformat);
+
+    fetch('receivepdf', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            console.log(text);
+            $("#loading").css("display", "none");
+            alert("Results have been opened in new tab");
+            //window.open("C:/Users/ET437GL/Documents/ASpace/updated/model_v1/model_v1/Image-Border/ImageBorder/runtimeoutputtables/" + text + ".html", '_blank');
+            window.open("static/runtimeoutputtables/" + text + ".html", '_blank');
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+  }
+
+
+  function setmodelname() {
+
+    // var query = window.location.href;
+    // alert(query);
+
+    try {
+      var modelname = getParameter("model");
+      // alert (modelname)
+    } catch (error) {
+      var modelname = localStorage.getItem("modelname");
+      // alert(modelname);
+    }
+
+    var newDiv = document.createElement("div");
+    var x = document.createElement("H3");
+    x.setAttribute("align", "center")
+    x.innerText = "Consuming model - " + modelname;
+
+    newDiv.appendChild(x);
+
+    var currentDiv = document.getElementById("title");
+    currentDiv.innerHTML = "Consuming model - " + modelname;
+    
+
+
+
+  }
+
+  function getParameter(parameterName) {
+    let paramsIndex = document.URL.indexOf("?");
+    let params = "";
+    if (paramsIndex > 0)
+      params = document.URL.substring(paramsIndex + 1, document.URL.length).split("&");
+    let result = [];
+    for (let i = 0; i < params.length; i++) {
+      console.warn(params[i].split("=")[0].toString() + "," + params[i].split("=")[1].toString());
+      var obj = { "key": params[i].split("=")[0].toString(), "value": params[i].split("=")[1].toString() };
+      result.push(obj);
+    }
+    return passedValue = result.find(x => x.key == parameterName).value;
+  }
+
+
+  function createtable() {
+    var model = localStorage.getItem("modelname");
+    var formdata = new FormData();
+    formdata.append('model', model);
+
+    fetch('gettitles', {
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            // alert(text);
+            text = text.replace(/'/g, "\"");
+            console.log(text);
+            var array = JSON.parse(text);
+            tableheaders = JSON.parse(text);
+            console.log(array);
+            if (count == 0) {
+              generateTableHead(table, array)
+              count = 1;
+            }
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return
+  }
+  setActiveMenuItem('#trained-model-menu')
+</script>
+{% endblock %}

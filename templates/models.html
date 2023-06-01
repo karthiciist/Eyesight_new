@@ -1,0 +1,989 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<style>
+  .sliderWrapper {
+    display: inline-block;
+    /* margin: 24px 24px 24px 24px; */
+    postion: relative;
+  }
+
+  .sliderWrapper div {
+    display: inline-block;
+    /* line-height: 60px; */
+  }
+
+  /* The switch - the box around the slider */
+  .switch {
+    vertical-align: middle;
+    position: relative;
+    display: inline-block;
+    padding: 0px;
+    width: 44px;
+    height: 18px;
+  }
+
+  /* Hide default HTML checkbox */
+  .switch input {
+    display: none;
+  }
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #505050;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 1px;
+    bottom: 1px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked+.slider {
+    background-color: #ffe600;
+  }
+
+  input:focus+.slider {
+    box-shadow: 0 0 1px #ffe600;
+  }
+
+  input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  *,
+  *:after,
+  *:before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  table,
+  th,
+  td {
+    border: solid 1px #CCC;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 0;
+    text-align: center;
+  }
+</style>
+
+<div class="position-absolute h-100 w-100 d-flex align-items-center justify-content-center" id="emptyscreen">
+  <img src="static/images/loading.gif" alt="Loading..." width="150" height="150">
+</div>
+
+<div class="ml-0 pt-3 row" id="modelcontainer">
+
+  <div id="createflashcard" class="card d-flex flex-column mb-0" style="margin-right: 1%;">
+    <h3 class="text-uppercase">New model</h3>
+
+    <div class="d-flex justify-content-around align-items-center actions pt-2">
+
+      <div class="d-flex flex-column action" onclick="sendtonewmodel()" title="create" role="button">
+
+        <!-- <i id="plus" class="fa fa-plus" aria-hidden="true" title="Cretae"></i> -->
+
+        <div style="font-size: 24px;">
+          <i class="fa fa-plus fa-2x" style="font-size: 50px; margin-top: 30px;"></i>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+
+<!-- DeleteModal -->
+<div class="modal fade" id="myModal2" role="dialog">
+  <div class="modal-dialog" style="width: 350px;">
+
+    <!-- DeleteModal content-->
+    <div class="modal-content">
+      <div class="modal-body" style="padding:30px 30px;">
+        <div>
+          <center>
+            <p id="deletetext">
+            </p>
+          </center>
+        </div>
+        <div>
+          <center>
+            <button class="btn-cardsave" id="cancelbtn" type="button" style="width:100px"
+              class="btn-consumenow">Cancel</button>
+            <button class="btn-cardsave" id="deletebtn" type="button" style="width:100px"
+              class="btn-consumenow">Delete</button>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- TestModal -->
+<div class="modal fade" id="testmodel" role="dialog">
+  <div class="modal-dialog" style="width: 550px;">
+
+    <!-- TestModal content-->
+    <div class="modal-content">
+      <div class="modal-body" style="padding:30px 30px;">
+        <div>
+          <center>
+            <h3 id="testtext">
+            </h3>
+          </center>
+        </div>
+
+        <form id="myform">
+          <div class="js" id="div1">
+            <center>
+              <div class="box">
+                <input type="file" name="filename[]" id="filename" class="inputfile inputfile-6"
+                  accept=".pdf,.jpg,.png,.jpeg" data-multiple-caption="{count} files selected" multiple accept="image/*"
+                  >
+                <label for="filename"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                      height="17" viewBox="0 0 20 17">
+                      <path
+                        d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                    </svg> Choose a file&hellip;</strong></label>
+              </div>
+            </center>
+          </div>
+
+        </form>
+
+
+        <div>
+          <center>
+            <button class="btn-cardsave" id="testcancelbtn" type="button" style="width:100px"
+              class="btn-consumenow">Cancel</button>
+            <button class="btn-cardsave" id="testbtn" type="button" style="width:100px"
+              class="btn-consumenow">Test</button>
+          </center>
+        </div>
+        <div id="loading" style="display: none;">
+          <center>
+            <img src="static/images/scan.gif" alt="Loading..." width=300px />
+            <p>Scanning your images. This will take some time. Please hold on...</p>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Model view Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+
+      <div class="modal-header" style="padding:10px 10px;">
+        <button type="button" class="close" data-dismiss="modal" id="closebtn">&times;</button>
+        <center>
+          <h4 style="color: white;" id="modaltitle">Model Details</h4>
+          <h5 style="color: white;" id="ocrtype">OCR details</h5>
+        </center>
+      </div>
+
+      <div class="modal-body" style="padding:10px 50px;">
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold;">Full Height :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputfullheight" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold;">Full Width :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputfullwidth" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Header Captured :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputheader" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Footer Captured :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputfooter" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Left Index Captured :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputleftindex" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Total Parameters :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputtotalparam" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Threshold Value :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefthre" placeholder="Extracting text...">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Colorcut Value :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefcolcut" placeholder="Extracting text...">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Eyesight Range (X) :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefeyerangex" placeholder="Extracting text...">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Eyesight Range (Y) :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefeyerangey" placeholder="Extracting text...">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Dilate:</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefdilate" placeholder="Extracting text...">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Erode:</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdeferode" placeholder="Extracting text...">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <div id="apiblock" style="border:1px solid gray; padding-left: 5px; margin-top: 10px;">
+          <div class="checkbox" id="thrediv">
+            <label><input type="checkbox" value="" onchange="showapioptions(this)" id="apicheckbox">Expose this model as
+              API</label>
+          </div>
+          <div id="apioptions">
+
+            <div style="margin-right: 5px; margin-bottom: 5px;">
+              <div>
+                <h5 style="font-weight: bold; margin-top: 5px;">URL :</h5>
+              </div>
+              <div style="font-weight:bolder; font-style: italic; display: inline-flex; width: 100%;">
+                <!-- <p id="foundtxt">Extracting text...</p> -->
+                <input type="text" class="form-control" id="apiurl" value="http://consumesampleocrmodel.eyesight.com"
+                  readonly="readonly">
+                <button type="button" class="apicopybtn" id="btncpyurl">Copy</button>
+              </div>
+
+              <div>
+                <h5 style="font-weight: bold; margin-top: 5px;">API Key :</h5>
+              </div>
+              <div style="font-weight:bolder; font-style: italic; display: inline-flex; width: 100%;">
+                <!-- <p id="foundtxt">Extracting text...</p> -->
+                <input type="text" class="form-control" id="apikey" value="A8JD93MFK3JMFIKK30058DJNMCK3"
+                  readonly="readonly">
+                <button type="button" class="apicopybtn" id="btncpykey">Copy</button>
+              </div>
+              <div style="margin-top: 5px;"><a href="abc.com">Learn more about how to consume this API</a></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div>
+          <div>
+            <center>
+              <button class="btn-cardsave" id="savedata" type="button" style="width:100px" class="btn-consumenow"
+                onclick="savedata()">Save</button>
+              <button class="btn-cardsave" id="close" type="button" style="width:100px" class="btn-consumenow"
+                data-dismiss="modal">Close</button>
+            </center>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="static/lib/custom-file-input.js"></script>
+<script type="application/javascript">
+
+  fetchmodels();
+
+  $(document).ready(function () {
+    $("#apioptions").css("display", "none");
+    var apiurl = document.getElementById("apiurl");
+    var apikey = document.getElementById("apikey");
+
+    btncpyurl.onclick = function () {
+      apiurl.select();
+      document.execCommand("copy");
+    }
+
+    btncpykey.onclick = function () {
+      apikey.select();
+      document.execCommand("copy");
+    }
+
+    if ($(apicheckbox).is(":checked")) {
+      $("#apioptions").css("display", "inline");
+    } else {
+      $("#apioptions").css("display", "none");
+    }
+  });
+
+  function formcard(modelnames) {
+    for (modelname in modelnames) {
+
+      model = modelnames[modelname];
+      btnname = 'btn' + model
+      dltbtnname = 'dltbtn' + model
+
+      var html = `
+    <h3 id="modelname" class="text-uppercase">${model}</h3>
+    <div class="description flex-fill overflow-auto border-bottom">This is a placeholder for description pertaining to the solution. A small summary of the solution will be displayed over here.</div>
+    <div class="d-flex justify-content-around align-items-center actions pt-2">
+
+      <!--<div class="btn-consumenow" onclick="sendtoconsume('${model}')">Consume</div>
+      <div class="btn-viewnow" onclick="sendtoview('${model}')">View</div>
+      <div class="btn-deletenow" onclick="sendtodelete('${model}')">Delete</div>
+      -->
+
+      <div class="d-flex flex-column action" onclick="sendtoconsume('${model}')" role="button">
+        <i id="${btnname}" class="fa fa-check" aria-hidden="true" title="Consume Now"></i>
+        <span>Consume</span>
+      </div>
+      <div class="d-flex flex-column action" onclick="sendtoview('${model}')" title="View" role="button">
+        <i id="${btnname}" class="fa fa-eye" aria-hidden="true"></i>
+        <span>View</span>
+      </div>
+      <div class="d-flex flex-column action" onclick="sendtodelete('${model}')" title="Delete" role="button">
+        <i id="${btnname}" class="fa fa-trash-o" aria-hidden="true"></i>
+        <span>Delete</span>
+      </div>
+    </div>`
+      var card = document.createElement('div');
+      card.setAttribute('id', model + 'flashcard');
+      card.setAttribute('class', 'card d-flex flex-column mb-0');
+      card.innerHTML = html;
+      var col = document.getElementById("modelcontainer");
+      col.appendChild(card);
+      document.getElementById(model + "flashcard").style.marginRight = "1%";
+    }
+    console.log(modelnames.length);
+    if (modelnames.length > 0) {
+      $("#emptyscreen").removeClass('d-flex').addClass('d-none')
+    }
+  }
+
+  function sendtonewmodel() {
+    window.location.href = 'createmodelpage'
+  }
+
+  // function sendtoconsume(classifier) {
+  //   localStorage.setItem("modelname", classifier);
+  //   var name = localStorage.getItem("modelname");
+  //   window.location.href = 'classifiertestpage'
+  // }
+
+  function sendtodelete(model) {
+
+    model_name = model.split("$")[0];
+
+    document.getElementById("deletetext").innerHTML = "Delete " + model_name + "?";
+    $("#myModal2").modal();
+
+    document.getElementById("cancelbtn").onclick = function (event) {
+      $('#myModal2').modal('hide');
+    }
+
+    document.getElementById("deletebtn").onclick = function (event) {
+      $('#myModal2').modal('hide');
+      var http = new XMLHttpRequest();
+      var url = 'deletemodelnew';
+      var params = 'model=' + model;
+      http.open('POST', url, true);
+
+      http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+      http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+          if (http.status == 200) {
+            // alert("deleted model")
+            location.reload();
+          } else {
+            alert("failed to delete a model")
+            location.reload();
+          }
+        }
+      }
+      http.send(params);
+    }
+  }
+
+  function sendtoview(model) {
+    console.log(model);
+    document.getElementById("savedata").onclick = function (event) {
+      savedata(model);
+    }
+
+    var http = new XMLHttpRequest();
+    var url = 'getmodeledtails';
+    var params = 'model=' + model;
+    http.open('POST', url, true);
+
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    http.onreadystatechange = function () {
+      if (http.readyState == 4 && http.status == 200) {
+        if (http.status == 200) {
+          responselist = http.response;
+          str = responselist.substring(responselist.indexOf("string\":"));
+          str = str.substring(str.indexOf(":") + 3);
+          str = str.replace("[", "");
+          str = str.replace("]", "");
+          str = str.replace("\"", "");
+          str = str.replace("}", "");
+          str = str.replace("\n", "");
+          str = str.replace("(", "");
+          str = str.replace(")", "");
+          var element = str.split(', ');
+          console.log(element);
+
+          modelname = element[0].replace(/\'/g, "");
+          ocrtype = element[1].replace(/\'/g, "");
+          fullheight = element[2].replace(/\'/g, "");
+          fullwidth = element[3].replace(/\'/g, "");
+          noofparam = element[4].replace(/\'/g, "");
+          header = element[5].replace(/\'/g, "");
+          footer = element[6].replace(/\'/g, "");
+          leftind = element[7].replace(/\'/g, "");
+          defthre = element[8].replace(/\'/g, "");
+          defcolcut = element[9].replace(/\'/g, "");
+          defeyerangex = element[10].replace(/\'/g, "");
+          defeyerangey = element[11].replace(/\'/g, "");
+          apiexposed = element[12].replace(/\'/g, "");
+          apiurl = element[14].replace(/\'/g, "");
+          apikey = element[13].replace(/\'/g, "");
+          dilate = element[15].replace(/\'/g, "");
+          erode = element[16].replace(/\'/g, "");
+
+          if (ocrtype == "zocr") {
+            ocrtype = "Zonal OCR model"
+          } else if (ocrtype == "hocr") {
+            ocrtype = "Hybrid OCR model"
+          } else if (ocrtype == "socr") {
+            ocrtype = "Simple OCR model"
+          } else if (ocrtype == "kocr") {
+            ocrtype = "Key Based OCR model"
+          }
+
+          if (apiexposed == "true") {
+            $("#apicheckbox").prop("checked", true);
+            $("#apioptions").css("display", "inline");
+          } else if (apiexposed == "false") {
+            $("#apicheckbox").prop("checked", false);
+            $("#apioptions").css("display", "none");
+          }
+
+          document.getElementById("inputfullheight").value = fullheight;
+          document.getElementById("inputfullwidth").value = fullwidth;
+          document.getElementById("inputheader").value = header;
+          document.getElementById("inputfooter").value = footer;
+          document.getElementById("inputleftindex").value = leftind;
+          document.getElementById("inputtotalparam").value = noofparam;
+          document.getElementById("inputdefthre").value = defthre;
+          document.getElementById("inputdefcolcut").value = defcolcut;
+          document.getElementById("inputdefeyerangex").value = defeyerangex;
+          document.getElementById("inputdefeyerangey").value = defeyerangey;
+          document.getElementById("apiurl").value = apiurl;
+          document.getElementById("apikey").value = apikey;
+          document.getElementById("modaltitle").innerHTML = modelname;
+          document.getElementById("ocrtype").innerHTML = ocrtype;
+          document.getElementById("inputdefdilate").value = dilate;
+          document.getElementById("inputdeferode").value = erode;
+
+          $('#myModal').modal('show');
+        } else {
+          alert("failed to get model data")
+        }
+      }
+    }
+    http.send(params);
+  }
+
+  function myNavFunction(id) {
+    $("#date-popover").hide();
+    var nav = $("#" + id).data("navigation");
+    var to = $("#" + id).data("to");
+    console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+  }
+
+  function fetchmodels() {
+
+    var data = "";
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        createnewrow(this.responseText)
+        // alert(this.responseText);
+      }
+    });
+
+    xhr.open("POST", "fetchnewmodels");
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.send(data);
+  }
+
+  function createnewrow(response) {
+
+    response = response.replace(/'/g, "\"");
+    var jsonobj = JSON.parse(response);
+    var length = jsonobj.length;
+
+    for (i = 0; i < length; i++) {
+      var modelname = jsonobj[i];
+      console.log(modelname);
+      modelname = modelname.replace(".json", "");
+      formcard1(modelname);
+    }
+
+    if (length > 0) {
+      $("#emptyscreen").removeClass('d-flex').addClass('d-none')
+    }
+  }
+
+  function formcard1(modelname) {
+
+    model_name = modelname.split("$")[0];
+    description = modelname.split("$")[1];
+
+    btnname = 'btn' + modelname
+    dltbtnname = 'dltbtn' + modelname
+
+    alertboxid = 'alertbox' + model_name
+    alerticonid = 'alertbtn' + model_name
+    alerttextid = 'alerttxt' + model_name
+
+    // var html = `
+    // <div class="sliderWrapper" style = "padding-left: 125px;">
+    //       <div>Publish</div>
+    //         <label class="switch">
+    //             <input type="checkbox"  onclick="publish('${model_name}')" name="data[SplashPage][firstname]">
+    //             <span class="slider"></span>
+    //         </label>
+    //     </div>
+    // <h3 id="modelname" class="text-uppercase">${model_name}</h3>
+    // <div class="description flex-fill overflow-auto border-bottom">${description}</div>
+    // <div class="d-flex justify-content-around align-items-center actions pt-2">
+
+    //   <!--<div class="btn-consumenow" onclick="sendtoconsume('${modelname}')">Consume</div>
+    //   <div class="btn-viewnow" onclick="sendtoview('${modelname}')">View</div>
+    //   <div class="btn-deletenow" onclick="sendtodelete('${modelname}')">Delete</div>
+    //   -->
+
+    //   <div class="d-flex flex-column action" onclick="sendtoconsume('${modelname}')" role="button">
+    //     <i id="${modelname}" class="fa fa-check" aria-hidden="true" title="Consume Now"></i>
+    //     <span>Test</span>
+    //   </div>
+
+    //   <div class="d-flex flex-column action" onclick="sendtoview('${modelname}')" title="View" role="button">
+    //       <i id="${btnname}" class="fa fa-eye" aria-hidden="true"></i>
+    //       <span>View</span>
+    //   </div>
+
+    //   <div class="d-flex flex-column action" onclick="sendtodelete('${modelname}')" title="Delete" role="button">
+    //     <i id="${btnname}" class="fa fa-trash-o" aria-hidden="true"></i>
+    //     <span>Delete</span>
+    //   </div>
+
+    // </div>
+    // <div id="${alertboxid}" class="d-flex justify-content-around align-items-center actions pt-2" style="background-color: dimgray;margin-top: 10px; pointer-events: none;">
+
+    //   <div class="d-flex flex-column action" onclick="sendtoconsume('${modelname}')" role="button" style="margin-bottom: 5px;">
+    //     <i id="${alerticonid}" class="fa fa-exclamation-circle" aria-hidden="true"></i>
+    //     <span id="${alerttextid}">Not published yet</span>
+    //   </div>
+
+
+    //   </div>
+    // `
+
+    var html = `
+
+    <h3 id="modelname" class="text-uppercase">${model_name}</h3>
+    <div class="description flex-fill overflow-auto border-bottom">${description}</div>
+    <div class="d-flex justify-content-around align-items-center actions pt-2">
+
+      <!--<div class="btn-consumenow" onclick="sendtoconsume('${modelname}')">Consume</div>
+      <div class="btn-viewnow" onclick="sendtoview('${modelname}')">View</div>
+      <div class="btn-deletenow" onclick="sendtodelete('${modelname}')">Delete</div>
+      -->
+
+      <div class="d-flex flex-column action" onclick="sendtoconsume('${modelname}')" role="button">
+        <i id="${modelname}" class="fa fa-check" aria-hidden="true" title="Consume Now"></i>
+        <span>Test</span>
+      </div>
+
+      <div class="d-flex flex-column action" onclick="sendtoview('${modelname}')" title="View" role="button">
+          <i id="${btnname}" class="fa fa-eye" aria-hidden="true"></i>
+          <span>View</span>
+      </div>
+
+      <div class="d-flex flex-column action" onclick="sendtodelete('${modelname}')" title="Delete" role="button">
+        <i id="${btnname}" class="fa fa-trash-o" aria-hidden="true"></i>
+        <span>Delete</span>
+      </div>
+
+    </div>
+    `
+
+    var card = document.createElement('div');
+    card.setAttribute('id', modelname + 'flashcard');
+    card.setAttribute('class', 'card d-flex flex-column mb-0');
+    card.innerHTML = html;
+    var col = document.getElementById("modelcontainer");
+    col.appendChild(card);
+    document.getElementById(modelname + "flashcard").style.marginRight = "1%";
+
+  }
+
+  function showapioptions(obj) {
+    if ($(obj).is(":checked")) {
+      $("#apioptions").css("display", "inline");
+    } else {
+      $("#apioptions").css("display", "none");
+    }
+  }
+
+  function savedata(model) {
+    modelname = model;
+    defthreval = $("#inputdefthre").val();
+    defcolcutval = $("#inputdefcolcut").val();
+    defeyerangex = $("#inputdefeyerangex").val();
+    defeyerangey = $("#inputdefeyerangey").val();
+    defdilate = $("#inputdefdilate").val();
+    deferode = $("#inputdeferode").val();
+
+    if ($(apicheckbox).is(":checked")) {
+      apiexposed = "true";
+    } else {
+      apiexposed = "false";
+    }
+
+    var xhr = new XMLHttpRequest();
+    var url = "updatemodeledtails";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.setRequestHeader("modelname", modelname);
+    xhr.setRequestHeader("apiexposed", apiexposed);
+    xhr.setRequestHeader("defthre", defthreval);
+    xhr.setRequestHeader("defcolcut", defcolcutval);
+    xhr.setRequestHeader("defeyerangex", defeyerangex);
+    xhr.setRequestHeader("defeyerangey", defeyerangey);
+    xhr.setRequestHeader("defdilate", defdilate);
+    xhr.setRequestHeader("deferode", deferode);
+
+    // xhr.send(JSON.stringify(json));
+    json = '{hi:hi}'
+    xhr.send(json);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var json = JSON.parse(xhr.responseText);
+        var output = xhr.response;
+        console.log(output);
+        $('#myModal').modal('hide');
+        alert("Model updated successfully");
+        // return "done";
+      }
+    }
+
+  }
+
+  function publish(modelname) {
+    // alert (oButton.parentNode.parentNode.rowIndex);
+
+    var today = new Date();
+    var date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date + ' ' + time;
+
+    alertboxid = 'alertbox' + modelname;
+    var boxcol = document.getElementById(alertboxid).style.backgroundColor;
+    // alert (boxcol);
+    if (boxcol.toString() == "rgb(255, 230, 0)") {
+      // alert ("off");
+      alertboxid = 'alertbox' + modelname;
+      alerticonid = 'alertbtn' + modelname;
+      alerttextid = 'alerttxt' + modelname;
+
+
+      document.getElementById(alertboxid).style.backgroundColor = "dimgray";
+      document.getElementById(alerticonid).style.color = "white";
+      document.getElementById(alerticonid).className = "fa fa-exclamation-circle";
+      document.getElementById(alerttextid).innerHTML = "Not published yet";
+      document.getElementById(alerttextid).style.color = "white"
+    } else {
+      var deployed_date_time = "Published on " + dateTime;
+
+      alertboxid = 'alertbox' + modelname;
+      alerticonid = 'alertbtn' + modelname;
+      alerttextid = 'alerttxt' + modelname;
+
+
+      document.getElementById(alertboxid).style.backgroundColor = "#ffe600";
+      document.getElementById(alerticonid).style.color = "black";
+      document.getElementById(alerticonid).className = "fa fa-cloud-upload";
+      document.getElementById(alerttextid).innerHTML = deployed_date_time;
+      document.getElementById(alerttextid).style.color = "black"
+    }
+
+
+  }
+
+
+
+
+
+
+
+  function sendtoconsume(model) {
+
+    model_name = model.split("$")[0];
+    document.getElementById("testtext").innerHTML = "Testing model - " + model_name;
+    $("#testmodel").modal();
+
+    document.getElementById("testcancelbtn").onclick = function (event) {
+      $('#testmodel').modal('hide');
+    }
+
+    document.getElementById("testbtn").onclick = function (event) {
+      document.getElementById("loading").style.display = "inline";
+      var files = document.getElementById("filename").files;
+
+      for (var i = 0; i < files.length; i++) {
+        // wait(2000);
+        checkfiletype(files[i], model);
+        wait(2000);
+      }
+
+    }
+  }
+
+
+  // check file type
+  function checkfiletype(file, model) {
+    var fileName = file.name;
+    extension = fileName.split('.').pop();
+    // alert(extension);
+    if ((extension == "pdf") || (extension == "jpg") || (extension == "png") || (extension == "jpeg")) {
+      sendfiletoserver(file, model, extension)
+    } else {
+      alert("Unsupported file format. EYESIGHT supports only '.pdf', '.png', '.jpg' formats");
+    }
+  }
+
+  // when pdf is loaded
+  function sendfiletoserver(file, model, extension) {
+
+    // document.getElementById("loading_transfering_file").style.display = "inline";
+
+    var formdata = new FormData();
+    formdata.append('file', file);
+    formdata.append('modelname', model);
+    formdata.append('extension', extension);
+
+    fetch('receivefilefortest', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            timestamp = text;
+            foldernameinserver = 'static/initialreceivepdf/' + text;
+            filenameinserver = text + extension;
+            console.log(foldernameinserver);
+            console.log(filenameinserver);
+            // document.getElementById("loading_transfering_file").style.display = "none";
+            // document.getElementById("loading_scanning").style.display = "inline";
+            processsentfile(text, model, extension);
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+  }
+
+  function processsentfile(timestamp, model, extension) {
+    // document.getElementById("loading_transfering_file").style.display = "none";
+    // document.getElementById("loading_scanning").style.display = "inline";
+
+    // var e = document.getElementById("language");
+    // var language = e.value;
+
+    var formdata = new FormData();
+    formdata.append('timestamp', timestamp);
+    formdata.append('extension', extension);
+    formdata.append('model', model);
+    // formdata.append('lang', language);
+
+    fetch('processsentfiletest', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          document.getElementById("loading").style.display = "none";
+          $('#testmodel').modal('toggle');
+          alert ("Cannot extract data from the provided document");
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            console.log(text);
+            window.open(text, '_blank');
+            document.getElementById("loading").style.display = "none";
+            $('#testmodel').modal('toggle');
+            // createimagedivs(timestamp, text);
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+  }
+
+
+
+  function wait(ms) {
+    const start = performance.now();
+    while (performance.now() - start < ms);
+  }
+
+
+  function sendafile(file, modelname) {
+
+    var outputformat = $("#downloadtype option:selected").val();
+
+    var formdata = new FormData();
+    formdata.append('file', file);
+    formdata.append('model', modelname);
+    // formdata.append('outputformat', outputformat);
+
+    fetch('receivepdfnew', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            // console.log(text);
+            $("#loading").css("display", "none");
+            alert(response.text());
+            // alert("Results have been opened in new tab");
+            //window.open("C:/Users/ET437GL/Documents/ASpace/updated/model_v1/model_v1/Image-Border/ImageBorder/runtimeoutputtables/" + text + ".html", '_blank');
+            // window.open("static/runtimeoutputtables/" + text + ".html", '_blank');
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+  }
+
+
+  setActiveMenuItem('#models-new-menu')
+</script>
+{% endblock %}

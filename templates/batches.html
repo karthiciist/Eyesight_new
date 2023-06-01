@@ -1,0 +1,249 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<style>
+  .sliderWrapper {
+    display: inline-block;
+    /* margin: 24px 24px 24px 24px; */
+    postion: relative;
+  }
+
+  .sliderWrapper div {
+    display: inline-block;
+    /* line-height: 60px; */
+  }
+
+  /* The switch - the box around the slider */
+  .switch {
+    vertical-align: middle;
+    position: relative;
+    display: inline-block;
+    padding: 0px;
+    width: 44px;
+    height: 18px;
+  }
+
+  /* Hide default HTML checkbox */
+  .switch input {
+    display: none;
+  }
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #505050;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 1px;
+    bottom: 1px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked+.slider {
+    background-color: #ffe600;
+  }
+
+  input:focus+.slider {
+    box-shadow: 0 0 1px #ffe600;
+  }
+
+  input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  *,
+  *:after,
+  *:before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  table,
+  th,
+  td {
+    border: solid 1px #CCC;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 0;
+    text-align: center;
+  }
+</style>
+
+<!-- <div class="position-absolute h-100 w-100 d-flex align-items-center justify-content-center" id="emptyscreen">
+  <img src="static/images/loading.gif" alt="Loading..." width="150" height="150">
+</div> -->
+
+<div>
+
+  <div id="createflashcard" style="margin-right: 2%; margin-top: 1%; float: right;">
+    <button class="btn-cardsave" id="startbatch" onclick="startbatch()" type="button" style="width:150px" class="btn-consumenow">Start new batch</button>   
+  </div>
+
+
+</div>
+
+
+<div class="ml-0 pt-3 row" id="modelcontainer">
+
+  <div id="createflashcard" class="card d-flex flex-column mb-0" style="margin-right: 1%; width: 100%; height: 100px;">
+    
+    
+
+    <div style="display: table-row; width: 100%;">
+
+      <div style="display: table-cell; width: 10%; height: 50%; padding-right: 10px; float: left;">
+        <img src="static/images/batch.png" alt="batch" width=70px />
+      </div>
+
+      <div style="display: table-cell; width: 30%; height: 100%; padding-right: 10px; float: left;">
+        <h4 style="margin-top: 0px;">Batch name</h4>
+        <h5 style="margin-top: 5px;">Batch ID</h5>
+        <h5 style="margin-top: 5px;">Timestamp</h5>
+      </div>
+
+      <div style="display: table-cell; width: 30%; height: 100%; padding-right: 10px; float: left;">
+        <h5 style="height: 100%; padding-top: 15px;">Batch status</h5>
+      </div>
+
+      <div style="display: table-cell; width: 30%; height: 100%; padding-right: 10px; float: right; padding-top: 15px;">
+        <i id="download" class="fa fa-check" aria-hidden="true" title="Download result" style="font-size: 20px; padding: 10px; cursor: pointer;"></i>
+        <i id="verify" class="fa fa-eye" aria-hidden="true" title="Verify" style="font-size: 20px; padding: 10px; cursor: pointer;"></i>
+        <i id="delete" class="fa fa-trash-o" aria-hidden="true" title="Delete batch" style="font-size: 20px; padding: 10px; cursor: pointer;"></i>
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+
+
+<!-- batchmodal -->
+<div class="modal fade" id="batchmodal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="width: 500px;">
+
+
+      <div class="modal-header" style="padding:0px 0px;">
+        <button type="button" class="close" data-dismiss="modal" onclick="closebatchoptions()" id="closebtn"
+          style="padding:5px 5px;">&times;</button>
+        <center>
+          <h5 style="color: white;">Enter Batch Details</h5>
+        </center>
+      </div>
+
+
+      <div style="padding-left: 10px;">
+
+        <!-- <h4 style="display: table-cell; padding: 6px; cursor: pointer;" onclick="addcolumn()" title="Add column">+</h4> -->
+        <div style="padding-left: 450px; display: table-cell">
+          <h4 style="display: table-cell; padding-top: 10px; cursor: pointer; font-size: 14px;" onclick="startbatch()"
+            title="Start batch">✓</h4>
+        </div>
+      </div>
+
+      <div class="modal-body" style="padding:0px 10px 10px 10px;">
+        <div>
+          <div>
+            <table border="1" style="background: #434343; border: 0px; margin-top: 10px"
+              align="center">
+              <tr>
+                <td style="width: 30%;">
+                  Batch Name
+                </td>
+                <td>
+                  <input type="text" id="server" placeholder="" style="width: 100%;">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Batch ID
+                </td>
+                <td>
+                  <input type="text" id="port" placeholder="" style="width: 100%;">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  OCR SOlution
+                </td>
+                <td>
+                  <select id="ocrsolname" style="width: 100%;">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Notification Email
+                </td>
+                <td>
+                  <input type="text" id="emailid" placeholder="" style="width: 100%;">
+                </td>
+              </tr>
+              <tr>
+                <td style="width: 30%;">
+                  Select files
+                </td>
+                <td>
+                  <input type="file" name="filename[]" id="inputId" class="inputfile inputfile-6" accept=".pdf,.jpg,.png,.jpeg"
+                  data-multiple-caption="{count} files selected" multiple accept="image/*"
+                  onchange="checkfiletype(this.files[0])" style="color: white; width: 100%;">
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="static/lib/custom-file-input.js"></script>
+<script type="application/javascript">
+
+  function startbatch(){
+    $("#batchmodal").modal();
+  }
+
+  setActiveMenuItem('#batch-running-menu')
+</script>
+{% endblock %}

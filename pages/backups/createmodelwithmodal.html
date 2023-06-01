@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en" class="js">
+
+<head>
+  <link rel="stylesheet" href="C:\Users\ET437GL\Desktop\ahmed\cropperjs-master\cropperjs-master\dist\cropper.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>Welcome to EYESIGHT</title>
+
+  <!-- Favicons -->
+  <link href="img/favicon.png" rel="icon">
+  <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!--external css-->
+  <link href="lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="css/zabuto_calendar.css">
+  <link rel="stylesheet" type="text/css" href="lib/gritter/css/jquery.gritter.css" />
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/style-responsive.css" rel="stylesheet">
+  <script src="lib/chart-master/Chart.js"></script>
+
+  <style>
+    table, th, td {
+      border: solid 1px #CCC;
+    }
+
+    table {
+      width: 100%;
+    }
+
+    th, td {
+      padding: 0;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <script src="C:\Users\ET437GL\Desktop\ahmed\cropperjs-master\cropperjs-master\dist\cropper.js"></script>
+	<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+  <script src="canvas2image.js"></script>
+  
+  <section id="container">
+ 
+    <header class="header black-bg">
+      <div class="sidebar-toggle-box">
+        <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+      </div>
+      <!--logo start-->
+      <a href="index.html" class="logo"><b>EY<span>ESIGHT</span></b></a>
+      <!--logo end-->
+      <div class="top-menu">
+        <ul class="nav pull-right top-menu">
+          <li><a class="logout" href="/eyesight">Logout</a></li>
+        </ul>
+      </div>
+    </header>
+    <aside>
+      <div id="sidebar" class="nav-collapse ">
+        <ul class="sidebar-menu" id="nav-accordion">
+          <li class="mt">
+            <a href="dashboard.html">
+              <i class="fa fa-dashboard"></i>
+              <span>Dashboard</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="trainedmodels.html">
+              <i class="fa fa-th"></i>
+              <span>Trained models</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a class="active" href="createmodel.html">
+              <i class="fa fa-th"></i>
+              <span>Create a model</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="javascript:;">
+              <i class="fa fa-book"></i>
+              <span>Help center</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="javascript:;">
+              <i class="fa fa-cogs"></i>
+              <span>Settings</span>
+              </a>
+          </li>
+      </div>
+    </aside>
+
+    <section id="main-content">
+      <section class="wrapper">
+        <div class="row">
+          <div class="col-lg-9 main-chart">
+            <!--CUSTOM CHART START -->
+            <div class="row mt">
+              <!-- SERVER STATUS PANELS -->
+              
+            </div>
+
+            <center>
+              <div class="box">
+                <form method="post" enctype="multipart/form-data">
+                  <input type="file" name="filename[]" id="inputId" class="inputfile inputfile-6" data-multiple-caption="{count} files selected" multiple accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
+                  <label for="inputId"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> Choose a file&hellip;</strong></label>  
+                </form>
+              </div>
+            </center>
+
+            <script src="custom-file-input.js"></script>
+
+            <center>
+              <button id="btnCrop" type="button" style="width:100px" class="btn-consumenow">Crop & Scan</button>
+              <button id="btnCreateModel" type="button" style="width:100px" class="btn-consumenow" onclick="showmodal2()">Create model</button>
+              <button id="keycapturebtn" type="button" style="width:200px; display: none;" class="btn-consumenow">Crop & Scan key</button>
+            </center>
+
+            <center>
+              <div>
+              <img id="output">
+            </div>
+            </center>
+            <div style="padding-top: 10px; display: none;">
+                  <table id="myTable" style="width:100%" align="center">
+                      <tr>
+                          <th COLSPAN="27">
+                              <h3 style="margin-top: 10px;">Results</h3>
+                          </th>
+                      </tr>
+                      <tr>
+                          <th>S.no</th>
+                          <th>x-axis</th>
+                          <th>y-axis</th>
+                          <th>width</th>
+                          <th>height</th>
+                          <th>rotate</th>
+                          <th>scaleX</th>
+                          <th>scaleY</th>
+                          <th>full width</th>
+                          <th>full height</th>
+                          <th>Lable</th>
+                          <th>Text from OCR</th>
+                          <th>header</th>
+                          <th>hposition</th>
+                          <th>htol</th>
+                          <th>footer</th>
+                          <th>fposition</th>
+                          <th>ftol</th>
+                          <th>ThreCol</th>
+                          <th>ColVal</th>
+                          <th>ThreVal</th>
+                          <th>Nature</th>
+                          <th>Lang</th>
+                          <th>Keymapped</th>
+                          <th>KeyVal</th>
+                          <th>KeySide</th>
+                          <th>KeyTol</th>
+                          <th></th>
+                      </tr>
+                  </table>
+            </div>
+          </div>
+          <div class="col-lg-3 ds">
+            <!-- <h3 style="text-align: center;">Captured parameters</h4> -->
+            <!-- <div style="height:40px"></div> -->
+
+            <div style="padding-top: 2px; padding-bottom: 5px;">
+              <table id="myTable2" style="width:100%" align="center">
+                <tr>
+                  <th COLSPAN="3" style="text-align:center;">
+                      <h3 style="text-align:center; margin-top: 10px;">Captured header</h3>
+                  </th>
+                </tr>
+                <tr>
+                  <th style="text-align:center; display: table-cell;"><button id="btnHeadCap">Capture a header</button></th>
+                  <th style="text-align:center; display: none; width: 75%;" id="capturedHead">Lable</th>
+                  <th style="display: none;" id="btnHeadRecap"><button>Recapture</button></th>
+                </tr>
+              </table>
+            </div>
+
+            <div style="padding-top: 2px; padding-bottom: 5px;">
+              <table id="myTable3" style="width:100%" align="center">
+                <tr>
+                  <th COLSPAN="3" style="text-align:center;">
+                      <h3 style="text-align:center; margin-top: 10px;">Captured footer</h3>
+                  </th>
+                </tr>
+                <tr>
+                      <th style="text-align:center; display: table-cell;"><button>Capture a footer</button></th>
+                      <th style="text-align:center; display: none; width: 75%;" id="capturedFoot">Lable</th>
+                      <th style="display: none;" id="btnFootRecap"><button>Recapture</button></th>
+                </tr>
+              </table>
+            </div>
+
+            <div style="padding-top: 2px;">
+              <table id="myTable1" style="width:100%" align="center">
+                <tr>
+                  <th COLSPAN="3" style="text-align:center;">
+                      <h3 style="text-align:center; margin-top: 10px;">Captured parameters</h3>
+                  </th>
+                </tr>
+                <tr>
+                  <th style="text-align:center;">Lable</th>
+                  <th style="text-align:center;">Text from OCR</th>
+                  <th></th>
+                </tr>
+                <tr>
+                  <th COLSPAN="3" style="text-align:center;"><button id="btnparametercapture" onclick="updateImageDisplay()">Capture a parameter</button></th>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <!-- /col-lg-3 -->
+        </div>
+        <!-- /row -->
+      </section>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog">
+      
+        <!-- Modal content-->
+        <div class="modal-content">
+
+
+          <div class="modal-header" style="padding:10px 10px;">
+            <button type="button" class="close" data-dismiss="modal" id="closebtn">&times;</button>
+            <center><h4 style="color: white;">Enter below details</h4></center>
+          </div>
+
+
+          <div class="modal-body" style="padding:10px 50px;">
+            <div><h5 style="font-weight: bold;">Cropped image :</h5></div>
+            <center><div style="margin: 10px;"><img id="croppedimg" src="logo.png" style="max-width: 400px;"></div></center>
+
+
+            <div id="threblock" style="border:1px solid gray; padding-left: 5px; margin-top: 5px;">
+              <div class="checkbox" id="thrediv">
+                <label><input type="checkbox" value="" onchange="showthreoptions(this)" id="threcheckbox" checked>Auto Thresholding and Color cut</label>
+              </div>
+              <div id="threoptions">
+
+                <div style="padding-left: 10px; padding-right: 10px;">
+                  <input type="range" id="colorcut" name="Color cut"
+                         min="0" max="255" value="0" step="10">
+                  <label for="colorcut">Color cut</label>
+                </div>
+                
+                <div style="padding-left: 10px; padding-right: 10px;">
+                  <input type="range" id="threshold" name="Thresholding" 
+                         min="0" max="255" value="0" step="10">
+                  <label for="threshold">Thresholding</label>
+                </div>
+
+                <div>
+                  <center>
+                    <button class="btn-keycapture" id="previewimage" onclick="getupdatedimage()" type="button">Preview image</button>
+                    <!-- <button class="btn-keycapture" id="doneenhance" onclick="getupdatedimagetext()" type="button">Done</button> -->
+                  </center>
+                </div>
+                  
+              </div>
+            </div>
+
+
+
+            
+            <div><h5 style="font-weight: bold; margin-top: 20px;">Text found in this image :</h5></div>
+            <center><div style="font-weight:bolder; font-style: italic;" ><p id="foundtxt">Extracting text...</p></div></center>
+            <form role="form">
+              <div class="form-group" style="margin-top: 15px;">
+                <input type="text" class="form-control" id="labeltxt" placeholder="Enter label for this text">
+              </div>
+
+              <div>
+                <label for="textnature" style="margin-right: 5px;">Select the nature of this text</label>
+                  <select id="textnature">
+                  <option value="letter">Single letter</option>
+                  <option value="word">Single word</option>
+                  <option value="line">A line</option>
+                  <option value="para">A Paragraph</option>
+                  <option value="num">Numeric</option>
+                  <option value="date">Date</option>
+                  </select>
+              </div>
+
+              <div>
+                <label for="language" style="margin-right: 5px;">Select the language of this text</label>
+                <select id="language">
+                <option value="eng">English</option>
+                <option value="spa">Spanish</option>
+                <option value="fre">French</option>
+                <option value="chi">Chinese</option>
+                <option value="ger">German</option>
+                <option value="tam">Tamil</option>
+                </select>
+              </div>
+
+              <div id="keyblock" style="border:1px solid gray; padding-left: 5px; margin-top: 5px;">
+                <div class="checkbox" id="keydiv">
+                  <label><input type="checkbox" value="" onchange="showkeyoptions(this)" id="keycheckbox">Map to a key</label>
+                </div>
+                <div id="keyoptions">
+  
+                    <div style="display: table; width: 100%;">
+                      <div style="display: table-cell;"><input type="text" class="form-control" id="foundkeytxt" placeholder="Enter key here"></div>
+                      <div style="display: table-cell;"><button class="btn-keycapture" id="capturekey" onclick="closemodal()" type="button">Capture key from image</button></div>
+                    </div>
+  
+                    <div id="keyfields">
+                      <div><h5 style="font-weight: bold;">Cropped key image :</h5></div>
+                      <center><div style="margin: 10px;"><img id="croppedkeyimg" src="" style="max-width: 300px;"></div></center>
+                    </div>
+  
+                    <label for="kposition" style="margin-right: 5px; margin-left: 50px;">This text will be found at which side of the key ?</label>
+                    <select id="kposition">
+                    <option value="top">Top</option>
+                    <option value="middle">Right</option>
+                    <option value="middle">Left</option>
+                    <option value="bottom">Below</option>
+                    </select>
+  
+                    <label for="ktol" style="margin-right: 5px; margin-left: 50px;">Select the tolerence error percentage for key</label>
+                    <select id="ktol">
+                      <option value="10">10 %</option>
+                      <option value="20">20 %</option>
+                      <option value="30">30 %</option>
+                      <option value="40">40 %</option>
+                      <option value="50">50 %</option>
+                    </select>
+                    
+                </div>
+              </div>
+
+              <div id="headerblock" style="border:1px solid gray; padding-left: 5px; margin-top: 5px;">
+                <div class="checkbox" id="headerdiv">
+                  <label><input type="checkbox" value="" onchange="showheaderoptions(this)" id="headercheckbox">This is header attribute</label>
+                </div>
+                <div id="headeroptions">
+                    <label for="hposition" style="margin-right: 5px; margin-left: 50px;">This header text can be found at which part of the image ?</label>
+                    <select id="hposition">
+                    <option value="top">Top</option>
+                    <option value="middle">Middle</option>
+                    <option value="bottom">Bottom</option>
+                    </select>
+  
+                    <label for="htol" style="margin-right: 5px; margin-left: 50px;">Select the tolerence error percentage</label>
+                    <select id="htol">
+                    <option value="10">10 %</option>
+                    <option value="20">20 %</option>
+                    <option value="30">30 %</option>
+                    <option value="40">40 %</option>
+                    <option value="50">50 %</option>
+                    </select>
+                </div>
+              </div>
+
+              <div id="footerblock" style="border:1px solid gray; padding-left: 5px; margin-top: 5px;">
+                <div class="checkbox" id="footerdiv">
+                  <label><input type="checkbox" value="" onchange="showfooteroptions(this)" id="footercheckbox">This is footer attribute</label>
+                </div>
+                <div id="footeroptions">
+                    <label for="fposition" style="margin-right: 5px; margin-left: 50px;">This footer text can be found at which part of the image ?</label>
+                    <select id="fposition">
+                    <option value="top">Top</option>
+                    <option value="middle">Middle</option>
+                    <option value="bottom">Bottom</option>
+                    </select>
+  
+                    <label for="ftol" style="margin-right: 5px; margin-left: 50px;">Select the tolerence error percentage</label>
+                    <select id="ftol">
+                    <option value="10">10 %</option>
+                    <option value="20">20 %</option>
+                    <option value="30">30 %</option>
+                    <option value="40">40 %</option>
+                    <option value="50">50 %</option>
+                    </select>
+                </div>
+              </div>
+            </form>
+            <div>
+              <center><button class="btn-cardsave" id="savedata" >Save</button></center>
+            </div>
+            
+          </div>
+
+        </div>
+        
+      </div>
+    </div>
+
+
+     <!-- Modal2 -->
+     <div class="modal fade" id="myModal2" role="dialog">
+      <div class="modal-dialog">
+      
+        <!-- Modal2 content-->
+        <div class="modal-content">
+
+
+          <div class="modal-header" style="padding:10px 10px;">
+            <button type="button" class="close" data-dismiss="modal" id="closebtn">&times;</button>
+            <center><h4 style="color: white;">Enter model name</h4></center>
+          </div>
+
+
+          <div class="modal-body" style="padding:10px 50px;">
+           
+            <form role="form">
+              <div class="form-group" style="margin-top: 15px;">
+                <input type="text" class="form-control" id="modelname" placeholder="Enter model name">
+              </div>
+            </form>
+            <div>
+              <center><button class="btn-cardsave" id="createmodel" >Create model</button></center>
+            </div>
+            
+          </div>
+
+
+          <!-- <div class="modal-footer">
+            <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+            <p>Not a member? <a href="#">Sign Up</a></p>
+            <p>Forgot <a href="#">Password?</a></p>
+          </div> -->
+
+
+        </div>
+        
+      </div>
+    </div>
+
+  <script src="lib/jquery/jquery.min.js"></script>
+  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+  <script class="include" type="text/javascript" src="lib/jquery.dcjqaccordion.2.7.js"></script>
+  <script src="lib/jquery.scrollTo.min.js"></script>
+  <script src="lib/jquery.nicescroll.js" type="text/javascript"></script>
+  <script src="lib/jquery.sparkline.js"></script>
+  <!--common script for all pages-->
+  <script src="lib/common-scripts.js"></script>
+  <script type="text/javascript" src="lib/gritter/js/jquery.gritter.js"></script>
+  <script type="text/javascript" src="lib/gritter-conf.js"></script>
+  <!--script for this page-->
+  <script src="lib/sparkline-chart.js"></script>
+  <script src="lib/zabuto_calendar.js"></script>
+  <script type="application/javascript">
+
+    var count = 2;
+		var xaxis;
+		var yaxis;
+		var width;
+		var heigth;
+		var rotate;
+		var scaleX;
+		var scaleY;
+		var fullheight;
+    var fullwidth;
+    var imgfilemain;
+    var cropperfull;
+    var cropperforenhance;
+    var paramcount = 1
+    
+    function fillkeydata(croppedkeyimg){
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'http://localhost:3000/extracttext', true);
+      xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+      xhr.send(JSON.stringify({ "thumbnail": croppedkeyimg}));
+      xhr.onreadystatechange = function(){
+            if(xhr.readyState != 4) return;
+            if(xhr.status != 200){
+                console.log("Status: " + xhr.status);
+            }else{
+                console.log(xhr.responseText);
+                response = xhr.responseText;
+                str = response.substring(response.indexOf("string\":"));
+                str1 = str.substring(str.indexOf(":")+3);
+                str2 = str1.slice(0, -4);
+                console.log(str2);
+                // foundstr = str2;
+                if (str2 == ""){
+                  // $('#foundkeytxt').text("Cannot extract text from this image");
+                  document.getElementById("foundkeytxt").value = "Cannot extract text from this image";
+                } else {
+                  // $('#foundkeytxt').text(str2);
+                  document.getElementById("foundkeytxt").value = str2;
+                }
+                
+            }
+      };
+    }
+
+    function closemodal(){
+      console.log(cropperfull);
+      $('#myModal').modal('hide');
+      $("#keycapturebtn").css("display", "block");
+      $("#btnCrop").css("display", "none");
+      $("#btnCreateModel").css("display", "none");
+
+      var image = document.getElementById('output');
+      console.log(image);
+
+      var cropper1 = new Cropper(image, {
+        crop(event) {
+          xaxis = event.detail.x;
+          yaxis = event.detail.y;
+          width = event.detail.width;
+          height = event.detail.height;
+          rotate = event.detail.rotate;
+          scaleX = event.detail.scaleX;
+          scaleY = event.detail.scaleY;
+        }
+      });
+      console.log(cropper1);
+
+      document.getElementById("keycapturebtn").onclick = function (event) {
+        $("#keycapturebtn").css("display", "none");
+        $("#btnCrop").css("display", "inline");
+        $("#btnCreateModel").css("display", "inline");
+        $('#myModal').modal('show');
+        $("#keyfields").css("display", "inline");
+
+        var keyimageData = cropperfull.getCroppedCanvas();
+        var croppedkeyimg = keyimageData.toDataURL("image/png");
+        $("#croppedkeyimg").attr("src", croppedkeyimg);
+        fillkeydata(croppedkeyimg);
+      }
+    }
+
+    function showcropper(){
+
+      $('#myModal').modal('hide');
+      $("#keycapturebtn").css("display", "block");
+      $("#btnCrop").css("display", "none");
+      $("#btnCreateModel").css("display", "none");
+      document.getElementById("keycapturebtn").onclick = function (event) {
+        $('#myModal').modal('show');
+        $("#keyfields").css("display", "inline");
+        // fillkeydata(cropper);
+        var image = document.getElementById('output');
+        console.log(image);
+
+        var cropper = new Cropper(image, {
+          crop(event) {
+            xaxis = event.detail.x;
+            yaxis = event.detail.y;
+            width = event.detail.width;
+            height = event.detail.height;
+            rotate = event.detail.rotate;
+            scaleX = event.detail.scaleX;
+            scaleY = event.detail.scaleY;
+          }
+        });
+        console.log(cropper);
+        var imageData = cropper.getCroppedCanvas();
+        var croppedimg = imageData.toDataURL("image/png");
+        console.log(croppedimg);
+        $("#croppedkeyimg").attr("src", croppedimg);
+      }
+    }
+
+		function updateImageDisplay(){
+
+      if (paramcount == 1){
+        var image = document.getElementById('output');
+        console.log(image);
+
+        var cropper = new Cropper(image, {
+          crop(event) {
+            xaxis = event.detail.x;
+            yaxis = event.detail.y;
+            width = event.detail.width;
+            height = event.detail.height;
+            rotate = event.detail.rotate;
+            scaleX = event.detail.scaleX;
+            scaleY = event.detail.scaleY;
+          }
+        });
+        
+
+        document.getElementById("btnCrop").onclick = function (event) {
+
+          // alert("x-axis - " + xaxis + "\n" + "y-axis - " + yaxis + "\n" + "width - " + width + "\n" + "height - " + height + "\n" + "rotate - " + rotate + "\n" + "scaleX - " + scaleX + "\n" + "scaleY - " + scaleY + "\n" + "full height - " + fullheight  + "\n" + "full width - " + fullwidth);
+
+          fullwidth = image.width;
+          fullheight = image.height;
+          cropperfull = cropper;
+          cropperforenhance = cropper;
+          // showmodal(cropper, fullheight, fullwidth);
+          getcroppedpicenhanced(cropper, fullheight, fullwidth);
+        }
+        paramcount = 2;
+      } else{
+        alert("You can capture the parameter")
+      }
+    }
+
+    function getcroppedpicenhanced(cropper, fullheight, fullwidth){
+
+      var imageData = cropper.getCroppedCanvas();
+      var croppedimg = imageData.toDataURL("image/png");
+
+      var foundstr; 
+      var xhr = new XMLHttpRequest();
+
+      xhr.open('POST', 'http://localhost:3000/processcroppedimg', true);
+      xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+      xhr.send(JSON.stringify({ "thumbnail": croppedimg, "threshold": 125, "colorcut": 200}));
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState != 4) return;
+        if(xhr.status != 200){
+            console.log("Status: " + xhr.status);
+        }else{
+            console.log(xhr.responseText);
+            response = xhr.responseText;
+            // str = response.substring(response.indexOf("string\":"));
+            // str1 = str.substring(str.indexOf(":")+3);
+            // str2 = str1.slice(0, -4);
+            // console.log(str2);
+            // foundstr = response;
+            var responseobj = JSON.parse(response);
+            imagestr = responseobj.imagestring;
+            console.log(imagestr);
+            showmodal(imagestr, fullheight, fullwidth, cropper);
+        }
+      };
+
+    }
+
+    function showmodal(enhancedpic, fullheight, fullwidth, cropper){
+      // console.log(cropper);
+      // $("#threoptions").css("display", "none");
+      document.getElementById("threcheckbox").checked="true";
+      cropper = cropperforenhance;
+      $("#myModal").modal();
+      $("myModal").ready(function(){
+
+        $("#keyfields").css("display", "none");
+
+        // var imageData = cropper.getCroppedCanvas();
+        // console.log(imageData);
+        // var croppedimg = enhancedpic.toDataURL("image/png");
+        // console.log(croppedimg);
+        // imgElem.setAttribute('src', "data:image/jpg;base64," + baseStr64);
+        $("#croppedimg").attr("src", "data:image/jpg;base64," + enhancedpic);
+
+        // console.log(imageData);
+
+        var foundstr; 
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('POST', 'http://localhost:3000/extracttext', true);
+        xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify({ "thumbnail": enhancedpic}));
+        xhr.onreadystatechange = function(){
+              if(xhr.readyState != 4) return;
+              if(xhr.status != 200){
+                  console.log("Status: " + xhr.status);
+              }else{
+                  console.log(xhr.responseText);
+                  response = xhr.responseText;
+                  str = response.substring(response.indexOf("string\":"));
+                  str1 = str.substring(str.indexOf(":")+3);
+                  str2 = str1.slice(0, -4);
+                  console.log(str2);
+                  foundstr = str2;
+                  if (str2 == ""){
+                    $('#foundtxt').text("Cannot extract text from this image");
+                  } else {
+                    $('#foundtxt').text(str2);
+                  }
+                  
+              }
+        };
+
+      });
+      document.getElementById("savedata").onclick = function (event) {
+        var label = $('#labeltxt').val();
+        var foundstring = $("#foundtxt").html();
+        var ishead;
+        var isfoot;
+        var selhposition;
+        var selhtol;
+        var selfposition;
+        var selftol;
+        var textnature;
+        var language;
+        var iskey;
+
+        // document.getElementById("threcheckbox").checked="true";
+
+        // $("#threoptions").css("display", "none");
+
+        if($("#headercheckbox").prop('checked') == true){
+            ishead = true;
+            selhposition = $( "#hposition option:selected" ).val();
+            selhtol = $( "#htol option:selected" ).val();
+        }
+        if($("#footercheckbox").prop('checked') == true){
+            isfoot = true;
+            selfposition = $( "#fposition option:selected" ).val();
+            selftol = $( "#ftol option:selected" ).val();
+        }
+
+        if($("#threcheckbox").prop('checked') == true){
+            isthre = true;
+            var colorcut = "-";
+            var threshold = "-";
+        } else {
+            isthre = false;
+            var colorcut = document.getElementById("colorcut").value;
+            var threshold = document.getElementById("threshold").value;
+        }
+
+        // var textNatureDropDown = document.getElementById("textnature");
+        // var textnature = textNatureDropDown.options[textNatureDropDown.selectedIndex].value;
+
+        // var languageDropDown = document.getElementById("language");
+        // var language = languageDropDown.options[languageDropDown.selectedIndex].value;
+
+        textnature = $("#textnature option:selected").val();
+        language = $("#language option:selected").val();
+
+        // alert(textnature + "--" + language);
+
+        if($("#keycheckbox").prop('checked') == true){
+            iskey = true;
+            var keyval = $('#foundkeytxt').val();
+
+            var kpositionDropDown = document.getElementById("kposition");
+            var kposition = kpositionDropDown.options[kpositionDropDown.selectedIndex].value;
+
+            var ktolDropDown = document.getElementById("ktol");
+            var ktol = ktolDropDown.options[ktolDropDown.selectedIndex].value;
+        } else {
+            iskey = false;
+        }
+        
+        if (label == ""){
+          alert("Enter a label");
+        } else if (label != "") {
+          updateTable(cropper, fullheight, fullwidth, label, foundstring, ishead, selhposition, selhtol, isfoot, selfposition, selftol, isthre, colorcut, threshold, textnature, language, iskey, kposition, ktol, keyval);
+          $('.checkbox').prop("checked", false);
+          $("input:checkbox").prop("checked", false);
+          $("p").text("Extracting text...");
+          $("input:text").val("");
+          $("#headerdiv").css("display", "block");
+          $("#footerdiv").css("display", "block");
+          $("#keyoptions").css("display", "none");
+          $("#footeroptions").css("display", "none");
+          $("#headeroptions").css("display", "none");
+          $('#myModal').modal('toggle');
+          $("#keycapturebtn").css("display", "none");
+          $("#btnCrop").css("display", "inline");
+          $("#btnCreateModel").css("display", "inline");
+          document.getElementById("threcheckbox").checked="true";
+          $("#threoptions").css("display", "none");
+        }
+      }
+      // updateImageDisplay();
+      // document.getElementById("threcheckbox").checked="true";
+    }
+    
+    function showmodal2(){
+
+      $("#myModal2").modal();
+      document.getElementById("createmodel").onclick = function (event) {
+        var modelname = $('#modelname').val();
+        if (modelname == ""){
+          alert("Enter a model name");
+        } else if (modelname != "") {
+          createmodel(modelname);
+          $("input:text").val("");
+          $('#myModal2').modal('toggle');
+        }
+      }
+    }
+
+		function updateTable(cropper, fullheight, fullwidth, label, foundstr, header, hposition, htol, footer, fposition, ftol, isthre, colorcut, threshold, textnature, language, iskey, kposition, ktol, keyval){
+
+      createnewrow(count);
+
+      // alert(isthre + "-" + colorcut + "-" + threshold + "-" + textnature + "-" + language + "-" + iskey + "-" + kposition + "-" + ktol);
+        
+      var myTable1 = document.getElementById('myTable1');
+      myTable1.rows[count].cells[0].innerHTML = label;
+      
+      var myTable = document.getElementById('myTable');
+
+      xaxis = Math.round(xaxis);
+      yaxis = Math.round(yaxis);
+      width = Math.round(width);
+      height = Math.round(height);
+      myTable.rows[count].cells[1].innerHTML = xaxis;
+      myTable.rows[count].cells[2].innerHTML = yaxis;
+      myTable.rows[count].cells[3].innerHTML = width;
+      myTable.rows[count].cells[4].innerHTML = height;
+      myTable.rows[count].cells[5].innerHTML = rotate;
+      myTable.rows[count].cells[6].innerHTML = scaleX;
+      myTable.rows[count].cells[7].innerHTML = scaleY;
+      myTable.rows[count].cells[8].innerHTML = fullwidth;
+      myTable.rows[count].cells[9].innerHTML = fullheight;
+      myTable.rows[count].cells[10].innerHTML = label;
+      myTable.rows[count].cells[12].innerHTML = header;
+      myTable.rows[count].cells[13].innerHTML = hposition;
+      myTable.rows[count].cells[14].innerHTML = htol;
+      myTable.rows[count].cells[15].innerHTML = footer;
+      myTable.rows[count].cells[16].innerHTML = fposition;
+      myTable.rows[count].cells[17].innerHTML = ftol;
+
+      myTable.rows[count].cells[18].innerHTML = isthre;
+      myTable.rows[count].cells[19].innerHTML = colorcut;
+      myTable.rows[count].cells[20].innerHTML = threshold;
+      myTable.rows[count].cells[21].innerHTML = textnature;
+      myTable.rows[count].cells[22].innerHTML = language;
+      myTable.rows[count].cells[23].innerHTML = iskey;
+      myTable.rows[count].cells[24].innerHTML = kposition;
+      myTable.rows[count].cells[25].innerHTML = ktol;
+      myTable.rows[count].cells[26].innerHTML = keyval;
+
+      // var imageData = cropper.getCroppedCanvas();
+      // var croppedimg = imageData.toDataURL("image/png");
+
+      // const imgFile = croppedimg;
+
+      myTable1.rows[count].cells[1].innerHTML = foundstr;
+      myTable.rows[count].cells[11].innerHTML = foundstr;
+      count = count + 1;
+			
+		}
+
+		function createmodel(modelname){
+
+			// var modelname = document.getElementById('modelname').value;
+
+			if (modelname == "") {
+                alert("Please enter the model name");
+            }
+            else {
+
+            	var http = new XMLHttpRequest();
+              var url = 'http://localhost:3000/createmodel';
+              var params = 'modelname=' + modelname;
+              http.open('POST', url, true);
+
+              http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+              http.onreadystatechange = function() {
+                  if(http.readyState == 4 && http.status == 200) {
+                      // alert(http.status);
+                      if (http.status == 200){
+                        trainmodel(modelname);
+                      } else {
+                        alert("failed to create a model")
+                      }
+                  }
+              }
+              http.send(params);
+            }
+
+		}
+
+		function trainmodel(modelname){
+			var modelname = modelname;
+			var json = [];
+			var myTab = document.getElementById('myTable');
+	        for (i = 2; i < myTab.rows.length; i++) {
+	            var objCells = myTab.rows.item(i).cells;
+
+	            var sno = objCells.item(0).innerHTML;
+	            var xaxisl = objCells.item(1).innerHTML;
+	            var yaxisl = objCells.item(2).innerHTML;
+	            var widthl = objCells.item(3).innerHTML;
+	            var heightl = objCells.item(4).innerHTML;
+	            var rotatel = objCells.item(5).innerHTML;
+	            var scalexl = objCells.item(6).innerHTML;
+	            var scaleyl = objCells.item(7).innerHTML;
+	            var fullwidthl = objCells.item(8).innerHTML;
+	            var fullheightl = objCells.item(9).innerHTML;
+	            var labell = objCells.item(10).innerHTML;
+              var textl = objCells.item(11).innerHTML;
+              var headerl = objCells.item(12).innerHTML;
+              var hpositionl = objCells.item(13).innerHTML;
+              var htoll = objCells.item(14).innerHTML;
+              var footerl = objCells.item(15).innerHTML;
+              var fpositionl = objCells.item(16).innerHTML;
+              var ftoll = objCells.item(17).innerHTML;
+
+              var isthre = objCells.item(18).innerHTML;
+              var colorcut = objCells.item(19).innerHTML;
+              var threshold = objCells.item(20).innerHTML;
+              var textnature = objCells.item(21).innerHTML;
+              var language = objCells.item(22).innerHTML;
+              var iskey = objCells.item(23).innerHTML;
+              var kposition = objCells.item(24).innerHTML;
+              var ktol = objCells.item(25).innerHTML;
+              var keyval = objCells.item(26).innerHTML;
+
+              if (headerl == "undefined"){
+                headerl = "-";
+              }
+              if (hpositionl == "undefined"){
+                hpositionl = "-";
+              }
+              if (htoll == "undefined"){
+                htoll = "-";
+              }
+              if (footerl == "undefined"){
+                footerl = "-";
+              }
+              if (fpositionl == "undefined"){
+                fpositionl = "-";
+              }
+              if (ftoll == "undefined"){
+                ftoll = "-";
+              }
+              if (kposition == "undefined"){
+                kposition = "-";
+              }
+              if (ktol == "undefined"){
+                ktol = "-";
+              }
+              if (keyval == "undefined"){
+                keyval = "-";
+              }
+
+              // builderstring = '"' + sno + '": {"xaxis":"' + xaxisl + '", "yaxis":"' + yaxisl + '", "width":"' + widthl + '", "height":"' + heightl + '", "rotate":"' + rotatel + '", "scalex":"' + scalexl + '", "scaley":"' + scaleyl + '", "fullwidth":"' + fullwidthl + '", "fullheight":"' + fullheightl + '", "lable":"' + labell + '", "text":"' + textl + '"}';
+              // builderstring = '"' + sno + '": {"xaxis":"' + xaxisl + '", "yaxis":"' + yaxisl + '", "width":"' + widthl + '", "height":"' + heightl + '", "rotate":"' + rotatel + '", "scalex":"' + scalexl + '", "scaley":"' + scaleyl + '", "fullwidth":"' + fullwidthl + '", "fullheight":"' + fullheightl + '", "lable":"' + labell + '", "text":"' + textl + '", "header":"' + headerl + '", "hposition":"' + hpositionl + '", "htol":"' + htoll + '", "footer":"' + footerl + '", "fposition":"' + fpositionl + '", "ftol":"' + ftoll + '"}';
+              // builderstring = '"' + sno + '": {"xaxis":"' + xaxisl + '", "yaxis":"' + yaxisl + '", "width":"' + widthl + '", "height":"' + heightl + '", "rotate":"' + rotatel + '", "scalex":"' + scalexl + '", "scaley":"' + scaleyl + '", "fullwidth":"' + fullwidthl + '", "fullheight":"' + fullheightl + '", "lable":"' + labell + '", "text":"' + textl + '", "header":"' + headerl + '", "hposition":"' + hpositionl + '", "htol":"' + htoll + '", "footer":"' + footerl + '", "fposition":"' + fpositionl + '", "isthre":"' + isthre + '", "colorcut":"' + colorcut + '", "threshold":"' + threshold + '", "textnature":"' + textnature + '", "language":"' + language + '", "iskey":"' + iskey + '", "kposition":"' + kposition + '", "ktol":"' + ktol + '", "ftol":"' + ftoll + '"}';
+              builderstring = '"' + sno + '": {"xaxis":"' + xaxisl + '", "yaxis":"' + yaxisl + '", "width":"' + widthl + '", "height":"' + heightl + '", "rotate":"' + rotatel + '", "scalex":"' + scalexl + '", "scaley":"' + scaleyl + '", "fullwidth":"' + fullwidthl + '", "fullheight":"' + fullheightl + '", "lable":"' + labell + '", "text":"' + textl + '", "header":"' + headerl + '", "hposition":"' + hpositionl + '", "htol":"' + htoll + '", "footer":"' + footerl + '", "fposition":"' + fpositionl + '", "isthre":"' + isthre + '", "colorcut":"' + colorcut + '", "threshold":"' + threshold + '", "textnature":"' + textnature + '", "language":"' + language + '", "iskey":"' + iskey + '", "kposition":"' + kposition + '", "ktol":"' + ktol + '", "keyval":"' + keyval + '", "ftol":"' + ftoll + '"}';
+              json.push(builderstring);
+	           
+	        }
+	        json = json.toString();
+	        json = "{" + json + "}"
+	        console.log(json);
+	        loaddata(json, modelname);
+		}
+
+		function loaddata(json, modelname){
+			var xhr = new XMLHttpRequest();
+			var url = "http://localhost:3000/trainmodel";
+			xhr.open("POST", url, true);
+			xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			xhr.setRequestHeader("modelname", modelname);
+			// xhr.send(JSON.stringify(json));
+			xhr.send(json);
+			xhr.onreadystatechange = function () {
+			    if (xhr.readyState === 4 && xhr.status === 200) {
+			        var json = JSON.parse(xhr.responseText);
+			        var output = xhr.response;
+			        alert ("Model created successfully")
+			    }
+			}
+		}
+
+		function createnewrow() {
+
+      var table1 = document.getElementById("myTable1");
+      var row = table1.insertRow(count);
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+
+      var button = document.createElement('input');
+
+      button.setAttribute('type', 'button');
+      button.setAttribute('value', 'X');
+      button.setAttribute('onclick', 'removeRow(this)');
+
+      cell3.appendChild(button);
+
+			var table = document.getElementById("myTable");
+			var row = table.insertRow(count);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			var cell3 = row.insertCell(2);
+			var cell4 = row.insertCell(3);
+			var cell5 = row.insertCell(4);
+			var cell6 = row.insertCell(5);
+			var cell7 = row.insertCell(6);
+			var cell8 = row.insertCell(7);
+			var cell9 = row.insertCell(8);
+			var cell10 = row.insertCell(9);
+			var cell11 = row.insertCell(10);
+			var cell12 = row.insertCell(11);
+      var cell13 = row.insertCell(12);
+      var cell14 = row.insertCell(13);
+      var cell15 = row.insertCell(14);
+      var cell16 = row.insertCell(15);
+      var cell17 = row.insertCell(16);
+      var cell18 = row.insertCell(17);
+      var cell19 = row.insertCell(18);
+      var cell20 = row.insertCell(19);
+      var cell21 = row.insertCell(20);
+      var cell22 = row.insertCell(21);
+      var cell23 = row.insertCell(22);
+      var cell24 = row.insertCell(23);
+      var cell25 = row.insertCell(24);
+      var cell26 = row.insertCell(25);
+      var cell27 = row.insertCell(26);
+      var cell28 = row.insertCell(27);
+
+      var button = document.createElement('input');
+
+      button.setAttribute('type', 'button');
+      button.setAttribute('value', 'Remove');
+      button.setAttribute('onclick', 'removeRow(this)');
+
+      cell28.appendChild(button);
+
+      cell1.innerHTML = count - 1;
+    }
+
+    function removeRow(oButton) {
+
+	    var empTab = document.getElementById('myTable');
+      empTab.deleteRow(oButton.parentNode.parentNode.rowIndex);
+      
+      var empTab1 = document.getElementById('myTable1');
+      empTab1.deleteRow(oButton.parentNode.parentNode.rowIndex);
+      
+	    count = count - 1;
+    }
+
+    $(document).ready(function(){
+      $("#headeroptions").css("display", "none");
+      $("#footeroptions").css("display", "none");
+      $("#keyoptions").css("display", "none");
+      // $("$keycapturebtn").css("display", "none");
+      $("#threoptions").css("display", "none");
+      $("#thrediv").css("display", "block");
+    });
+
+    function showheaderoptions(obj) {
+      if($(obj).is(":checked")){
+        $("#headeroptions").css("display", "inline");
+        $("#footerdiv").css("display", "none");
+        $("#page-header-inner").addClass("sticky");
+      }else{
+        $("#headeroptions").css("display", "none");
+        $("#footerdiv").css("display", "block");
+      }
+    }
+
+    function showfooteroptions(obj) {
+      if($(obj).is(":checked")){
+        $("#footeroptions").css("display", "inline");
+        $("#page-header-inner").addClass("sticky");
+        $("#headerdiv").css("display", "none");
+      }else{
+        $("#footeroptions").css("display", "none");
+        $("#headerdiv").css("display", "block");
+      }
+    }
+
+    function showkeyoptions(obj) {
+      if($(obj).is(":checked")){
+        $("#keyoptions").css("display", "inline");
+        // $("#page-header-inner").addClass("sticky");
+        // $("#keydiv").css("display", "none");
+      }else{
+        $("#keyoptions").css("display", "none");
+        $("#keydiv").css("display", "block");
+      }
+    }
+
+    function showthreoptions(obj) {
+      if($(obj).is(":checked")){
+        $("#threoptions").css("display", "none");
+        $("#thrediv").css("display", "block");
+      }else{
+        $("#threoptions").css("display", "inline");
+        // $("#page-header-inner").addClass("sticky");
+        // $("#keydiv").css("display", "none");
+      }
+    }
+
+    function getupdatedimage(){
+      $('#foundtxt').text("Extracting updated text...");
+      var inputthreshold = document.getElementById("colorcut").value;
+      var inputcolorcut = document.getElementById("threshold").value;
+      // alert(inputcolorcut + "-------" + inputthreshold);
+      var imageData = cropperforenhance.getCroppedCanvas();
+      var croppedimg = imageData.toDataURL("image/png");
+      console.log(croppedimg);
+
+      var foundstr; 
+      var xhr = new XMLHttpRequest();
+
+      xhr.open('POST', 'http://localhost:3000/processcroppedimg', true);
+      xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+      xhr.send(JSON.stringify({ "thumbnail": croppedimg, "threshold": inputthreshold, "colorcut": inputcolorcut}));
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState != 4) return;
+        if(xhr.status != 200){
+            console.log("Status: " + xhr.status);
+        }else{
+            console.log(xhr.responseText);
+            response = xhr.responseText;
+            // str = response.substring(response.indexOf("string\":"));
+            // str1 = str.substring(str.indexOf(":")+3);
+            // str2 = str1.slice(0, -4);
+            // console.log(str2);
+            // foundstr = response;
+            var responseobj = JSON.parse(response);
+            imagestr = responseobj.imagestring;
+            updatedstr = responseobj.updatedresultstring;
+            console.log(imagestr);
+            // showmodal(imagestr, fullheight, fullwidth, cropper);
+            $("#croppedimg").attr("src", "data:image/jpg;base64," + imagestr);
+            $('#foundtxt').text(updatedstr);
+        }
+      };
+    }
+
+    $(function(){
+        $('#closebtn').click(function() {
+            $('.checkbox').prop("checked", false);
+            $("input:checkbox").prop("checked", false);
+            $("p").text("Extracting text...");
+            $("input:text").val("");
+            $("#keydiv").css("display", "block");
+            $("#headerdiv").css("display", "block");
+            $("#footerdiv").css("display", "block");
+            $("#keyoptions").css("display", "none");
+            $("#footeroptions").css("display", "none");
+            $("#headeroptions").css("display", "none");
+            document.getElementById("threcheckbox").checked="true";
+        });
+    });
+
+  </script>
+
+</body>
+
+</html>

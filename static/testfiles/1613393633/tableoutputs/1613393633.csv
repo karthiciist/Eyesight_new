@@ -1,0 +1,14 @@
+,0,1,2,3,4
+0,SNO,Description,Quantity,Rate,Amount
+1,,,Hourly,USD,USD
+2,1,ITS DA Data Management - Abdul Hameed Kareem,,,
+3,,From line item 2 Purchase order 1515729,184,32.3,"5,943.20"
+4,2,ITS DA Data Management - Narasimha Rao,,,
+5,,Chandramouli From line item 4 Purchase order,,,
+6,,1515729,184,31.7,"5,832.80"
+7,3,ITS DA Data Management - Subrahmanyam,,,
+8,,Peddagari From line item 6 Purchase order,,,
+9,,1515729,176,28,"4,928.00"
+10,4,ITS DA Data Management - Selvakumar S From,,,
+11,,line item 8 Purchase order 1515729,176,25,"4,400.00"
+12,,Amount in words : US DOLLAR TWENTY-ONE THOUSAND,,,

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" class="js">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>Welcome to EYESIGHT</title>
+
+  <!-- Favicons -->
+  <link href="img/favicon.png" rel="icon">
+  <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!--external css-->
+  <link href="lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="css/zabuto_calendar.css">
+  <link rel="stylesheet" type="text/css" href="lib/gritter/css/jquery.gritter.css" />
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/style-responsive.css" rel="stylesheet">
+  <script src="lib/chart-master/Chart.js"></script>
+  <script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
+  <style type="text/css">
+      *,
+      *:after,
+      *:before {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      table, th, td {
+        border: solid 1px #CCC;
+      }
+
+      table {
+        width: 100%;
+      }
+
+      th, td {
+        padding: 0;
+        text-align: center;
+      }
+    </style>
+
+
+</head>
+
+<body>
+  <section id="container">
+ 
+    <header class="header black-bg">
+      <div class="sidebar-toggle-box">  
+        <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+      </div>
+      <!--logo start-->
+      <a href="dashboard.html" class="logo"><b>EY<span>ESIGHT</span></b></a>
+      <!--logo end-->
+      <div class="top-menu">
+        <ul class="nav pull-right top-menu">
+          <li><a class="logout" href="/eyesight">Logout</a></li>
+        </ul>
+      </div>
+    </header>
+    <aside>
+      <div id="sidebar" class="nav-collapse ">
+        <ul class="sidebar-menu" id="nav-accordion">
+          <li class="mt">
+            <a href="dashboard.html">
+              <i class="fa fa-dashboard"></i>
+              <span>Dashboard</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="ocrsolutions.html">
+              <i class="fa fa-eye"></i>
+              <span>OCR Solutions</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a class="active" href="trainedmodels.html">
+              <i class="fa fa-th"></i>
+              <span>Trained models</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="createmodelwithmodal.html">
+              <i class="fa fa-plus-square-o"></i>
+              <span>Create a model</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="retrainwithmodal.html">
+              <i class="fa fa-refresh"></i>
+              <span>Retrain a model</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="pdfoperations.html">
+              <i class="fa fa-cogs"></i>
+              <span>PDF Operations</span>
+            </a>
+          </li>
+          <li class="sub-menu">
+            <a href="trainedpdfmodels.html">
+              <i class="fa fa-cogs"></i>
+              <span>PDF Trained models</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="javascript:;">
+              <i class="fa fa-book"></i>
+              <span>Help center</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="javascript:;">
+              <i class="fa fa-cogs"></i>
+              <span>Settings</span>
+              </a>
+          </li>
+      </div>
+    </aside>
+
+    <div style="margin-left:16%; padding-top: 5%; padding-right: 1%" id="div1">
+
+      <center>
+        <div>
+          <h3 id="title">Title here</h3>
+        </div>
+      </center>
+
+      <div style="margin-top: 2%"></div>
+
+      <form id="myform">
+
+        <center>
+          <div class="box">
+            <input type="file" name="filename[]" id="filename" class="inputfile inputfile-6" data-multiple-caption="{count} files selected" multiple>
+            <label for="filename"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> Choose a file&hellip;</strong></label>
+          </div>
+        </center>
+
+        <script src="lib/custom-file-input.js"></script>
+
+        <!-- <div style="margin-top: 2%"></div> -->
+
+        <center><input type="button" name="button" value="Send" onclick="img()" class="btn-send"><input type="button" id="tocsv" class="btn-send" value="Export to csv" onclick="formcsvheader()" align="center" /></center>
+
+      </form>
+
+      <div style="margin-top: 2%"></div>
+
+      <div id="loading" style="display: none;">
+        <center>
+          <img src="img/scan.gif" alt="Loading..." width=300px/>
+          <p>Scanning your images. This will take some time. Please hold on...</p>
+        </center>
+      </div>
+
+      <div style="font-family: Arial, Helvetica, sans-serif">
+        <table id="myTable" style="width:90%" align="center">
+        </table>
+      </div>
+
+    </div>
+
+  <script src="lib/jquery/jquery.min.js"></script>
+  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+  <script class="include" type="text/javascript" src="lib/jquery.dcjqaccordion.2.7.js"></script>
+  <script src="lib/jquery.scrollTo.min.js"></script>
+  <script src="lib/jquery.nicescroll.js" type="text/javascript"></script>
+  <script src="lib/jquery.sparkline.js"></script>
+  <!--common script for all pages-->
+  <script src="lib/common-scripts.js"></script>
+  <script type="text/javascript" src="lib/gritter/js/jquery.gritter.js"></script>
+  <script type="text/javascript" src="lib/gritter-conf.js"></script>
+  <!--script for this page-->
+  <script src="lib/sparkline-chart.js"></script>
+  <script src="lib/zabuto_calendar.js"></script>
+  <script type="text/javascript" src="lib/html2CSV.js" ></script>
+  <script type="application/javascript">
+
+  // fetchmodels();
+
+  var tableheaders = [];
+
+  setmodelname();
+
+  $(document).ready(function() {
+    $("#tocsv").css("display", "none");
+  });
+
+  function formcsvheader(){
+    $('#myTable').table2CSV({header:tableheaders});
+  }
+
+  let table = document.querySelector("table");
+  let count = 0;
+
+
+  function generateTableHead(table, data) {
+    let thead = table.createTHead();
+    let row = thead.insertRow();
+    for (let key of data) {
+      let th = document.createElement("th");
+      let text = document.createTextNode(key);
+      th.appendChild(text);
+      row.appendChild(th);
+    }
+    return
+  }
+
+
+  function generateTable(table, data) {
+    $("#loading").css("display", "none");
+    let row = table.insertRow();
+    for (let element of data) {
+      let cell = row.insertCell();
+      // let text = document.createTextNode(element);
+      // let text = document.innerHTML(element)
+      // cell.appendChild(text);
+      element = element.replace(/^\s*[\r\n]/gm, '');
+      cell.innerHTML = element
+    }
+    let buttoncell = row.insertCell();
+
+    var button = document.createElement('input');
+    button.setAttribute('type', 'button');
+    button.setAttribute('value', 'Retrain');
+    button.setAttribute('onclick', 'redirecttoretrain()');
+    buttoncell.appendChild(button);
+    $("#tocsv").css("display", "inline");
+    return
+  }
+
+
+  function redirecttoretrain(){
+    // alert("redirect to retrain window")
+    window.location.href = 'file:///C:/Users/ET437GL/Documents/EYESIGHT/EYESIGHT_final/ongoing/retrainwithmodal.html'
+  }
+
+  function wait(ms) {
+    const start = performance.now();
+    while(performance.now() - start < ms);
+  }
+
+  function img(){
+
+    $("#loading").css("display", "inline");
+
+    var modelname=localStorage.getItem("modelname");
+    var files = document.getElementById("filename").files;
+
+    for (var i = 0; i < files.length; i++){
+      // wait(2000);
+      sendafile(files[i], modelname);
+      wait(2000);
+    }
+  }
+
+  function sendafile(file, modelname){
+    var formdata = new FormData();
+    formdata.append('file', file);
+    formdata.append('model', modelname);
+
+    fetch('http://localhost:3000/receiveimage', {
+      // mode: 'no-cors',
+        method: 'POST',
+        body: formdata
+    }).then(
+      function(response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function(text) {
+          console.log(text);
+          
+          var array = JSON.parse(text);
+          // console.log(array.string);
+          stringvalue = array.string;
+          stringvalue = stringvalue.replace(/'/g, "");
+          // stringvalue = stringvalue.replace("'", "");
+          console.log(stringvalue);
+          var values = JSON.parse(stringvalue);
+          console.log(values);
+          createtable();
+          generateTable(table, values);
+        });
+        }
+      }
+    ).catch(function(err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+  }
+
+
+  function setmodelname(){
+    var modelname=localStorage.getItem("modelname");
+    // alert(modelname);
+
+    var newDiv = document.createElement("div"); 
+    var x = document.createElement("H3");
+    x.setAttribute("align", "center")
+    x.innerText = "Consuming model - " + modelname;
+
+    newDiv.appendChild(x);
+
+    var currentDiv = document.getElementById("title"); 
+    currentDiv.innerHTML = "Consuming model - " + modelname;
+
+  }
+
+
+  function createtable(){
+    var model = localStorage.getItem("modelname");
+    var formdata = new FormData();
+    formdata.append('model', model);
+
+    fetch('http://localhost:3000/gettitles', {
+        method: 'POST',
+        body: formdata
+    }).then(
+        function(response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            return response.text().then(function(text) {
+            // alert(text);
+            text = text.replace(/'/g, "\"");
+            console.log(text);
+            var array = JSON.parse(text);
+            tableheaders = JSON.parse(text);
+            console.log(array);
+            if (count == 0){
+              generateTableHead(table, array)
+              count = 1;
+            }
+          });
+          }
+        }
+      ).catch(function(err) {
+        console.log('Fetch Error :-S', err);
+    });
+    return
+  }
+
+  </script>
+</body>
+</html>

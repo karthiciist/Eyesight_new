@@ -1,0 +1,7 @@
+,0,1,2,3,4,5
+0,Components,Quantity,UoM,Rate,UoM,Amount(INR)
+1,Regas Charges,35963.140,MMBTU (Gross),61.07,INR / MMBTU(G),2196269.14
+2,Price (foreign Comp),35963.140,MMBTU (Gross),7.1609,USDN / MMBTU(G),19559274.59
+3,Price (Swap Spread),35963.140,MMBTU (Gross),0.19,USDN / MMBTU(G),518948.15
+4,Gas Trans Tariff 1,35963.140,MMBTU (Gross),39.85,INR / MMBTU(G),1433131.27
+5,Reimb. of GST Cost on Trans Charges,0.000,,12,%,171975.75

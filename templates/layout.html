@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% block head %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>Welcome to EYESIGHT</title>
+
+  <link href="static/images/favicon.png" rel="icon">
+  <link href="static/images/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- <link href="static/styles/bootstrap.min.css" rel="stylesheet"> -->
+  <link href="static/lib/font-awesome/css/font-awesome.css" rel="stylesheet">
+  <link href="static/styles/style.css" rel="stylesheet">
+  <link href="static/styles/style-responsive.css" rel="stylesheet">
+  <link href="static/styles/new-ui.css" rel="stylesheet">
+  {% endblock %}
+</head>
+
+<body class="d-flex flex-column">
+  <div class="d-flex header position-relative theme-bg pl-4 py-2 align-items-center">
+    <!-- <div class="fa fa-bars hamburger-icon mr-2"></div> -->
+    <a href="dashboardpage" class="logo text-light m-0 font-weight-bold">EY<span>ESIGHT</span></a>
+    <a class="ml-auto btn btn-outline-light btn-sm mr-3 px-2 py-1 text-center d-flex align-items-center"
+      href="/eyesight">Logout</a>
+  </div>
+  <div class="d-flex flex-fill overflow-auto">
+    <div class="d-flex flex-column sidenav">
+      <a id="dashboard-menu" href="dashboardpage"
+        class="icon active theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">
+        <i class="fa fa-dashboard"></i>
+        <span class="text-center">Dashboard</span>
+      </a>
+      <a id="models-new-menu" href="modelspage"
+        class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">
+        <i class="fa fa-th"></i>
+        <span class="text-center">Models</span>
+      </a>
+      <a id="ocr-solutions-menu" href="ocrsolutionspage"
+        class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">
+        <i class="fa fa-eye"></i>
+        <span class="text-center">Clusters</span>
+      </a>
+      <a id="classifiers-model-menu" href="trainedclassifierspage"
+        class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">
+        <i class="fa fa-arrows"></i>
+        <span class="text-center">Classifiers</span>
+      </a>
+      <a id="import-model-menu"
+        class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">
+        <i class="fa fa-download"></i>
+        <span class="text-center">Import</span>
+      </a>
+      <!-- <a id="trained-models-menu" href="trainedmodelspage"
+        class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">
+        <i class="fa fa-th"></i>
+        <span class="text-center">Image Models</span>
+      </a> -->
+<!--      <a id="trained-model-menu" href="trainedpdfmodelspage"-->
+<!--        class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">-->
+<!--        <i class="fa fa-object-ungroup"></i>-->
+<!--        <span class="text-center">PDF Models</span>-->
+<!--      </a>-->
+      <!-- <a id="create-model-menu" href="createmodelwithmodalpage"
+        class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">
+        <i class="fa fa-plus-square-o"></i>
+        <span class="text-center">Create Image Model</span>
+      </a>
+      <a id="pdf-operations-menu" href="pdfoperationspage"
+        class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">
+        <i class="fa fa-file-pdf-o"></i>
+        <span class="text-center">Create PDF Model</span>
+      </a> -->
+
+<!--      <a id="model-store-train-menu" href="modelstoretrainpage"-->
+<!--        class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">-->
+<!--        <i class="fa fa-refresh"></i>-->
+<!--        <span class="text-center">Retrain a model</span>-->
+<!--      </a>-->
+<!--      -->
+<!--      <a id="custommodels-store-train-menu" href="custommodelspage"-->
+<!--        class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">-->
+<!--        <i class="fa fa-cart-arrow-down"></i>-->
+<!--        <span class="text-center">Custom models</span>-->
+<!--      </a>-->
+      <a id="batch-running-menu" href="batchespage"
+        class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">
+        <i class="fa fa-tasks"></i>
+        <span class="text-center">Batches</span>
+      </a>
+
+
+      <!-- <a id="help-menu" href="helpcenterpage" class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">
+        <i class="fa fa-book"></i>
+        <span class="text-center">Help center</span>
+      </a>
+      <a id="settings-menu" class="icon theme-bg d-flex flex-column align-items-center p-1 py-3 px-2">
+        <i class="fa fa-cogs"></i>
+        <span class="text-center">Settings</span>
+      </a> -->
+      <span class="flex-fill theme-bg"></span>
+    </div>
+    <div class="d-flex flex-column content flex-fill ml-3 position-relative">
+      {% block body %}
+      {% endblock %}
+    </div>
+  </div>
+  {% block scripts %}
+  <script src="static/lib/jquery/jquery.min.js"></script>
+  <script src="static/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script>
+    function setActiveMenuItem(selector) {
+      $('.sidenav .icon').removeClass('active')
+      $(selector).addClass('active')
+    }
+  </script>
+  {% endblock %}
+</body>
+
+</html>

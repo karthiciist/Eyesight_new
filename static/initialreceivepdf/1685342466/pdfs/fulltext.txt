@@ -1,0 +1,107 @@
+Höganäs Belgium S.A.
+Ruelle Gros Pierre 10
+B-7800 ATH
+Telephone
+32 68 268989
+Fax
+32 68 285775
+RPM Tournai
+BE 0422.056.601
+BANK: Svenska Handelsbanken AB (publ) 
+SWIFT/BIC : HANDSESS
+IBAN (USD): SE63 6000 0000 0000 5262 3459
+IBAN (GBP): SE66 6000 0000 0000 5262 3599
+IBAN (EUR): SE57 6000 0000 0000 5367 6599
+110069
+DP.1 200-300 µM
+3431482
+500.0
+Kg 
+PO5501392296
+0010578922
+1(1)
+Print date
+Page:
+Item number
+Item name
+Lot number
+Quantity
+Customer
+CERTIFICATE OF ANALYSIS
+Your reference
+2021-10-18
+COAMMS480AH-A4
+Delivery
+Shipment
+2555124
+3609828
+Order no
+62525     
+INVISTA TEXTILES (U.K.) LTD.        
+Accounts Payable,                   
+Ermin Street,                       
+Brockworth                          
+Gloucester  Great Britain  GL3 4HP  
+BE1
+2021-10-18
+12:50:21
+MIN
+MAX
+ISSUE 1
+Test result
+Unit
+Specification
+CHEMICAL PROPERTIES
+Carbon
+%
+0.03 %
+ 0.02
+Iron is BALANCE
+ 
+Chromium
+%
+34.0
+37.0 %
+ 34.7
+Silicon
+%
+2.0
+4.0 %
+ 2.7
+Nitrogen
+%
+ 0.091
+PHYSICAL PROPERTIES
+Apparent density (Hall)
+g/cm3
+1.74
+2.06 g/cm3
+ 1.90
+SIEVE ANALYSIS
++425 Microns
+%
+ 0.01
++300 Microns
+%
+10.00 %
+ 4.38
++212 Microns
+%
+ 82.78
++150 Microns
+%
+ 12.81
+-212 Microns
+%
+15.00 %
+ 
+-150 Microns
+%
+1.00 %
+ 0.02
+Approved by
+Inspection certificate
+EN 10 204 3.1
+Carl Mary
+Quality Control Manager
+

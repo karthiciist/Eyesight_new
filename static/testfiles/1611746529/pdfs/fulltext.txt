@@ -1,0 +1,649 @@
+Tax Invoice
+(Original for Recipient)
+Payment Ref:
+E0200BOD3T
+Invoice No:
+TIO21HR100213637
+Invoice Date:
+07/08/2020
+Regd. Office: Microsoft Corporation (India) Private Limited, 807, New Delhi House, Barakhamba Road, New Delhi -110001
+1 of 6
+Bill From / Ship From
+PAN No.
+AAACM5586C
+Sold-To
+Microsoft Corporation (India) Private Limited
+Shed No. 1.1 B situated at 23/5 Delhi Mathura
+Road, Ballabhgarh Haryana 121004, India
+CIN
+U74899DL1988PTC032549
+Vijay Ernst & Young LLP Ernst & Young LLP 1st
+Floor, Divyashree Chambers, Langford town,
+Bangalore Karnataka 560001, India
+Phone Number
+000 800 440 2038 (Mon - Fri, 9am-6pm)
+Web Support:
+azure.microsoft.com/support/options
+GSTIN/UIN No.
+29AAEFE1763C2ZN
+GSTIN No.
+06AAACM5586C1ZL
+PAN No.
+AAEFE1763C
+Billing Summary
+Order ID
+b83e05a5-71e6-4c2a-9097-7ecdfad2a2d1
+Charges
+177,608.90
+Subscription ID
+75176239-f07a-4b03-be22-49494f0f3c08
+Adjustments
+0.00
+Billing Period:
+07/07/2020 - 06/08/2020
+Central Tax
+0%
+0.00
+Due Date:
+06/09/2020
+State Tax
+0%
+0.00
+Payment Terms:
+Net 30 days
+Integrated Tax
+18%
+31,969.60
+State of destination
+Karnataka - 29
+Total Charges
+INR 209,578.50
+RUPEES TWO HUNDRED NINE THOUSAND FIVE HUNDRED SEVENTY EIGHT AND
+FIFTY PAISE ONLY
+Payment Instructions:
+Please DO NOT PAY. You will be charged the amount due through your selected method of payment.
+Authorized Signatory
+Document certified by Microsoft Corporation (India) Pvt Ltd.
+Digitally signed by Microsoft Corporation (India) Pvt Ltd. on Friday,
+August 7, 2020
+Tax Invoice
+(Original for Recipient)
+Payment Ref:
+E0200BOD3T
+Invoice No:
+TIO21HR100213637
+Invoice Date:
+07/08/2020
+Regd. Office: Microsoft Corporation (India) Private Limited, 807, New Delhi House, Barakhamba Road, New Delhi -110001
+2 of 6
+Billing Details
+Pay-As-You-Go
+Service Period
+HSN
+Charges
+Central Tax
+State Tax
+Integrated Tax
+Total
+06/07/2020 - 05/08/2020
+997331
+0.03
+06/07/2020 - 05/08/2020
+997331
+0.04
+06/07/2020 - 05/08/2020
+997331
+0.16
+06/07/2020 - 05/08/2020
+997331
+0.17
+06/07/2020 - 05/08/2020
+997331
+0.87
+06/07/2020 - 05/08/2020
+997331
+0.87
+06/07/2020 - 05/08/2020
+997331
+2.30
+06/07/2020 - 05/08/2020
+997331
+2.87
+06/07/2020 - 05/08/2020
+997331
+21.78
+06/07/2020 - 05/08/2020
+997331
+26.35
+06/07/2020 - 05/08/2020
+997331
+26.42
+06/07/2020 - 05/08/2020
+997331
+136.58
+06/07/2020 - 05/08/2020
+997331
+158.41
+06/07/2020 - 05/08/2020
+997331
+158.62
+06/07/2020 - 05/08/2020
+997331
+614.18
+06/07/2020 - 05/08/2020
+997331
+633.63
+06/07/2020 - 05/08/2020
+997331
+1,267.26
+06/07/2020 - 05/08/2020
+997331
+1,300.92
+06/07/2020 - 05/08/2020
+997331
+1,302.67
+06/07/2020 - 05/08/2020
+997331
+1,822.86
+06/07/2020 - 05/08/2020
+997331
+1,943.13
+06/07/2020 - 05/08/2020
+997331
+2,537.93
+06/07/2020 - 05/08/2020
+997331
+2,772.99
+06/07/2020 - 05/08/2020
+997331
+2,787.97
+06/07/2020 - 05/08/2020
+997331
+2,839.36
+06/07/2020 - 05/08/2020
+997331
+3,801.78
+06/07/2020 - 05/08/2020
+997331
+4,864.56
+06/07/2020 - 05/08/2020
+997331
+4,946.90
+06/07/2020 - 05/08/2020
+997331
+5,941.72
+Tax Invoice
+(Original for Recipient)
+Payment Ref:
+E0200BOD3T
+Invoice No:
+TIO21HR100213637
+Invoice Date:
+07/08/2020
+Regd. Office: Microsoft Corporation (India) Private Limited, 807, New Delhi House, Barakhamba Road, New Delhi -110001
+3 of 6
+06/07/2020 - 05/08/2020
+997331
+7,603.57
+06/07/2020 - 05/08/2020
+997331
+8,139.56
+06/07/2020 - 05/08/2020
+997331
+8,870.83
+06/07/2020 - 05/08/2020
+997331
+8,922.90
+06/07/2020 - 05/08/2020
+997331
+10,138.09
+06/07/2020 - 05/08/2020
+997331
+10,138.09
+06/07/2020 - 05/08/2020
+997331
+10,347.00
+06/07/2020 - 05/08/2020
+997331
+31,777.65
+06/07/2020 - 05/08/2020
+997331
+41,757.88
+Sub-Total
+177,608.90
+0.00
+0.00
+31,969.60
+209,578.50
+06/07/2020 - 05/08/2020
+997331
+0.00
+06/07/2020 - 05/08/2020
+997331
+0.00
+Grand Total
+177,608.90
+0.00
+0.00
+31,969.60
+209,578.50
+Tax Invoice
+(Original for Recipient)
+Payment Ref:
+E0200BOD3T
+Invoice No:
+TIO21HR100213637
+Invoice Date:
+07/08/2020
+Regd. Office: Microsoft Corporation (India) Private Limited, 807, New Delhi House, Barakhamba Road, New Delhi -110001
+4 of 6
+Usage Charges
+Name
+Type
+Resource
+Region
+Consumed
+Included
+Billable
+Rate
+Total
+Bandwidth
+Data Transfer Out
+Zone 1
+111.8063
+5.0000
+106.8063
+5.7504
+614.18
+Bandwidth
+Data Transfer Out
+Zone 2
+8.3310
+5.0000
+3.3310
+7.9316
+26.42
+Virtual Network
+IP Addresses
+Static Public IP
+20,790.0000
+0.0000
+20,790.0000
+0.2379
+4,946.90
+Storage
+Standard Page Blob
+LRS Data Stored
+0.0088
+0.0000
+0.0088
+2.9743
+0.03
+Storage
+Standard Page Blob
+LRS Data Stored
+IN Central
+0.0000
+0.0000
+0.0000
+3.2718
+0.00
+Storage
+Files
+LRS Data Stored
+IN Central
+4.9930
+0.0000
+4.9930
+4.3624
+21.78
+Storage
+Premium Page Blob
+P10 Disks
+IN Central
+0.9999
+0.0000
+0.9999
+1,302.7571
+1,302.67
+Storage
+General Block Blob
+LRS List and Create Container
+Operations
+0.0002
+0.0000
+0.0002
+0.0238
+0.00
+Storage
+General Block Blob
+Read Operations
+1,107.3632
+0.0000
+1,107.3632
+0.0238
+26.35
+Storage
+Tables
+LRS Data Stored
+0.0551
+0.0000
+0.0551
+2.9743
+0.16
+Storage
+General Block Blob
+LRS Write Operations
+36.7528
+0.0000
+36.7528
+0.0238
+0.87
+Storage
+General Block Blob
+Delete Operations
+36.6106
+0.0000
+36.6106
+0.0238
+0.87
+Storage
+Tables
+Batch Write Operations
+7.3439
+0.0000
+7.3439
+0.0238
+0.17
+Storage
+Standard Page Blob
+Disk Write Operations
+96.6546
+0.0000
+96.6546
+0.0238
+2.30
+Storage
+Standard Page Blob
+Disk Read Operations
+120.5127
+0.0000
+120.5127
+0.0238
+2.87
+Storage
+Tables
+LRS Data Stored
+IN Central
+0.0112
+0.0000
+0.0112
+3.2718
+0.04
+Storage
+Standard HDD
+Managed Disks
+S10 Disks
+EU North
+4.9930
+0.0000
+4.9930
+389.1747
+1,943.13
+Virtual Machines
+Dv3/DSv3 Series
+Windows
+D2 v3/D2s v3
+US Central
+741.9167
+0.0000
+741.9167
+13.9463
+10,347.00
+Virtual Machines
+BS Series Windows
+B2ms
+EU North
+741.9167
+0.0000
+741.9167
+6.5567
+4,864.56
+Virtual Machines
+BS Series Windows
+B2ms
+IN Central
+742.9334
+0.0000
+742.9334
+7.9976
+5,941.72
+Virtual Machines
+BS Series Windows
+B4ms
+US North Central
+741.7501
+0.0000
+741.7501
+12.0295
+8,922.90
+Virtual Machines
+BS Series
+B4ms
+US North Central
+741.8501
+0.0000
+741.8501
+10.9720
+8,139.56
+Virtual Machines
+BS Series Windows
+B4ms
+US Central
+9.5667
+0.0000
+9.5667
+14.2768
+136.58
+Virtual Machines
+BS Series Windows
+B2ms
+US Central
+4,451.6513
+0.0000
+4,451.6513
+7.1384
+31,777.65
+Virtual Machines
+BS Series Windows
+B2s
+US Central
+741.9334
+0.0000
+741.9334
+3.8270
+2,839.36
+Virtual Machines
+BS Series Windows
+B2ms
+US North Central
+302.4001
+0.0000
+302.4001
+6.0280
+1,822.86
+Storage
+Standard SSD
+Managed Disks
+E15 Disks
+US Central
+6.9901
+0.0000
+6.9901
+1,269.0480
+8,870.83
+Storage
+Standard SSD
+E20 Disks
+US North Central
+3.9944
+0.0000
+3.9944
+2,538.0960
+10,138.09
+Tax Invoice
+(Original for Recipient)
+Payment Ref:
+E0200BOD3T
+Invoice No:
+TIO21HR100213637
+Invoice Date:
+07/08/2020
+Regd. Office: Microsoft Corporation (India) Private Limited, 807, New Delhi House, Barakhamba Road, New Delhi -110001
+5 of 6
+Managed Disks
+Storage
+Standard SSD
+Managed Disks
+E15 Disks
+US South Central
+0.9986
+0.0000
+0.9986
+1,269.0480
+1,267.26
+Storage
+Standard SSD
+Managed Disks
+E20 Disks
+EU North
+0.9999
+0.0000
+0.9999
+2,538.0960
+2,537.93
+Storage
+Standard SSD
+Managed Disks
+E15 Disks
+US North Central
+7.9887
+0.0000
+7.9887
+1,269.0480
+10,138.09
+Storage
+Standard SSD
+Managed Disks
+E10 Disks
+US North Central
+0.9986
+0.0000
+0.9986
+634.5240
+633.63
+Storage
+Standard SSD
+Managed Disks
+E20 Disks
+US Central
+2.9958
+0.0000
+2.9958
+2,538.0960
+7,603.57
+Storage
+Standard SSD
+Managed Disks
+E4 Disks
+EU North
+0.9999
+0.0000
+0.9999
+158.6310
+158.62
+Storage
+Standard SSD
+Managed Disks
+E4 Disks
+US North Central
+0.9986
+0.0000
+0.9986
+158.6310
+158.41
+Storage
+Standard SSD
+Managed Disks
+E20 Disks
+IN Central
+0.9986
+0.0000
+0.9986
+2,791.9056
+2,787.97
+Storage
+Standard SSD
+Managed Disks
+E10 Disks
+US Central
+5.9916
+0.0000
+5.9916
+634.5240
+3,801.78
+Storage
+Standard SSD
+Managed Disks
+Disk Operations
+20,977.0203
+0.0000
+20,977.0203
+0.1322
+2,772.99
+Storage
+Premium SSD
+Managed Disks
+P10 Disks
+EU North
+0.9986
+0.0000
+0.9986
+1,302.7571
+1,300.92
+Virtual Machines
+BS Series Windows
+B16ms
+US Central
+732.0670
+0.0000
+732.0670
+57.0411
+41,757.88
+Total (INR)
+177,608.90
+Tax Invoice
+(Original for Recipient)
+Payment Ref:
+E0200BOD3T
+Invoice No:
+TIO21HR100213637
+Invoice Date:
+07/08/2020
+Regd. Office: Microsoft Corporation (India) Private Limited, 807, New Delhi House, Barakhamba Road, New Delhi -110001
+6 of 6
+Detailed usage
+Visit https://account.windowsazure.com/Subscriptions to view detailed usage and charges
+Additional Info
+Microsoft Azure offers flexible support options. Click here for more info.
+Discover, purchase, and provision services from Microsoft partners on the Microsoft Azure Marketplace.
+Useful Resources
+Understand your bill
+azure.microsoft.com/support/understand-your-bill
+Support
+azure.microsoft.com/support/options
+Connect with us
+facebook.com/microsoftazure
+Visit Windows Azure blog
+azure.microsoft.com/blog
+

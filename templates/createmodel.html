@@ -1,0 +1,3783 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="static/styles/cropper.css">
+{{ super() }}
+
+<style>
+  /* #canvas { */
+  /* width: 700x; */
+  /* height: 800px; */
+  /* border: 10px solid blue; */
+  /* } */
+
+  .rectangle {
+    border: 1px solid #FF0000;
+    position: absolute;
+  }
+
+  table,
+  th,
+  td {
+    border: solid 1px #CCC;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 0;
+    text-align: center;
+  }
+
+  .tab {
+    overflow: hidden;
+    /* border: 1px solid #ccc; */
+    background-color: #f1f1f1;
+  }
+
+  .tab2 {
+    overflow: hidden;
+    /* border: 1px solid #ccc; */
+    background-color: #f1f1f1;
+  }
+
+  /* Style the buttons inside the tab */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    /* padding: 10px 34px; */
+    transition: 0.3s;
+    font-size: 13px;
+  }
+
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #ddd;
+  }
+
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #ccc;
+  }
+
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    /* border: 1px solid #ccc; */
+    border-top: none;
+  }
+
+  /* Style the tab content */
+  .tabcontentfortable {
+    display: none;
+    padding: 6px 12px;
+    /* border: 1px solid #ccc; */
+    border-top: none;
+  }
+
+  /* loading */
+  .linePreloader {
+    width: 0px;
+    height: 4px;
+    background: linear-gradient(to right, yellow, yellow);
+    /* background-color:#ccc; */
+    /* position:fixed; */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-radius: 4px;
+    background-size: 20%;
+    background-repeat: repeat-y;
+    background-position: -25% 0;
+    animation: scroll 1.2s ease-in-out infinite;
+    margin-top: 5px;
+  }
+
+  @keyframes scroll {
+    50% {
+      background-size: 80%
+    }
+
+    100% {
+      background-position: 125% 0;
+    }
+  }
+
+  .canvaswrapper {
+    position: relative;
+  }
+
+  .canvasbox {
+    position: absolute;
+    /* top:10px; */
+    /* left:10px; */
+    /* width:50px; */
+    /* height:50px; */
+    border: 2px solid #a10000;
+    background-color: transparent
+  }
+
+  .canvas {
+    cursor: crosshair;
+    border: 1px solid #000000;
+  }
+</style>
+{% endblock%}
+
+{% block body%}
+<div class="d-flex js flex-fill overflow-auto">
+  <div class="col-lg-9 main-chart" style="width: 70%; overflow: auto;" id="centerpanel">
+    <center>
+      <div class="box" id="filechoosediv">
+        <form method="post" enctype="multipart/form-data">
+          <input type="file" name="filename[]" id="inputId" class="inputfile inputfile-6" accept=".pdf,.jpg,.png,.jpeg"
+            data-multiple-caption="{count} files selected" multiple accept="image/*"
+            onchange="checkfiletype(this.files[0])">
+          <label for="inputId"><span style="width: 400px;"></span> <strong><svg xmlns="http://www.w3.org/2000/svg"
+                width="20" height="17" viewBox="0 0 20 17">
+                <path
+                  d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+              </svg> Choose a Document&hellip;</strong></label>
+        </form>
+      </div>
+      <div id="loading_transfering_file" style="display: none;">
+        <center>
+          <img src="static/images/scan.gif" alt="Loading..." width=300px />
+          <h4>Transfering file...</h4>
+        </center>
+      </div>
+      <div id="loading_scanning" style="display: none;">
+        <center>
+          <img src="static/images/scan.gif" alt="Loading..." width=300px />
+          <h4>Scanning file. Please wait...</h4>
+        </center>
+      </div>
+    </center>
+  </div>
+
+
+
+  <div class="col-lg-3 ds" style="width: 30%;">
+
+    <center>
+      <div style="padding-top: 5px;">
+        <!-- <label for="language" style="margin-right: 5px;">Document language</label> -->
+        <select id="language" class="form-control" style="margin-bottom: 5px; background-color: black; color: white;">
+          <option value="eng">English</option>
+          <option value="spa">Spanish</option>
+          <option value="fre">French</option>
+          <option value="chi_sim">Chinese Simple</option>
+          <option value="chi_tra">Chinese Traditional</option>
+          <option value="kor">Korean</option>
+          <option value="jpn">Japanese</option>
+          <option value="deu">German</option>
+          <option value="tam">Tamil</option>
+          <option value="hin">Hindi</option>
+        </select>
+      </div>
+    </center>
+
+    <!-- <div style="pointer-events:none;" id="rightpanel"> -->
+    <div id="rightpanel">
+
+      <div class="form-group">
+
+        <input type="text" class="form-control" id="modelname" placeholder="Model name"
+          style="background-color: black;color: white;">
+        <input type="text" class="form-control" id="description" placeholder="Short description"
+          style="margin-top: 5px; background-color: black; color: white;">
+
+        <center>
+          <div class="checkbox" id="togglemultipagediv">
+            <label><input type="checkbox" value="" onchange="togglemultipageoptions()"
+                id="togglemultipagecheckbox">Enable
+              multi page support</label>
+          </div>
+
+          <div id="headerfooterdiv">
+            <input type="text" class="form-control" id="doc_header" placeholder="Document header"
+              style="display: none; background-color: black;color: white;" onclick="lockfield(this)">
+            <input type="text" class="form-control" id="doc_footer" placeholder="Document footer"
+              style="margin-top: 5px; display: none; background-color: black; color: white;" onclick="lockfield(this)">
+          </div>
+        </center>
+        <center>
+
+          <div class="linePreloader" id="createmodelloading"></div>
+
+          <button id="btnCreateModel" type="button" class="btn-consumenow" onclick="createmodel()"
+            style="margin-top: 10px;">Create model</button>
+        </center>
+      </div>
+
+      <div class="tab" style="width: 100%;">
+        <center>
+          <button class="tablinks" onclick="openCaptureType(event, 'Values')" id="defaultOpen"
+            style="width: 50%;">Capture
+            values</button>
+          <button class="tablinks" onclick="openCaptureType(event, 'Tables')" style="width: 50%;">Capture
+            tables</button>
+        </center>
+      </div>
+
+      <div class="tabcontentfortable" id="Values" style="padding: 0px;">
+        <div class="tab" style="width: 100%;">
+          <center>
+            <button class="tablinks" onclick="openValueCaptureType(event, 'keybased')" id="defaultOpen1"
+              style="width: 20%;">Key</button>
+            <button class="tablinks" onclick="openValueCaptureType(event, 'regionbased')"
+              style="width: 20%;">Region</button>
+            <button class="tablinks" onclick="openValueCaptureType(event, 'fullocr')" style="width: 20%;">Full
+              OCR</button>
+            <button class="tablinks" onclick="openValueCaptureType(event, 'static')" style="width: 20%;">Static</button>
+            <button class="tablinks" onclick="openValueCaptureType(event, 'fromdb')" style="width: 20%;">From
+              DB</button>
+          </center>
+        </div>
+      </div>
+
+      <div class="tabcontentfortable" id="Tables" style="padding: 0px;">
+        <div class="tab" style="width: 100%;">
+          <center>
+            <button class="tablinks" onclick="openValueCaptureType(event, 'withborder')" id="defaultOpen2"
+              style="width: 50%;">With border</button>
+            <button class="tablinks" onclick="openValueCaptureType(event, 'withoutborder')" style="width: 50%;">Without
+              border</button>
+          </center>
+        </div>
+      </div>
+
+      <div id="keybased" class="tabcontent" style="padding: 0px;">
+        <div id="valueoptions">
+
+          <div class="linePreloader" id="keybasedloading"></div>
+
+          <div id="parametertablediv" style="padding-top: 5px;">
+            <tr>
+              <th colspan="3">
+                <div style="display: table; margin-bottom: 5px; width: 100%;">
+                  <input type="text" class="form-control" id="keybasedlabel" placeholder="Label"
+                    style="background: #232323; color: white; display: table-cell;">
+                  <h4 style="display: table-cell; padding-left: 6px; cursor: pointer;" onclick="addcondition()"
+                    title="Add condition">+</h4>
+                  <h4 style="display: table-cell;cursor: pointer;" onclick="keybasedtrycurrentvalue()" title="Try">⟲
+                  </h4>
+                  <h4 style="display: table-cell; padding-left: 0px; cursor: pointer;"
+                    onclick="showpostprocessing('keybased')" title="Postprocessing options">⋯</h4>
+                  <h5 style="display: table-cell; cursor: pointer;" onclick="savekeybasedvalue()"
+                    title="Save parameter">
+                    ✓</h5>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <div style="display: table; margin-bottom: 10px; width: 100%;">
+                <input type="text" class="form-control" id="keybasedcapturedvalue" placeholder="Value captured"
+                  style="background: #232323; color: white; display: table-cell;">
+              </div>
+            </tr>
+
+            <table style="border-top: 0px;">
+              <td align=Left>
+                <div class="checkbox" style="margin: 1px; text-align: left; margin-bottom: 10px;">
+                  <label><input type="checkbox" value="" id="mandatoryvaluekeybased">Mandatory field</label>
+                </div>
+              </td>
+              <td style="text-align: -webkit-right;">
+                <div style="display: table-cell; padding-bottom: 10px;">
+                  <input type="text" id="pagekeybased" placeholder="Page" style="width: 100%;">
+                </div>
+              </td>
+            </table>
+
+
+
+            <div id="existingparametertable">
+              <div>
+                <table border="1" id="tableid1" style="background: #434343; border: 0px; margin-top: 10px"
+                  align="center">
+                  <tbody>
+                    <tr>
+                      <div style="display: table-row; width: 100%;">
+                        <div style="display: table-cell; padding-right: 5px; width: 62%;">
+                          <input type="text" id="keywordid1" placeholder="Enter key" style="width: 100%;"
+                            onclick="lockfield(this)">
+                        </div>
+
+                        <div style="display: table-cell; padding-right: 5px;">
+                          <select id="positionid1">
+                            <option value="top">Top</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="left">Left</option>
+                            <option value="right">Right</option>
+                          </select>
+                        </div>
+
+                        <div style="display: table-cell; padding-right: 5px;">
+                          <input type="text" id="widthid1" placeholder="width" style="width: 50px;">
+                        </div>
+
+                        <div style="display: table-cell; padding-right: 5px;">
+                          <input type="text" id="heightid1" placeholder="height" style="width: 50px;">
+                        </div>
+
+                        <div style="display: table-cell;" onclick="closeparameterrow()">
+                          <p style="margin: 0px; cursor: pointer;">×</p>
+                        </div>
+                      </div>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="regionbased" class="tabcontent" style="padding: 0px;">
+
+        <div class="linePreloader" id="regionbasedloading"></div>
+
+        <tr>
+          <th colspan="3">
+            <div style="display: table; margin-bottom: 5px; width: 100%; padding-top: 5px;">
+              <input type="text" class="form-control" id="regionbasedlabel" placeholder="Label"
+                style="background: #232323; color: white; display: table-cell;">
+              <h4 style="display: table-cell; padding-left: 6px; cursor: pointer;"
+                onclick="trycurrentvalueregionbased()" title="Try">⟲</h4>
+              <h4 style="display: table-cell; padding-left: 0px; cursor: pointer;"
+                onclick="showpostprocessing('regionbased')" title="Postprocessing options">⋯</h4>
+              <h5 style="display: table-cell; cursor: pointer; padding-left: 6px;" onclick="saveregionbasedvalue()"
+                title="Save parameter">✓
+              </h5>
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <div style="display: table; margin-bottom: 10px; width: 100%;">
+            <input type="text" class="form-control" id="capturedvalueregionbased" placeholder="Value captured"
+              style="background: #232323; color: white; display: table-cell;">
+          </div>
+        </tr>
+        <div class="checkbox" style="margin: 1px; text-align: left; margin-bottom: 10px;">
+          <label><input type="checkbox" value="" id="mandatoryvalueregionbased">Mandatory field</label>
+        </div>
+        <table border="1" id="tableid1" style="background: #434343; border: 0px; margin-top: 10px" align="center">
+          <tbody>
+            <tr>
+              <div style="display: table-row; width: 100%;">
+
+                <div style="display: table-cell; padding-right: 5px; width: 20%;">
+                  <label for="selectedpage">Page</label>
+                  <input type="text" id="selectedpage" placeholder="" style="width: 100%;">
+                </div>
+
+                <div style="display: table-cell; padding-right: 5px; width: 20%;">
+                  <label for="x0">X0</label>
+                  <input type="text" id="x0" placeholder="" style="width: 100%;">
+                </div>
+
+                <div style="display: table-cell; padding-right: 5px; width: 20%;">
+                  <label for="y0">Y0</label>
+                  <input type="text" id="y0" placeholder="" style="width: 100%;">
+                </div>
+
+                <div style="display: table-cell; padding-right: 5px; width: 20%;">
+                  <label for="x1">X1</label>
+                  <input type="text" id="x1" placeholder="" style="width: 100%;">
+                </div>
+
+                <div style="display: table-cell; width: 20%;">
+                  <label for="y1">Y1</label>
+                  <input type="text" id="y1" placeholder="" style="width: 100%;">
+                </div>
+
+              </div>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="fullocr" class="tabcontent" style="padding: 0px;">
+
+        <div class="linePreloader" id="fullocrloading"></div>
+
+        <div id="parametertablediv" style="padding-top:5px;">
+          <tr>
+            <th colspan="3">
+              <div style="display: table; margin-bottom: 5px; width: 100%;">
+                <input type="text" class="form-control" id="fullocrlabel" placeholder="Label"
+                  style="background: #232323; color: white; display: table-cell;">
+                <h4 style="display: table-cell; padding-left: 6px; cursor: pointer;" onclick="addfullocrcondition()"
+                  title="Add condition">+</h4>
+                <h4 style="display: table-cell; padding-left: 6px; cursor: pointer;" onclick="tryfullocrcurrentvalue()"
+                  title="Try">⟲</h4>
+                <h5 style="display: table-cell; cursor: pointer;" onclick="savefullocrvalue()" title="Save parameter">✓
+                </h5>
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <div style="display: table; margin-bottom: 10px; width: 100%;">
+              <input type="text" class="form-control" id="capturedvaluefullocr" placeholder="Value captured"
+                style="background: #232323; color: white; display: table-cell;">
+            </div>
+          </tr>
+          <div id="existingfullocrparametertable">
+
+            <div class="checkbox" style="margin: 1px; text-align: left; margin-bottom: 10px;">
+              <label><input type="checkbox" value="" id="mandatoryvaluefullocr">Mandatory field</label>
+            </div>
+
+            <div>
+              <table border="1" id="fullocrtableid1" style="background: #434343; border: 0px; margin-top: 10px"
+                align="center">
+                <tbody>
+                  <tr>
+                    <div style="display: table-row; width: 100%;">
+                      <div style="display: table-cell; padding-right: 5px; width: 25%;">
+                        <select id="fullocrfirstdropdownid1" style="width: 100%;">
+                          <option value="add">Add</option>
+                          <option value="remove">Remove</option>
+                          <option value="removeall">Remove all</option>
+                          <option value="replace">Replace</option>
+                          <option value="replaceall">Replace all</option>
+                          <option value="translate">Translate</option>
+                          <option value="runregex">Run regex</option>
+                          <option value="extractonly">Extract only</option>
+                          <option value="statictext">Static text</option>
+                        </select>
+                      </div>
+
+                      <div style="display: table-cell; padding-right: 5px; width: 30%;">
+                        <select id="fullocrseconddropdownid1" style="width: 100%;">
+                          <option value="characters">Characters</option>
+                          <option value="numbers">Numbers</option>
+                          <option value="specialcharacters">Special Characters</option>
+                          <option value="alphabets">Alphabets</option>
+                          <option value="alphanumerics">Alphanumerics</option>
+                          <option value="dates">Dates</option>
+                          <option value="currency">Currency</option>
+                          <option value="textbefore">Text before</option>
+                          <option value="textafter">Text after</option>
+                          <option value="texttill">Text till</option>
+                          <option value="allspaces">All Spaces</option>
+                          <option value="trailingspaces">Trailing Spaces</option>
+                        </select>
+                      </div>
+
+                      <div style="display: table-cell; padding-right: 5px; width: 45%;">
+                        <input type="text" id="fullocrkeywordid1" placeholder="" style="width: 100%;">
+                      </div>
+
+                      <div style="display: table-cell;">
+                        <p style="margin: 0px; cursor: pointer;" onclick="closeparameterrowfullocr()">×</p>
+                      </div>
+                    </div>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="static" class="tabcontent" style="padding: 0px;">
+
+        <div class="linePreloader" id="staticloading"></div>
+
+        <div id="parametertablediv" style="padding-top: 5px;">
+          <tr>
+            <th colspan="3">
+              <div style="display: table; margin-bottom: 5px; width: 100%;">
+                <input type="text" class="form-control" id="staticlabel" placeholder="Label"
+                  style="background: #232323; color: white; display: table-cell;">
+                <!-- <h4 style="display: table-cell; padding-left: 6px; cursor: pointer;" onclick="addfullocrcondition()"
+                  title="Add condition">+</h4> -->
+                <h4 style="display: table-cell; padding-left: 6px; cursor: pointer;" onclick="trystaticcurrentvalue()"
+                  title="Try">⟲</h4>
+                <h5 style="display: table-cell; cursor: pointer;" onclick="savestaticvalue()" title="Save parameter">✓
+                </h5>
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <div style="display: table; margin-bottom: 10px; width: 100%;">
+              <input type="text" class="form-control" id="capturedvaluestatic" placeholder="Value captured"
+                style="background: #232323; color: white; display: table-cell;">
+            </div>
+          </tr>
+          <div id="existingstaticparametertable">
+
+            <!-- <div class="checkbox" style="margin: 1px; text-align: left; margin-bottom: 10px;">
+              <label><input type="checkbox" value="" id="mandatoryvaluefullocr">Mandatory field</label>
+            </div> -->
+
+            <div>
+              <table border="1" id="statictableid1" style="background: #434343; border: 0px; margin-top: 10px"
+                align="center">
+                <tbody>
+                  <tr>
+                    <div style="display: table-row; width: 100%;">
+                      <div style="display: table-cell; padding-right: 5px; width: 25%;">
+                        <select id="staticfirstdropdownid" style="width: 100%;">
+                          <option value="statictext">Static text</option>
+                          <option value="date">Date</option>
+                          <option value="day">Day</option>
+                          <option value="month">Month</option>
+                          <option value="year">Year</option>
+                          <option value="time">Time</option>
+                          <option value="timestamp">Timestamp</option>
+
+                        </select>
+                      </div>
+                      <!-- 
+                      <div style="display: table-cell; padding-right: 5px; width: 30%;">
+                        <select id="fullocrseconddropdownid1" style="width: 100%;">
+                          <option value="characters">Characters</option>
+                          <option value="numbers">Numbers</option>
+                          <option value="specialcharacters">Special Characters</option>
+                          <option value="alphabets">Alphabets</option>
+                          <option value="alphanumerics">Alphanumerics</option>
+                          <option value="dates">Dates</option>
+                          <option value="currency">Currency</option>
+                          <option value="textbefore">Text before</option>
+                          <option value="textafter">Text after</option>
+                          <option value="texttill">Text till</option>
+                          <option value="allspaces">All Spaces</option>
+                          <option value="trailingspaces">Trailing Spaces</option>
+                        </select>
+                      </div> -->
+
+                      <div style="display: table-cell; width: 45%;">
+                        <input type="text" id="statickeywordid" placeholder="" style="width: 100%;">
+                      </div>
+
+                      <!-- <div style="display: table-cell;">
+                        <p style="margin: 0px; cursor: pointer;" onclick="closeconditionrowinfullocr(this)">×</p>
+                      </div> -->
+                    </div>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="fromdb" class="tabcontent" style="padding: 0px;">
+
+        <div class="linePreloader" id="regionbasedloading"></div>
+
+        <tr>
+          <th colspan="3">
+            <div style="display: table; margin-bottom: 5px; width: 100%; padding-top: 5px;">
+              <input type="text" class="form-control" id="regionbasedlabel" placeholder="Label"
+                style="background: #232323; color: white; display: table-cell;">
+              <h4 style="display: table-cell; padding-left: 6px; cursor: pointer;" onclick="trycurrentvaluefromdb()"
+                title="Try">⟲</h4>
+              <h4 style="display: table-cell; padding-left: 0px; cursor: pointer;" onclick="showdboptions()"
+                title="Database options">⋯</h4>
+              <h5 style="display: table-cell; cursor: pointer; padding-left: 6px;" onclick="savefromdbvalue()"
+                title="Save parameter">✓
+              </h5>
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <div style="display: table; margin-bottom: 10px; width: 100%;">
+            <input type="text" class="form-control" id="capturedvalueregionbased" placeholder="Value captured"
+              style="background: #232323; color: white; display: table-cell;">
+          </div>
+        </tr>
+        <div class="checkbox" style="margin: 1px; text-align: left; margin-bottom: 10px;">
+          <label><input type="checkbox" value="" id="mandatoryvalueregionbased">Mandatory field</label>
+        </div>
+        <div>
+          <textarea style="background: #232323; color: white; height: 100px;" placeholder="Query" class="form-control"></textarea>
+        </div>
+      </div>
+
+      <div id="withborder" class="tabcontent">
+        <div id="tableoptionswithborder">
+          <div class="linePreloader" id="withborderloading"></div>
+          <table style="border-top: 0px;">
+            <td align=Left>
+              <div class="checkbox" style="margin: 1px; text-align: left;">
+                <label><input type="checkbox" value="" id="mandatorytablewithborder">Mandatory table</label>
+              </div>
+            </td>
+            <td>
+              <div style="text-align:end">
+                <p style="margin-bottom: 5px; cursor: pointer;" onclick="showcolumnnames()">Specify table columns</p>
+              </div>
+            </td>
+          </table>
+          <!-- <tr>
+            <div class="checkbox" style="margin: 1px;">
+              <label><input type="checkbox" value="" id="mandatorytablewithborder">Mandatory table</label>
+            </div>
+          </tr>
+          <tr>
+            <p style="margin-bottom: 5px; cursor: pointer;" onclick="showcolumnnames()">Specify table columns</p>
+          </tr> -->
+          <tr>
+            <th colspan="3">
+              <div style="display: table; margin-bottom: 3px; width: 100%;">
+                <input type="text" class="form-control" id="tablenamewithborder" placeholder="Table name"
+                  style="background: #232323; color: white; display: table-cell;" onclick="lockfield(this)">
+                <h4 style="display: table-cell; padding-left: 6px; cursor: pointer;" onclick="gettablewithborder()">⟲
+                </h4>
+                <h5 style="display: table-cell; cursor: pointer;" onclick="savetablewithborder()">✓</h5>
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <th colspan="3">
+              <div style="display: table; margin-bottom: 3px; width: 100%;">
+                <input type="text" class="form-control" id="tableheaderwithborder" placeholder="Table header"
+                  style="background: #232323; color: white; display: table-cell;" onclick="lockfield(this)">
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <div class="checkbox" style="margin: 1px;">
+              <label><input type="checkbox" value="" id="headerintablewithborder">Table starts after header</label>
+            </div>
+            <!-- <div class="checkbox" style="margin: 1px;">
+              <label><input type="checkbox" value="" id="headeravailabilitywithborder">Header found in every
+                page</label>
+            </div> -->
+          </tr>
+          <tr>
+            <th colspan="3">
+              <div style="display: table; margin-bottom: 0px; width: 100%;">
+                <input type="text" class="form-control" id="tablefooterwithborder" placeholder="Table footer"
+                  style="background: #232323; color: white; display: table-cell;" onclick="lockfield(this)">
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <div class="checkbox" style="margin: 1px;">
+              <label><input type="checkbox" value="" id="footerintablewithborder">Table ends before footer</label>
+            </div>
+            <!-- <div class="checkbox" style="margin: 1px;">
+              <label><input type="checkbox" value="" id="footeravailabilitywithborder">Footer found in every
+                page</label>
+            </div> -->
+          </tr>
+          <tr>
+            <div class="checkbox" style="margin: 1px;">
+              <label><input type="checkbox" onchange="togglemultipageoptions_with_border()" value=""
+                  id="enablemultipagetablewithborder">Enable multi page table </label>
+            </div>
+            <!-- <center>
+              <div class="checkbox" style="margin: 1px;">
+                <label><input type="checkbox" onchange="togglemultipageoptions()" value="" id="enablemultipagetablewithoutborder">Enable multi page table </label>
+              </div>
+            </center> -->
+          </tr>
+
+          <div id="latticeoptions" style="padding-bottom: 5px;">
+
+            <div id="multipageoptionswithborder" style="display: none;">
+
+              <div class="checkbox" style="margin: 1px;">
+                <label><input type="checkbox" value="" id="headeravailabilitywithborder">Header found in every
+                  page</label>
+              </div>
+
+              <div class="checkbox" style="margin: 1px;">
+                <label><input type="checkbox" value="" id="footeravailabilitywithborder">Footer found in every
+                  page</label>
+              </div>
+
+              <div style="padding-top: 5px;">
+                Top margin
+                <input style="float: right; width: 100px;" id="topmarginwithborder" , value="10">
+              </div>
+
+              <div style="padding-top: 10px;">
+                Bottom margin
+                <input style="float: right; width: 100px;" id="bottommarginwithborder" , value="10">
+              </div>
+            </div>
+
+            <div style="padding-top: 10px;">
+              <label for="bglines" style="margin-right: 5px;">Process background lines</label>
+              <select id="bglines" style="float: right; width: 100px;">
+                <option value="True">True</option>
+                <option value="False">False</option>
+              </select>
+            </div>
+            <div style="padding-top: 5px;">
+              <label for="cuttext" style="margin-right: 5px;">Cut text</label>
+              <select id="cuttext" style="float: right; width: 100px;">
+                <option value="True">True</option>
+                <option value="False">False</option>
+              </select>
+            </div>
+
+            <div style="padding-top: 5px;">
+              <label for="superscript" style="margin-right: 5px;">Detect superscripts</label>
+              <select id="superscript" style="float: right; width: 100px;">
+                <option value="True">True</option>
+                <option value="False">False</option>
+              </select>
+            </div>
+            <div style="padding-top: 5px;">
+              Detect small lines
+              <input style="float: right; width: 100px;" id="smalllines" value="15">
+            </div>
+
+            <div style="padding-top: 10px;">
+              Text edge tolrence
+              <input style="float: right; width: 100px;" id="edgetolwithborder" value="50">
+            </div>
+
+          </div>
+
+          <!-- <div style="padding-top: 30px;">
+            <center>
+              <button id="btnTableCrop" type="button" class="btn-consumenow" onclick="showtablecapturemethodmodal()">Crop
+                and
+                Capture
+                Tables</button>
+            </center>
+            <center>
+              <button id="btnviewdldata" type="button" class="btn-consumenow" onclick="sendtoscan()">Detect
+                tables</button>
+            </center>
+            <center>
+              <button id="btncreatemodel" type="button" class="btn-consumenow" onclick="showmodal2()">Create
+                model</button>
+            </center>
+          </div> -->
+
+          <!-- <div style="padding-top: 8px;">
+            <table id="capturedtablestable" style="width:100%; display: none;" align="center" >
+              <tr>
+                <th COLSPAN="3" style="text-align:center;">
+                  <h4 style="text-align:center; margin-top: 10px;">Captured tables</h4>
+                </th>
+              </tr>
+              <tr>
+                <th style="text-align:center;">page</th>
+                <th style="text-align:center;">Table name</th>
+                <th></th>
+              </tr>
+
+            </table>
+          </div> -->
+        </div>
+      </div>
+
+      <div id="withoutborder" class="tabcontent">
+        <div id="tableoptionswithoutborder">
+          <div class="linePreloader" id="withoutborderloading"></div>
+          <table style="border-top: 0px;">
+            <td align=Left>
+              <div class="checkbox" style="margin: 1px; text-align: left;">
+                <label><input type="checkbox" value="" id="mandatorytablewithoutborder">Mandatory table</label>
+              </div>
+            </td>
+            <td>
+              <div style="text-align:end">
+                <p style="margin-bottom: 5px; cursor: pointer;" onclick="showcolumnnames()">Specify table columns</p>
+              </div>
+            </td>
+          </table>
+          <!-- <tr>
+            <td>
+              <div class="checkbox" style="margin: 1px;">
+                <label><input type="checkbox" value="" id="mandatorytablewithoutborder">Mandatory table</label>
+              </div>
+            </td>
+            <td>
+              <div>
+                <p style="margin-bottom: 5px; cursor: pointer;" onclick="showcolumnnames()">Specify table columns</p>
+              </div>
+            </td>
+          </tr> -->
+          <!-- <tr>
+            <p style="margin-bottom: 5px; cursor: pointer;" onclick="showcolumnnames()">Specify table columns</p>
+          </tr> -->
+          <tr>
+            <th colspan="3">
+              <div style="display: table; margin-bottom: 3px; width: 100%;">
+                <input type="text" class="form-control" id="tablenamewithoutborder" placeholder="Table name"
+                  style="background: #232323; color: white; display: table-cell;" onclick="lockfield(this)">
+                <h4 style="display: table-cell; padding-left: 6px; cursor: pointer;" onclick="gettablewithoutborder()">⟲
+                </h4>
+                <h5 style="display: table-cell; cursor: pointer;" onclick="savetablewithoutborder()">✓</h5>
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <th colspan="3">
+              <div style="display: table; margin-bottom: 3px; width: 100%;">
+                <input type="text" class="form-control" id="tableheaderwithoutborder" placeholder="Table header"
+                  style="background: #232323; color: white; display: table-cell;" onclick="lockfield(this)">
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <div class="checkbox" style="margin: 1px;">
+              <label><input type="checkbox" value="" id="headerintablewithoutborder">Table starts after header</label>
+            </div>
+            <!-- <div class="checkbox" style="margin: 1px;">
+              <label><input type="checkbox" value="" id="headeravailabilitywithoutborder">Header found in every
+                page</label>
+            </div> -->
+            <!-- <center>
+              <div class="checkbox" style="margin: 1px;">
+                <label><input type="checkbox" value="" id="headerintablewithoutborder">Table starts after header</label>
+              </div>
+            </center> -->
+          </tr>
+          <tr>
+            <th colspan="3">
+              <div style="display: table; margin-bottom: 0px; width: 100%;">
+                <input type="text" class="form-control" id="tablefooterwithoutborder" placeholder="Table footer"
+                  style="background: #232323; color: white; display: table-cell;" onclick="lockfield(this)">
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <div class="checkbox" style="margin: 1px;">
+              <label><input type="checkbox" value="" id="footerintablewithoutborder">Table ends before footer</label>
+            </div>
+            <!-- <div class="checkbox" style="margin: 1px;">
+              <label><input type="checkbox" value="" id="footeravailabilitywithoutborder">Footer found in every
+                page</label>
+            </div> -->
+            <!-- <center>
+              <div class="checkbox" style="margin: 1px;">
+                <label><input type="checkbox" value="" id="footerintablewithoutborder">Table ends before footer</label>
+              </div>
+            </center> -->
+          </tr>
+          <tr>
+            <div class="checkbox" style="margin: 1px;">
+              <label><input type="checkbox" onchange="togglemultipageoptions_without_border()" value=""
+                  id="enablemultipagetablewithoutborder">Enable multi page table </label>
+            </div>
+            <!-- <center>
+              <div class="checkbox" style="margin: 1px;">
+                <label><input type="checkbox" onchange="togglemultipageoptions()" value="" id="enablemultipagetablewithoutborder">Enable multi page table </label>
+              </div>
+            </center> -->
+          </tr>
+
+          <div id="streamoptions">
+
+            <div id="multipageoptionswithoutborder" style="display: none;">
+
+              <div class="checkbox" style="margin: 1px;">
+                <label><input type="checkbox" value="" id="headeravailabilitywithoutborder">Header found in every
+                  page</label>
+              </div>
+
+              <div class="checkbox" style="margin: 1px;">
+                <label><input type="checkbox" value="" id="footeravailabilitywithoutborder">Footer found in every
+                  page</label>
+              </div>
+
+              <div style="padding-top: 5px;">
+                Top margin
+                <input style="float: right; width: 100px;" id="topmarginwithoutborder" , value="10">
+              </div>
+
+              <div style="padding-top: 10px;">
+                Bottom margin
+                <input style="float: right; width: 100px;" id="bottommarginwithoutborder" , value="10">
+              </div>
+            </div>
+
+            <div style="padding-top: 10px;">
+              Group into row
+              <input style="float: right; width: 100px;" id="grouprows" , value="10">
+            </div>
+
+            <div style="padding-top: 10px;">
+              Group into column
+              <input style="float: right; width: 100px;" id="groupcolumns" , value="10">
+            </div>
+
+            <div style="padding-top: 10px;">
+              <label for="superscript_withoutborder" style="margin-right: 5px;">Detect superscripts</label>
+              <select id="superscript_withoutborder" style="float: right; width: 100px;">
+                <option value="True">True</option>
+                <option value="False">False</option>
+              </select>
+            </div>
+            <div style="padding-top: 6px;">
+              <label for="cuttext_withoutborder" style="margin-right: 5px;">Cut text</label>
+              <select id="cuttext_withoutborder" style="float: right; width: 100px;">
+                <option value="True">True</option>
+                <option value="False">False</option>
+              </select>
+            </div>
+
+            <div style="padding-top: 6px;">
+              Text edge tolrence
+              <input style="float: right; width: 100px;" id="edgetol" value="50">
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="capturedparameterstableid" style="padding-top: 2px; display: none;">
+        <table id="capturedparameterstable" style="width:100%" align="center">
+          <tr>
+            <th COLSPAN="3" style="text-align:center;">
+              <h4 style="text-align:center; margin-top: 10px;">Captured Parameters</h4>
+            </th>
+          </tr>
+          <tr>
+            <th style="text-align:center;">Key</th>
+            <th style="text-align:center;">Capture type</th>
+            <th></th>
+          </tr>
+
+        </table>
+      </div>
+
+      <div id="capturedtablestableid" style="padding-top: 8px; display: none;">
+        <table id="capturedtablestable" style="width:100%; " align="center">
+          <tr>
+            <th COLSPAN="3" style="text-align:center;">
+              <h4 style="text-align:center; margin-top: 10px;">Captured tables</h4>
+            </th>
+          </tr>
+          <tr>
+            <th style="text-align:center;">Table name</th>
+            <th style="text-align:center;">Header</th>
+            <th></th>
+          </tr>
+
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- postprocess for keybased modal -->
+<div class="modal fade" id="postprocessmodal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="width: 500px;">
+
+
+      <div class="modal-header" style="padding:0px 0px;">
+        <button type="button" class="close" data-dismiss="modal" onclick="closemodal()" id="closebtn"
+          style="padding:5px 5px;">&times;</button>
+        <center>
+          <h5 style="color: white;">Post Processing Options</h5>
+        </center>
+      </div>
+
+
+      <div class="modal-body" style="padding:0px 10px;">
+
+        <div class="linePreloader" id="modalloading"></div>
+
+        <div id="parametertablediv" style="padding-top: 5px;">
+          <tr>
+            <th colspan="3">
+              <div style="display: table; margin-bottom: 5px; width: 100%;">
+                <input type="text" class="form-control" id="keybasedcapturedvalueinmodal" placeholder="Value captured"
+                  style="background: #232323; color: white; display: table-cell;">
+                <h4 style="display: table-cell; padding-left: 6px; cursor: pointer;" onclick="addmodalcondition()">+
+                </h4>
+                <h4 style="display: table-cell; padding-left: 6px; cursor: pointer;" onclick="trymodalcurrentvalue()">⟲
+                </h4>
+                <h5 style="display: table-cell; cursor: pointer;" id="savepostprocessvalueid">✓</h5>
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <div style="display: table; margin-bottom: 10px; width: 100%;">
+              <input type="text" class="form-control" id="keybasedpostprocessedvalueinmodal"
+                placeholder="Post processed value" style="background: #232323; color: white; display: table-cell;">
+            </div>
+          </tr>
+          <div id="existingmodalpostprocessingtable">
+            <div>
+              <table border="1" id="modaltableid1" style="background: #434343; border: 0px; margin-top: 10px"
+                align="center">
+                <tbody>
+                  <tr>
+                    <div style="display: table-row; width: 100%;">
+                      <div style="display: table-cell; padding-right: 5px; width: 25%;">
+                        <select id="modalfirstdropdownid1" style="width: 100%;">
+                          <option value="add">Add</option>
+                          <option value="remove">Remove</option>
+                          <option value="removeall">Remove all</option>
+                          <option value="replace">Replace</option>
+                          <option value="replaceall">Replace all</option>
+                          <option value="translate">Translate</option>
+                          <option value="runregex">Run regex</option>
+                          <option value="extractonly">Extract only</option>
+                          <option value="statictext">Static text</option>
+                        </select>
+                      </div>
+
+
+                      <div style="display: table-cell; padding-right: 5px; width: 30%;">
+                        <select id="modalseconddropdownid1" style="width: 100%;">
+                          <option value="characters">Characters</option>
+                          <option value="numbers">Numbers</option>
+                          <option value="specialcharacters">Special Characters</option>
+                          <option value="alphabets">Alphabets</option>
+                          <option value="alphanumerics">Alphanumerics</option>
+                          <option value="dates">Dates</option>
+                          <option value="currency">Currency</option>
+                          <option value="textbefore">Text before</option>
+                          <option value="textafter">Text after</option>
+                          <option value="texttill">Text till</option>
+                          <option value="allspaces">All Spaces</option>
+                          <option value="trailingspaces">Trailing Spaces</option>
+                        </select>
+                      </div>
+
+                      <div style="display: table-cell; padding-right: 5px; width: 45%;">
+                        <input type="text" id="modalkeywordid1" style="width: 100%;">
+                      </div>
+
+                      <div style="display: table-cell;">
+                        <p style="margin: 0px; cursor: pointer;" onclick="closeconditionrowinmodal(this)">×</p>
+                      </div>
+                    </div>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- database options modal -->
+<div class="modal fade" id="dboptionsmodal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="width: 500px;">
+
+
+      <div class="modal-header" style="padding:0px 0px;">
+        <button type="button" class="close" data-dismiss="modal" onclick="closemodaldboptions()" id="closebtn"
+          style="padding:5px 5px;">&times;</button>
+        <center>
+          <h5 style="color: white;">Enter Database Parameters</h5>
+        </center>
+      </div>
+
+      <div class="linePreloader" id="dbloading"></div>
+
+      <div style="padding-left: 10px;">
+
+        <!-- <h4 style="display: table-cell; padding: 6px; cursor: pointer;" onclick="addcolumn()" title="Add column">+</h4> -->
+        <div style="padding-left: 420px; display: table-cell">
+          <h4 style="display: table-cell; padding: 6px; cursor: pointer; font-size: 14px;" onclick="checkconnection()"
+            title="Check connection">⟲</h4>
+          <h5 style="display: table-cell; padding: 6px; cursor: pointer;" onclick="savedbparameters()"
+            title="Save DB parameters">✓
+          </h5>
+        </div>
+      </div>
+
+      <div class="modal-body" style="padding:0px 10px 10px 10px;">
+        <div>
+          <div>
+            <table border="1" style="background: #434343; border: 0px; margin-top: 10px"
+              align="center">
+              <tr>
+                <td style="width: 30%;">
+                  Server
+                </td>
+                <td>
+                  <input type="text" id="server" placeholder="" style="width: 100%;">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Port
+                </td>
+                <td>
+                  <input type="text" id="port" placeholder="" style="width: 100%;">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Database
+                </td>
+                <td>
+                  <input type="text" id="database" placeholder="" style="width: 100%;">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  UID
+                </td>
+                <td>
+                  <input type="text" id="uid" placeholder="" style="width: 100%;">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Password
+                </td>
+                <td>
+                  <input type="password" id="password" placeholder="" style="width: 100%;">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Trusted connection
+                </td>
+                <td>
+                  <select id="trustedconnection" style="width: 100%;">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p id="connstatus"
+        style="padding-left: 10px; padding-bottom: 10px; display: table-cell; cursor: pointer; font-size: 12px; color: white;">
+        Awaiting Connection</p>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+<!-- column names modal -->
+<div class="modal fade" id="columnnamesmodal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="width: 600px;">
+
+
+      <div class="modal-header" style="padding:0px 0px;">
+        <button type="button" class="close" data-dismiss="modal" onclick="closemodalcolumnnames()" id="closebtn"
+          style="padding:5px 5px;">&times;</button>
+        <center>
+          <h5 style="color: white;">Enter columns</h5>
+        </center>
+      </div>
+
+      <div style="padding-top: 10px; margin-left: 520px;">
+        <h4 style="display: table-cell; padding: 6px; cursor: pointer;" onclick="addcolumn()" title="Add column">+</h4>
+        <h4 style="display: table-cell; padding: 6px; cursor: pointer;" onclick="removecolumn(this)"
+          title="Remove column">×</h4>
+        <h5 style="display: table-cell; padding: 6px; cursor: pointer;" onclick="savecolumns()" title="Save column">✓
+        </h5>
+      </div>
+
+      <div class="modal-body" style="padding:0px 10px 10px 10px;">
+        <div id="existingcolumnstablediv">
+          <div>
+            <table border="1" id="existingcolumnstable" style="background: #434343; border: 0px; margin-top: 10px"
+              align="center">
+              <tr>
+                <th>Key column</th>
+                <th>Mandatory</th>
+                <th>Multi-line header</th>
+                <th>Column name</th>
+                <th>Orientation</th>
+              </tr>
+              <tr>
+                <td>
+                  <input type="checkbox" id="keycolumn1">
+                </td>
+                <td>
+                  <input type="checkbox" id="mandatory1">
+                </td>
+                <td>
+                  <input type="checkbox" id="multiline1">
+                </td>
+                <td>
+                  <input type="text" id="columnname1" placeholder="Column name" style="width: 100%;">
+                </td>
+                <td>
+                  <select id="columnorientation1" style="width: 100%;">
+                    <option value="top">Top</option>
+                    <option value="center">Center</option>
+                    <option value="bottom">Bottom</option>
+                  </select>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts%}
+
+<script src="static/lib/cropper.js"></script>
+<script src="static/lib/custom-file-input.js"></script>
+<script src="http://cdn.jsdelivr.net/g/filesaver.js"></script>
+<script src="static/lib/cropper.js"></script>
+<script src="static/lib/canvas2image.js"></script>
+{{ super() }}
+<script>
+
+  var conditioncount = 1;
+  var keywordcount = 1;
+  var positioncount = 1;
+  var widthcount = 1;
+  var heightcount = 1;
+
+  var fullocrconditioncount = 1;
+  var dropdown1count = 1;
+  var dropdown2count = 1;
+  var fullocrkeycount = 1;
+
+  var preprocessingcount = 1;
+
+  var parameterscount = 0;
+  var tablescount = 0;
+  var columncount = 1;
+
+  var noofpages;
+  var selected_page;
+
+  var foldernameinserver;
+  var timestamp;
+
+  var lockedfieldid;
+
+  var final_json_to_model = { "keyvalues": [], "tables": [] };
+
+  var post_processing_conditions = {};
+  var db_connection_parameters = {};
+  var values_in_model = [];
+  var tables_in_model = [];
+
+  var columns_list = [];
+
+  var current_value_captured = "";
+  var current_tab = "";
+
+  var originalwidth_to_model_creation;
+  var originalheight_to_model_creation;
+
+  var compression_ratio;
+
+  document.getElementById("defaultOpen").click();
+
+  let template = null;
+  $('.modal').on('show.bs.modal', function (event) {
+    template = $(this).html();
+  });
+
+  $('.modal').on('hidden.bs.modal', function (e) {
+    $(this).html(template);
+  });
+
+  // showandhidecapturedparameterstable();
+  // showandhidecapturedtablestable();
+
+  // expand parameters table
+  function expandparametertable() {
+    key = document.getElementById("expandCaptureValues").innerHTML;
+    if (key == "▴") {
+      document.getElementById("parametertablediv").style.display = "none";
+      document.getElementById("expandCaptureValues").innerHTML = "▾";
+    } else {
+      document.getElementById("parametertablediv").style.display = "inline";
+      document.getElementById("expandCaptureValues").innerHTML = "▴";
+    }
+  }
+
+  function addcondition() {
+
+    conditioncount = conditioncount + 1;
+    keywordcount = keywordcount + 1;
+    positioncount = positioncount + 1;
+    widthcount = widthcount + 1;
+    heightcount = heightcount + 1;
+
+    tableid = "tableid" + conditioncount;
+    keywordid = "keywordid" + conditioncount;
+    positionid = "positionid" + conditioncount;
+    widthid = "widthid" + conditioncount;
+    heightid = "heightid" + conditioncount;
+
+    var tablehtml = `
+    <table border="1" id="${tableid}" style="background: #434343; border: 0px; margin-top: 10px" align="center">
+      <tbody>
+        <tr>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; padding-right: 5px; width: 62%;">
+              <input type="text" id="${keywordid}" placeholder="Enter key" style="width: 100%;" onclick="lockfield(this)">
+            </div>
+
+            <div style="display: table-cell; padding-right: 5px;">
+              <select id="${positionid}" >
+                <option value="top">Top</option>
+                <option value="bottom">Bottom</option>
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+              </select>
+            </div>
+
+            <div style="display: table-cell; padding-right: 5px;">
+              <input type="text"  id="${widthid}" placeholder="width" style="width: 50px;">
+            </div>
+
+            <div style="display: table-cell; padding-right: 5px;">
+              <input type="text"  id="${heightid}" placeholder="height" style="width: 50px;">
+            </div>
+
+            <div style="display: table-cell;">
+              <p style="margin: 0px; cursor: pointer; opacity:0">x</p>
+            </div>
+
+          </div>
+        </tr>
+      </tbody>
+    </table>
+    `
+    // <div style="display: table-cell;">
+    //   <p style="margin: 0px; cursor: pointer;" onclick="closeparameterrow(this)">×</p>
+    // </div>
+
+    var conditionrow = document.createElement('div');
+    conditionrow.innerHTML = tablehtml;
+    var existingparametertable = document.getElementById("existingparametertable");
+    existingparametertable.appendChild(conditionrow);
+  }
+
+  function addfullocrcondition() {
+
+    fullocrconditioncount = fullocrconditioncount + 1;
+    // dropdown1count = dropdown1count + 1;
+    // dropdown2count = dropdown2count + 1;
+    // fullocrkeycount = fullocrkeycount + 1;
+
+
+    fullocrtableid = "fullocrtableid" + fullocrconditioncount;
+    dropdown1id = "fullocrfirstdropdownid" + fullocrconditioncount;
+    dropdown2id = "fullocrseconddropdownid" + fullocrconditioncount;
+    fullocrkeyid = "fullocrkeywordid" + fullocrconditioncount;
+
+    var tablehtml = `
+    <table border="1" id="${fullocrtableid}" style="background: #434343; border: 0px; margin-top: 10px"
+            align="center">
+            <tbody>
+              <tr>
+                <div style="display: table-row; width: 100%;">
+                  <div style="display: table-cell; padding-right: 5px; width: 25%;">
+                    <select id="${dropdown1id}" style="width: 100%;">
+                      <option value="add">Add</option>
+                      <option value="remove">Remove</option>
+                      <option value="removeall">Remove all</option>
+                      <option value="replace">Replace</option>
+                      <option value="replaceall">Replace all</option>
+                      <option value="translate">Translate</option>
+                      <option value="runregex">Run regex</option>
+                      <option value="extractonly">Extract only</option>
+                      <option value="statictext">Static text</option>
+                    </select>
+                  </div>
+
+
+                  <div style="display: table-cell; padding-right: 5px; width: 30%;">
+                    <select id="${dropdown2id}" style="width: 100%;">
+                      <option value="characters">Characters</option>
+                        <option value="numbers">Numbers</option>
+                        <option value="specialcharacters">Special Characters</option>
+                        <option value="alphabets">Alphabets</option>
+                        <option value="alphanumerics">Alphanumerics</option>
+                        <option value="dates">Dates</option>
+                        <option value="currency">Currency</option>
+                        <option value="textbefore">Text before</option>
+                        <option value="textafter">Text after</option>
+                        <option value="texttill">Text till</option>
+                        <option value="allspaces">All Spaces</option>
+                        <option value="trailingspaces">Trailing Spaces</option>
+                    </select>
+                  </div>
+
+                  <div style="display: table-cell; padding-right: 5px; width: 45%;">
+                    <input type="text" id="${fullocrkeyid}" placeholder="" style="width: 100%;">
+                  </div>
+
+                  <div style="display: table-cell;" onclick = "closeparameterrowfullocr()">
+                    <p style="margin: 0px; opacity:0">×</p>
+                  </div>
+                </div>
+              </tr>
+            </tbody>
+          </table>
+`
+    var conditionrow = document.createElement('div');
+    conditionrow.innerHTML = tablehtml;
+    var existingfullocrparametertable = document.getElementById("existingfullocrparametertable");
+    existingfullocrparametertable.appendChild(conditionrow);
+  }
+
+  // tabs operation
+  function openCaptureType(evt, captureType) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontentfortable");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(captureType).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // tabs operation
+  function openValueCaptureType(evt, captureType) {
+    // current_tab = captureType;
+    // alert (current_tab);
+    if (captureType == "regionbased") {
+      // current_tab = "region"
+      initDraw(document.getElementById('canvas'));
+    } else if (captureType == "keybased") {
+      // current_tab = "key"
+      // document.getElementById('canvas').style.display = "none";
+      for (i = 0; i < noofpages; i++) {
+        canvas_id = 'canvas' + (i + 1);
+        document.getElementById(canvas_id).style.display = "none";
+      }
+    } else if (captureType == "fullocr") {
+      // current_tab = "fullocr"
+      // document.getElementById('canvas').style.display = "none";
+      for (i = 0; i < noofpages; i++) {
+        canvas_id = 'canvas' + (i + 1);
+        document.getElementById(canvas_id).style.display = "none";
+      }
+    } else if (captureType == "fromdb") {
+      // current_tab = "fromdb"
+      // document.getElementById('canvas').style.display = "none";
+      for (i = 0; i < noofpages; i++) {
+        canvas_id = 'canvas' + (i + 1);
+        document.getElementById(canvas_id).style.display = "none";
+      }
+    } else if (captureType == "static") {
+      // current_tab = "static"
+      // document.getElementById('canvas').style.display = "none";
+      for (i = 0; i < noofpages; i++) {
+        canvas_id = 'canvas' + (i + 1);
+        document.getElementById(canvas_id).style.display = "none";
+      }
+    }
+
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(captureType).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // toogle views of header and footer
+  function togglemultipageoptions() {
+    if ($('#togglemultipagecheckbox').is(":checked")) {
+      $("#doc_header").show();
+      $("#doc_footer").show();
+    } else {
+      $("#doc_header").hide();
+      $("#doc_footer").hide();
+    }
+
+    // document.getElementById("header").style.display = "inline";
+    // document.getElementById("footer").style.display = "inline";
+  }
+
+  // close paraMETER row
+  function closeparameterrow() {
+    div_to_remove = "keywordid" + conditioncount;
+    $("#" + div_to_remove).parent().parent().parent().remove();
+    conditioncount = conditioncount - 1;
+  }
+
+  // close paraMETER row
+  function closeparameterrowfullocr() {
+    div_to_remove = "fullocrfirstdropdownid" + fullocrconditioncount;
+    $("#" + div_to_remove).parent().parent().parent().remove();
+    fullocrconditioncount = fullocrconditioncount - 1;
+  }
+
+  // close condition row in modal
+  function closeconditionrowinmodal(parameterrow) {
+    div_to_remove = "modalfirstdropdownid" + preprocessingcount;
+    $("#" + div_to_remove).parent().parent().parent().remove();
+    preprocessingcount = preprocessingcount - 1;
+    // $(parameterrow).parent().parent().remove();
+  }
+
+  // show and hide captured parameters table
+  function showandhidecapturedparameterstable() {
+    if (parameterscount == 0) {
+      document.getElementById("capturedparameterstableid").style.display = "none";
+    } else {
+      document.getElementById("capturedparameterstableid").style.display = "inline";
+    }
+  }
+
+  // show and hide captured parameters table
+  function showandhidecapturedtablestable() {
+    if (tablescount == 0) {
+      document.getElementById("capturedtablestableid").style.display = "none";
+    } else {
+      document.getElementById("capturedtablestableid").style.display = "inline";
+    }
+  }
+
+  // show post processing modal
+  function showpostprocessing(tab) {
+
+    // current_tab = tab;
+    // alert (tab);
+    $("#postprocessmodal").modal();
+    // captured_value = document.getElementById("keybasedcapturedvalue").value
+
+    document.getElementById("keybasedcapturedvalueinmodal").value = current_value_captured;
+    document.getElementById("savepostprocessvalueid").onclick = function () { savepostprocessvalue(tab); };
+  }
+
+  // add post processing condition in modal
+  function addmodalcondition() {
+    preprocessingcount = preprocessingcount + 1;
+
+    modaltableid = "modaltableid" + preprocessingcount;
+    modalfirstdropdownid = "modalfirstdropdownid" + preprocessingcount;
+    modalseconddropdownid = "modalseconddropdownid" + preprocessingcount;
+    modalkeywordid = "modalkeywordid" + preprocessingcount;
+
+    var tablehtml = `
+    <table border="1" id="${modaltableid}" style="background: #434343; border: 0px; margin-top: 10px"
+              align="center">
+              <tbody>
+                <tr>
+                  <div style="display: table-row; width: 100%;">
+                    <div style="display: table-cell; padding-right: 5px; width: 25%;">
+                      <select id="${modalfirstdropdownid}" style="width: 100%;">
+                        <option value="add">Add</option>
+                        <option value="remove">Remove</option>
+                        <option value="removeall">Remove all</option>
+                        <option value="replace">Replace</option>
+                        <option value="replaceall">Replace all</option>
+                        <option value="translate">Translate</option>
+                        <option value="runregex">Run regex</option>
+                        <option value="extractonly">Extract only</option>
+                        <option value="statictext">Static text</option>
+                      </select>
+                    </div>
+  
+  
+                    <div style="display: table-cell; padding-right: 5px; width: 30%;">
+                      <select id="${modalseconddropdownid}" style="width: 100%;">
+                        <option value="characters">Characters</option>
+                        <option value="numbers">Numbers</option>
+                        <option value="specialcharacters">Special Characters</option>
+                        <option value="alphabets">Alphabets</option>
+                        <option value="alphanumerics">Alphanumerics</option>
+                        <option value="dates">Dates</option>
+                        <option value="currency">Currency</option>
+                        <option value="textbefore">Text before</option>
+                        <option value="textafter">Text after</option>
+                        <option value="texttill">Text till</option>
+                        <option value="allspaces">All Spaces</option>
+                        <option value="trailingspaces">Trailing Spaces</option>
+                      </select>
+                    </div>
+  
+                    <div style="display: table-cell; padding-right: 5px; width: 45%;">
+                      <input type="text" id="${modalkeywordid}" style="width: 100%;">
+                    </div>
+  
+                    <div style="display: table-cell;">
+                      <p style="margin: 0px; cursor: pointer; opacity:0">×</p>
+                    </div>
+                  </div>
+                </tr>
+              </tbody>
+            </table>
+    `
+    var conditionrow = document.createElement('div');
+    conditionrow.innerHTML = tablehtml;
+    var existingmodalpostprocessingtable = document.getElementById("existingmodalpostprocessingtable");
+    existingmodalpostprocessingtable.appendChild(conditionrow);
+  }
+
+  // check file type
+  function checkfiletype(file) {
+    var fileName = file.name;
+    extension = fileName.split('.').pop();
+    // alert(extension);
+    if ((extension == "pdf") || (extension == "PDF")) {
+      sendfiletoserver(file)
+    } else if ((extension == "jpg") || (extension == "png") || (extension == "jpeg")) {
+      sendimagetoserver(file)
+    } else {
+      alert("Unsupported file format");
+    }
+  }
+
+  // when pdf is loaded
+  function sendfiletoserver(file) {
+
+    document.getElementById("loading_transfering_file").style.display = "inline";
+
+    var formdata = new FormData();
+    formdata.append('file', file);
+
+    fetch('receivefile', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            timestamp = text;
+            foldernameinserver = 'static/initialreceivepdf/' + text;
+            filenameinserver = text + '.pdf';
+            console.log(foldernameinserver);
+            console.log(filenameinserver);
+            document.getElementById("loading_transfering_file").style.display = "none";
+            document.getElementById("loading_scanning").style.display = "inline";
+            processsentfile(text);
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+  }
+
+  function processsentfile(timestamp) {
+    document.getElementById("loading_transfering_file").style.display = "none";
+    document.getElementById("loading_scanning").style.display = "inline";
+
+    var e = document.getElementById("language");
+    var language = e.value;
+
+    var formdata = new FormData();
+    formdata.append('timestamp', timestamp);
+    formdata.append('lang', language);
+
+    fetch('processsentfile', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            // console.log(text);
+
+            var jsonjson = JSON.parse(text);
+            // jsonjson = JSON.parse(jsonjson);
+            console.log(jsonjson.dimensions);
+            console.log(jsonjson.jsondata);
+
+            boxes_data = jsonjson.jsondata
+            dimensions = jsonjson.dimensions
+
+            document.getElementById("loading_scanning").style.display = "none";
+            createimagedivs(timestamp, boxes_data, dimensions);
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+  }
+
+  function createimagedivs(timestamp, jsonstring, dimensions) {
+    document.getElementById("filechoosediv").style.display = "none";
+
+    dimension_array = JSON.parse(dimensions);
+
+    var jsonjson = JSON.parse(jsonstring);
+    jsonjson = JSON.parse(jsonjson);
+    // console.log(jsonjson);
+
+    pageslist = [];
+    for (x in jsonjson) {
+      pageslist.push(x)
+    }
+
+    noofpages = pageslist.length;
+
+    for (i = 0; i < noofpages; i++) {
+
+      current_image_dimension = dimension_array[i];
+      // console.log();
+      var filename = "/output" + i + ".jpg";
+      var filepath = "static/initialreceivepdf/" + timestamp + filename;
+
+      var widthcompression;
+      var heightcompression;
+
+      originalwidth = parseInt(current_image_dimension[0]);
+      originalheight = parseInt(current_image_dimension[1]);
+
+      if (i == 0) {
+        originalwidth_to_model_creation = originalwidth;
+        originalheight_to_model_creation = originalheight;
+      }
+
+      // originalwidth = 2480;
+      // originalheight = 3505;
+      // widthcompression = (900 / originalwidth) * 100;
+      // heightcompression = (1300 / originalheight) * 100;
+      // widthcompression = 37;
+      // heightcompression = 37;
+
+      // x = 
+      // console.log(x);
+
+      compression_ratio = (900 / originalwidth) * 100;
+      console.log(originalwidth);
+      console.log(originalheight);
+      console.log(compression_ratio);
+      // console.log(widthcompression);
+      // console.log(heightcompression);
+
+
+      var map = document.createElement('map');
+      map.name = pageslist[i];
+
+      pagename = "output" + i + ".jpg";
+      pagemetadata = jsonjson[pagename];
+      for (box in pagemetadata) {
+        var area = document.createElement('area');
+        area.shape = "rect"
+        area.title = pagemetadata[box];
+        // console.log(pagemetadata[box]);
+        area.setAttribute('onclick', "callalert('" + pagemetadata[box] + "')");
+        box = box.replace("(", "").replace(")", "");
+
+
+        var array = JSON.parse("[" + box + "]");
+        // console.log(array);
+        x0 = parseInt(array[0]);
+        y0 = parseInt(array[1]);
+        x1 = parseInt(array[2]);
+        y1 = parseInt(array[3]);
+
+        x0onepercent = x0 / 100;
+        x0corrected = compression_ratio * x0onepercent;
+        // console.log(widthcompression);
+        y0onepercent = y0 / 100;
+        y0corrected = compression_ratio * y0onepercent;
+        x1onepercent = x1 / 100;
+        x1corrected = compression_ratio * x1onepercent;
+        y1onepercent = y1 / 100;
+        y1corrected = compression_ratio * y1onepercent;
+
+        box = parseInt(x0corrected) + "," + parseInt(y0corrected) + "," + parseInt(x1corrected) + "," + parseInt(y1corrected);
+        // box = parseInt(x0) + "," + parseInt(y0) + "," + parseInt(x1) + "," + parseInt(y1);
+        // console.log(box);
+        // console.log(pagemetadata[box]);
+
+        area.coords = box;
+
+        // area.title = pagemetadata[box];
+        map.appendChild(area);
+      }
+
+      var title = document.createElement('h5');
+      title.innerHTML = "Page " + (i + 1).toString();
+      title.style.paddingBottom = "5px"
+
+      var imageview = document.createElement('img');
+      imageview.src = filepath;
+      // imageview.width = "900"
+      // imageview.height = "1300"
+      imageview.width = (originalwidth / 100) * compression_ratio;
+      imageview.height = (originalheight / 100) * compression_ratio;
+      imageview.style.paddingBottom = "10px"
+      imageview.useMap = "#" + pageslist[i];
+      imageview.id = "imageview" + i;
+
+      var canvas = document.createElement('canvas');
+      // canvas.width = "900"
+      // canvas.height = "1300"
+      canvas.width = (originalwidth / 100) * compression_ratio;
+      canvas.height = (originalheight / 100) * compression_ratio;
+      canvas.id = "canvas" + (i + 1)
+      canvas.style.position = "absolute"
+      canvas.style.top = "0px"
+      canvas.style.left = "0px"
+      canvas.style.display = "none"
+      // canvas.addEventListener('click', function() { alert(this.id) }, false);
+      canvas.addEventListener('click', function () { drawcropbox(this.id, originalwidth, originalheight) }, false);
+
+
+      context = canvas.getContext('2d');
+
+      var wrapperdiv = document.createElement('div');
+      wrapperdiv.id = "wrapperdiv" + i;
+      wrapperdiv.className = "canvaswrapper";
+
+      var centerpanel = document.getElementById("centerpanel");
+      centerpanel.appendChild(title);
+      centerpanel.appendChild(map);
+      wrapperdiv.appendChild(imageview);
+      wrapperdiv.appendChild(canvas);
+      centerpanel.appendChild(wrapperdiv);
+
+    }
+
+    document.getElementById("rightpanel").style.pointerEvents = "auto";
+    document.getElementById("language").style.pointerEvents = "none";
+
+  }
+
+  // function createimagedivs(timestamp, jsonstring) {
+  //   document.getElementById("filechoosediv").style.display = "none";
+
+  //   // console.log(jsonstring); 
+
+  //   var jsonjson = JSON.parse(jsonstring);
+  //   jsonjson = JSON.parse(jsonjson);
+  //   console.log(jsonjson);
+
+  //   pageslist = [];
+  //   for (x in jsonjson) {
+  //     pageslist.push(x)
+  //   }
+
+  //   noofpages = pageslist.length;
+
+  //   for (i = 0; i < noofpages; i++) {
+  //     var filename = "/output" + i + ".jpg";
+  //     var filepath = "static/initialreceivepdf/" + timestamp + filename;
+
+  //     var originalwidth;
+  //     var originalheight;
+  //     var widthcompression;
+  //     var heightcompression;
+
+  //     originalwidth = 2480;
+  //     originalheight = 3505;
+  //     // widthcompression = (900 / originalwidth) * 100;
+  //     // heightcompression = (1300 / originalheight) * 100;
+  //     widthcompression = 37;
+  //     heightcompression = 37;
+
+
+  //     var map = document.createElement('map');
+  //     map.name = pageslist[i];
+
+  //     pagename = "output" + i + ".jpg";
+  //     pagemetadata = jsonjson[pagename];
+  //     for (box in pagemetadata) {
+  //       var area = document.createElement('area');
+  //       area.shape = "rect"
+  //       area.title = pagemetadata[box];
+  //       // console.log(pagemetadata[box]);
+  //       area.setAttribute('onclick', "callalert('" + pagemetadata[box] + "')");
+  //       box = box.replace("(", "").replace(")", "");
+
+  //       var array = JSON.parse("[" + box + "]");
+  //       // console.log(array);
+  //       x0 = parseInt(array[0]);
+  //       y0 = parseInt(array[1]);
+  //       x1 = parseInt(array[2]);
+  //       y1 = parseInt(array[3]);
+
+  //       x0onepercent = x0 / 100;
+  //       x0corrected = widthcompression * x0onepercent;
+  //       y0onepercent = y0 / 100;
+  //       y0corrected = heightcompression * y0onepercent;
+  //       x1onepercent = x1 / 100;
+  //       x1corrected = widthcompression * x1onepercent;
+  //       y1onepercent = y1 / 100;
+  //       y1corrected = heightcompression * y1onepercent;
+
+  //       box = parseInt(x0corrected) + "," + parseInt(y0corrected) + "," + parseInt(x1corrected) + "," + parseInt(y1corrected);
+
+  //       area.coords = box;
+  //       map.appendChild(area);
+  //     }
+
+  //     var title = document.createElement('h5');
+  //     title.innerHTML = "Page " + (i + 1).toString();
+  //     title.style.paddingBottom = "5px"
+
+  //     var imageview = document.createElement('img');
+  //     imageview.src = filepath;
+  //     // imageview.style.maxWidth = "900px"
+  //     // imageview.height = "1300"
+  //     imageview.style.paddingBottom = "10px"
+  //     imageview.useMap = "#" + pageslist[i];
+  //     imageview.id = "imageview" + i;
+
+  //     var canvas = document.createElement('canvas');
+  //     // canvas.style.maxWidth = "900px"
+  //     // canvas.height = "1300"
+  //     canvas.id = "canvas" + (i + 1)
+  //     canvas.style.position = "absolute"
+  //     canvas.style.top = "0px"
+  //     canvas.style.left = "0px"
+  //     canvas.style.display = "none"
+  //     canvas.addEventListener('click', function () { drawcropbox(this.id) }, false);
+
+
+  //     context = canvas.getContext('2d');
+
+  //     var wrapperdiv = document.createElement('div');
+  //     wrapperdiv.id = "wrapperdiv" + i;
+  //     wrapperdiv.className = "canvaswrapper";
+
+  //     var centerpanel = document.getElementById("centerpanel");
+  //     centerpanel.appendChild(title);
+  //     centerpanel.appendChild(map);
+  //     wrapperdiv.appendChild(imageview);
+  //     wrapperdiv.appendChild(canvas);
+  //     centerpanel.appendChild(wrapperdiv);
+
+  //   }
+
+  //   document.getElementById("rightpanel").style.pointerEvents = "auto";
+  //   document.getElementById("language").style.pointerEvents = "none";
+
+  // }
+
+
+
+
+  function callalert(title) {
+    // alert (title);
+    var oldvalue = document.getElementById(lockedfieldid).value;
+    var newvalue = oldvalue + " " + title;
+    document.getElementById(lockedfieldid).value = newvalue;
+  }
+
+  // when image is loaded
+  function sendimagetoserver(file) {
+
+    document.getElementById("loading_transfering_file").style.display = "inline";
+
+    var formdata = new FormData();
+    formdata.append('file', file);
+
+    fetch('receiveimagefile', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            timestamp = text;
+            foldernameinserver = 'static/initialreceivepdf/' + text;
+            filenameinserver = text + '.jpg';
+            console.log(foldernameinserver);
+            console.log(filenameinserver);
+            document.getElementById("loading_transfering_file").style.display = "none";
+            document.getElementById("loading_scanning").style.display = "inline";
+            processsentimage(text);
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+  }
+
+  function processsentimage(timestamp) {
+    document.getElementById("loading_transfering_file").style.display = "none";
+    document.getElementById("loading_scanning").style.display = "inline";
+
+    var e = document.getElementById("language");
+    var language = e.value;
+
+
+    var formdata = new FormData();
+    formdata.append('timestamp', timestamp);
+    formdata.append('lang', language);
+
+    fetch('processsentimage', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            // console.log(text);
+            var jsonjson = JSON.parse(text);
+            // jsonjson = JSON.parse(jsonjson);
+            console.log(jsonjson.dimensions);
+            console.log(jsonjson.jsondata);
+
+            boxes_data = jsonjson.jsondata
+            dimensions = jsonjson.dimensions
+
+            document.getElementById("loading_scanning").style.display = "none";
+            createimagedivs(timestamp, boxes_data, dimensions);
+
+            // document.getElementById("loading_scanning").style.display = "none";
+            // createimagedivs(timestamp, text);
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+  }
+
+  function lockfield(field) {
+    // alert (field.id);
+    lockedfieldid = field.id;
+  }
+
+  // Try key based current value
+  function keybasedtrycurrentvalue() {
+
+    document.getElementById("keybasedloading").style.width = "385px";
+    var noofconditions = $("#existingparametertable > div").length;
+    var json = {};
+
+    json["timestamp"] = timestamp;
+
+    if (noofconditions == 1) {
+      jsonobject = {};
+      // var page = document.getElementById("pagekeybased").value.trim();
+      var enteredkeyword = document.getElementById("keywordid1").value.trim();
+      var enteredposition = document.getElementById("positionid1").value;
+      var enteredwidth = document.getElementById("widthid1").value;
+      var enteredheight = document.getElementById("heightid1").value;
+
+      if (enteredwidth == "") {
+        enteredwidth = 5000;
+      }
+
+      if (enteredheight == "") {
+        enteredheight = 0;
+      }
+
+      // jsonobject["page"] = page;
+      jsonobject["keyword"] = enteredkeyword;
+      jsonobject["position"] = enteredposition;
+      jsonobject["width"] = enteredwidth;
+      jsonobject["height"] = enteredheight;
+
+      json["condition1"] = jsonobject;
+
+      console.log(json);
+
+    } else {
+      for (i = 0; i < noofconditions; i++) {
+        jsonobject = {};
+
+        count = i + 1;
+        var conditionid = "condition" + count;
+        var keywordid = "keywordid" + count;
+        var positionid = "positionid" + count;
+        var widthid = "widthid" + count;
+        var heightid = "heightid" + count;
+
+        var enteredkeyword = document.getElementById(keywordid).value.trim();
+        var enteredposition = document.getElementById(positionid).value;
+        var enteredwidth = document.getElementById(widthid).value;
+        var enteredheight = document.getElementById(heightid).value;
+
+        jsonobject["keyword"] = enteredkeyword;
+        jsonobject["position"] = enteredposition;
+        jsonobject["width"] = enteredwidth;
+        jsonobject["height"] = enteredheight;
+
+        json[conditionid] = jsonobject;
+      }
+    }
+
+    var page = document.getElementById("pagekeybased").value.trim();
+    json["page"] = page;
+
+    console.log(json);
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('POST', 'trycurrentcondition', true);
+    xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(json));
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState != 4) return;
+      if (xhr.status != 200) {
+        console.log("Status: " + xhr.status);
+        document.getElementById("keybasedloading").style.width = "0px";
+        document.getElementById("keybasedcapturedvalue").value = "Couldnot find text";
+      } else if (xhr.status == 200) {
+        response = xhr.responseText;
+        var responseobj = JSON.parse(response);
+        searchbox = responseobj.searchbox;
+        foundtext = responseobj.foundtext;
+
+        document.getElementById("keybasedloading").style.width = "0px";
+        document.getElementById("keybasedcapturedvalue").value = foundtext.trim();
+
+        current_value_captured = foundtext.trim();
+
+        // [358, 688, 558, 696]
+        searchbox = searchbox.replace("[", "");
+        searchbox = searchbox.replace("]", "");
+        searchbox = searchbox.split(', ');
+        // alert (searchbox[0]);
+
+        var originalwidth = 2480;
+        var originalheight = 3505;
+        var widthcompression = (900 / originalwidth) * 100;
+        var heightcompression = (1300 / originalheight) * 100;
+
+        left = parseInt(searchbox[0]) / 100;
+        leftcorrected = widthcompression * left;
+        bottom = parseInt(searchbox[1]) / 100;
+        bottomcorrected = heightcompression * bottom;
+
+        width = (parseInt(searchbox[2]) - parseInt(searchbox[0])) / 100;
+        widthcorrected = widthcompression * width;
+        height = (parseInt(searchbox[3]) - parseInt(searchbox[2])) / 100;
+        heightcorrected = heightcompression * height;
+
+        var boxdiv = document.createElement('div');
+        boxdiv.id = "boxdiv" + i;
+        boxdiv.className = "canvasbox";
+        boxdiv.style.left = leftcorrected + "px";
+        boxdiv.style.bottom = bottomcorrected + "px";
+        boxdiv.style.width = widthcorrected + "px";
+        boxdiv.style.height = heightcorrected + "px";
+        // boxdiv.style.left = parseInt(searchbox[0]);
+        // boxdiv.style.bottom = parseInt(searchbox[1]);
+        // boxdiv.style.width = parseInt(searchbox[3]) - parseInt(searchbox[0]);
+        // boxdiv.style.height = parseInt(searchbox[4]) - parseInt(searchbox[2]);
+        // var wrapperdiv = document.getElementById("wrapperdiv0");
+        // wrapperdiv.appendChild(boxdiv);
+      } else {
+        document.getElementById("keybasedloading").style.width = "0px";
+        document.getElementById("keybasedcapturedvalue").value = "Couldnot find text";
+      }
+    };
+
+  }
+
+  function trymodalcurrentvalue() {
+
+    document.getElementById("modalloading").style.width = "480px";
+
+    var captured_text = document.getElementById("keybasedcapturedvalueinmodal").value;
+
+    conditions_block = document.getElementById("existingmodalpostprocessingtable");
+    // var total_condition_count = ($("#existingmodalpostprocessingtable > div").length);
+    // alert(total_condition_count);
+
+    all_conditions_list = [];
+
+    for (i = 0; i < preprocessingcount; i++) {
+
+      condition_list = []
+
+      var modalfirstdropdownid = "modalfirstdropdownid" + (i + 1);
+      var modalseconddropdownid = "modalseconddropdownid" + (i + 1);
+      var modalkeywordid = "modalkeywordid" + (i + 1);
+
+      // alert (modalfirstdropdownid);
+
+      var modalfirstdropdownid_text = document.getElementById(modalfirstdropdownid).value;
+      var modalseconddropdownid_text = document.getElementById(modalseconddropdownid).value;
+      var modalkeywordid_text = document.getElementById(modalkeywordid).value;
+      if (modalkeywordid_text == "") {
+        modalkeywordid_text = "-";
+      }
+
+      condition_list.push(modalfirstdropdownid_text);
+      condition_list.push(modalseconddropdownid_text);
+      condition_list.push(modalkeywordid_text);
+
+      all_conditions_list.push(condition_list)
+
+    }
+
+    final_text = post_processings(captured_text, all_conditions_list);
+  }
+
+  function post_processings(captured_text, all_conditions_list) {
+    console.log(all_conditions_list);
+
+    var json = {};
+
+    json["captured_text"] = captured_text;
+    json["all_conditions_list"] = all_conditions_list;
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('POST', 'trycurrentpostprocessingcondition', true);
+    xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(json));
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState != 4) return;
+      if (xhr.status != 200) {
+        document.getElementById("modalloading").style.width = "0px";
+        console.log("Status: " + xhr.status);
+      } else {
+        response = xhr.responseText;
+        // alert (response);
+        document.getElementById("modalloading").style.width = "0px";
+        document.getElementById("keybasedpostprocessedvalueinmodal").value = response;
+      }
+    };
+
+  }
+
+  function closemodal() {
+    // class="close" data-dismiss="modal"
+    $('#postprocessmodal').modal('toggle');
+  }
+
+  function closemodalregionbased() {
+    // class="close" data-dismiss="modal"
+    $('#postprocessmodalregionbased').modal('toggle');
+  }
+
+  function closemodalcolumnnames() {
+    // class="close" data-dismiss="modal"
+    $('#columnnamesmodal').modal('toggle');
+  }
+
+
+  // Try full ocr current value
+  function tryfullocrcurrentvalue() {
+
+    document.getElementById("fullocrloading").style.width = "385px";
+
+    var captured_text = document.getElementById("capturedvaluefullocr").value;
+
+    conditions_block = document.getElementById("existingfullocrparametertable");
+    var total_condition_count = ($("#existingfullocrparametertable > div").length) - 1;
+    // alert(total_condition_count);
+
+    all_conditions_list = [];
+
+    for (i = 0; i < total_condition_count; i++) {
+
+      condition_list = []
+
+      var modalfirstdropdownid = "fullocrfirstdropdownid" + (i + 1);
+      var modalseconddropdownid = "fullocrseconddropdownid" + (i + 1);
+      var modalkeywordid = "fullocrkeywordid" + (i + 1);
+
+      var modalfirstdropdownid_text = document.getElementById(modalfirstdropdownid).value;
+      var modalseconddropdownid_text = document.getElementById(modalseconddropdownid).value;
+      var modalkeywordid_text = document.getElementById(modalkeywordid).value;
+      if (modalkeywordid_text == "") {
+        modalkeywordid_text = "-";
+      }
+
+      condition_list.push(modalfirstdropdownid_text);
+      condition_list.push(modalseconddropdownid_text);
+      condition_list.push(modalkeywordid_text);
+
+      all_conditions_list.push(condition_list)
+
+    }
+
+    final_text = full_ocr(timestamp, all_conditions_list);
+    console.log(all_conditions_list);
+  }
+
+  function full_ocr(timestamp, all_conditions_list) {
+    console.log(all_conditions_list);
+
+    var json = {};
+
+    json["timestamp"] = timestamp;
+    json["all_conditions_list"] = all_conditions_list;
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('POST', 'trycurrentfullocrcondition', true);
+    xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(json));
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState != 4) return;
+      if (xhr.status != 200) {
+        document.getElementById("fullocrloading").style.width = "0px";
+        document.getElementById("capturedvaluefullocr").value = "Couldnot find text";
+        console.log("Status: " + xhr.status);
+      } else {
+        response = xhr.responseText;
+        // alert (response);
+        document.getElementById("fullocrloading").style.width = "0px";
+        document.getElementById("capturedvaluefullocr").value = response;
+      }
+    };
+
+  }
+
+
+  // Region based ocr
+  function initDraw(canvas) {
+
+    canvas_list = [];
+    for (i = 0; i < noofpages; i++) {
+      canvas_id = 'canvas' + (i + 1);
+      document.getElementById(canvas_id).style.display = "inline";
+      canvas_list.push(canvas_id);
+    }
+
+  }
+
+  function drawcropbox(canvasid, originalwidth, originalheight) {
+
+
+
+    selected_page = parseInt(canvasid.replace('canvas', ''));
+    document.getElementById("selectedpage").value = selected_page;
+
+    //Canvas
+    var canvas = document.getElementById(canvasid);
+    var canvas_width = canvas.width;
+    var canvas_height = canvas.height;
+    var ctx = canvas.getContext('2d');
+    //Variables
+    var canvasx = $(canvas).offset().left;
+    var canvasy = $(canvas).offset().top;
+    var last_mousex = last_mousey = 0;
+    var mousex = mousey = 0;
+    var mousedown = false;
+
+    console.log(originalwidth);
+    console.log(originalheight);
+    console.log(canvas_width);
+    console.log(canvas_height);
+
+    //Mousedown
+    $(canvas).on('mousedown', function (e) {
+      last_mousex = parseInt(e.clientX - canvasx);
+      last_mousey = parseInt(e.clientY - canvasy);
+      mousedown = true;
+      // document.getElementById('x0').value = parseInt(last_mousex * (1 + (compression_ratio/100)));
+      // document.getElementById('y0').value = parseInt((canvas_height - last_mousey) * (1 + (compression_ratio/100)));
+
+      canvas_width_percent_1 = (parseInt(last_mousex) / canvas_width) * 100;
+      canvas_height_percent_1 = (parseInt(canvas_height - last_mousey) / canvas_height) * 100;
+      // canvas_height_percent_1 = (parseInt(last_mousey)/canvas_width)*100;
+
+      original_width_percent_1 = (originalwidth / 100) * canvas_width_percent_1;
+      original_height_percent_1 = (originalheight / 100) * canvas_height_percent_1;
+
+      document.getElementById('x0').value = parseInt(original_width_percent_1);
+      document.getElementById('y0').value = parseInt(original_height_percent_1);
+    });
+
+    //Mouseup
+    $(canvas).on('mouseup', function (e) {
+      end_last_mousex = parseInt(e.clientX - canvasx);
+      end_last_mousey = parseInt(e.clientY - canvasy);
+      mousedown = false;
+      // document.getElementById('x1').value = parseInt(end_last_mousex * (1 + (compression_ratio/100)));
+      // document.getElementById('y1').value = parseInt((canvas_height - end_last_mousey) * (1 + (compression_ratio/100)));
+
+      canvas_width_percent_2 = (parseInt(end_last_mousex) / canvas_width) * 100;
+      canvas_height_percent_2 = (parseInt(canvas_height - end_last_mousey) / canvas_height) * 100;
+      // canvas_height_percent_2 = (parseInt(end_last_mousey)/canvas_width)*100;
+
+      original_width_percent_2 = (originalwidth / 100) * canvas_width_percent_2;
+      original_height_percent_2 = (originalheight / 100) * canvas_height_percent_2;
+
+      document.getElementById('x1').value = parseInt(original_width_percent_2);
+      document.getElementById('y1').value = parseInt(original_height_percent_2);
+    });
+
+    //Mousemove
+    $(canvas).on('mousemove', function (e) {
+      mousex = parseInt(e.clientX - canvasx);
+      mousey = parseInt(e.clientY - canvasy);
+      if (mousedown) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); //clear canvas
+        ctx.beginPath();
+        var width = mousex - last_mousex;
+        var height = mousey - last_mousey;
+        ctx.rect(last_mousex, last_mousey, width, height);
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+      //Output
+      $('#output').html('current: ' + mousex + ', ' + mousey + '<br/>last: ' + last_mousex + ', ' + last_mousey + '<br/>mousedown: ' + mousedown);
+    });
+  }
+
+  function trycurrentvalueregionbased() {
+
+    document.getElementById("regionbasedloading").style.width = "385px";
+
+    var selected_page = document.getElementById("selectedpage").value;
+    var x0 = document.getElementById("x0").value;
+    var y0 = document.getElementById("y0").value;
+    var x1 = document.getElementById("x1").value;
+    var y1 = document.getElementById("y1").value;
+
+    var json = {};
+
+    json["selected_page"] = selected_page;
+    json["timestamp"] = timestamp;
+    json["x0"] = x0;
+    json["y0"] = y0;
+    json["x1"] = x1;
+    json["y1"] = y1;
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('POST', 'trycurrentregionbasedcondition', true);
+    xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(json));
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState != 4) return;
+      if (xhr.status != 200) {
+        document.getElementById("regionbasedloading").style.width = "0px";
+        document.getElementById("capturedvalueregionbased").value = "Couldnot find text";
+        console.log("Status: " + xhr.status);
+      } else {
+        response = xhr.responseText;
+        // alert (response);
+        document.getElementById("regionbasedloading").style.width = "0px";
+        document.getElementById("capturedvalueregionbased").value = response;
+        current_value_captured = response;
+      }
+    };
+
+  }
+
+  function trystaticcurrentvalue() {
+
+    document.getElementById("staticloading").style.width = "385px";
+
+    var staticlabel = document.getElementById("staticlabel").value;
+    var capturedvaluestatic = document.getElementById("capturedvaluestatic").value;
+    var staticfirstdropdownid = document.getElementById("staticfirstdropdownid").value;
+    var statickeywordid = document.getElementById("statickeywordid").value;
+
+    var json = {};
+
+    json["staticlabel"] = staticlabel;
+    json["capturedvaluestatic"] = capturedvaluestatic;
+    json["staticfirstdropdownid"] = staticfirstdropdownid;
+    json["statickeywordid"] = statickeywordid;
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('POST', 'trycurrentstaticcondition', true);
+    xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(json));
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState != 4) return;
+      if (xhr.status != 200) {
+        document.getElementById("staticloading").style.width = "0px";
+        document.getElementById("capturedvaluestatic").value = "Couldnot find text";
+        console.log("Status: " + xhr.status);
+      } else {
+        response = xhr.responseText;
+        // alert (response);
+        document.getElementById("staticloading").style.width = "0px";
+        document.getElementById("capturedvaluestatic").value = response;
+        // current_value_captured = response;
+      }
+    };
+
+  }
+
+
+  // show db options modal
+  function showdboptions() {
+    $("#dboptionsmodal").modal();
+    document.getElementById("keybasedcapturedvalueinmodal").value = current_value_captured;
+    document.getElementById("savepostprocessvalueid").onclick = function () { savepostprocessvalue(tab); };
+  }
+
+  function closemodaldboptions() {
+    $('#dboptionsmodal').modal('toggle');
+  }
+
+  function checkconnection() {
+
+    var server = document.getElementById("server").value;
+    var port = document.getElementById("port").value;
+    var database = document.getElementById("database").value;
+    var uid = document.getElementById("uid").value;
+    var password = document.getElementById("password").value;
+    var trustedconnection = document.getElementById("trustedconnection").options[document.getElementById("trustedconnection").selectedIndex].value;
+
+
+    if ((server != "") && (port != "") && (database != "") && (uid != "") && (password != "") && (trustedconnection != "")) {
+      document.getElementById("dbloading").style.width = "497px";
+      var formdata = new FormData();
+      formdata.append('server', server);
+      formdata.append('port', port);
+      formdata.append('database', database);
+      formdata.append('uid', uid);
+      formdata.append('password', password);
+      formdata.append('trustedconnection', trustedconnection);
+
+      fetch('checkdbstatus', {
+        // mode: 'no-cors',
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            document.getElementById("dbloading").style.width = "0px";
+            console.log('Looks like there was a problem. Status Code: ' + response.text);
+            document.getElementById("connstatus").innerHTML = "⨂ Connection failed";
+            document.getElementById("connstatus").style.color = "red";
+            // alert("Cannot connect to specified DB");
+            return;
+          } else if (response.status == 200) {
+            return response.text().then(function (text) {
+              document.getElementById("dbloading").style.width = "0px";
+              console.log(text);
+              document.getElementById("connstatus").innerHTML = "⭘ Connection successful";
+              document.getElementById("connstatus").style.color = "springgreen";
+              // alert ("Connection successful")
+            });
+          }
+        }
+      ).catch(function (err) {
+        document.getElementById("dbloading").style.width = "0px";
+        console.log('Fetch Error :-S', err);
+        // alert("Cannot connect to specified DB");
+        document.getElementById("connstatus").innerHTML = "⨂ Connection failed";
+        document.getElementById("connstatus").style.color = "red";
+      });
+      return;
+    } else {
+      alert ("Fill all parameters");
+    }
+
+
+
+
+
+  }
+
+  function savedbparameters() {
+
+    var server = document.getElementById("server").value;
+    var port = document.getElementById("port").value;
+    var database = document.getElementById("database").value;
+    var uid = document.getElementById("uid").value;
+    var password = document.getElementById("password").value;
+    var trustedconnection = document.getElementById("trustedconnection").options[document.getElementById("trustedconnection").selectedIndex].value;
+
+    db_connection_parameters["server"] = server;
+    db_connection_parameters["port"] = port;
+    db_connection_parameters["database"] = database;
+    db_connection_parameters["uid"] = uid;
+    db_connection_parameters["password"] = password;
+    db_connection_parameters["trustedconnection"] = trustedconnection;
+
+    console.log(db_connection_parameters);
+
+    closemodaldboptions()
+
+  }
+
+
+
+
+
+  // Capture table without border
+  function gettablewithoutborder() {
+
+    document.getElementById("withoutborderloading").style.width = "385px";
+
+    var header = document.getElementById("tableheaderwithoutborder").value.trim();
+    var header_included_in_table;
+    var footer = document.getElementById("tablefooterwithoutborder").value.trim();
+    var footer_included_in_table;
+
+    var tblstrtsb4hdrchkbx = document.getElementById("headerintablewithoutborder");
+    var tblstrtsb4ftrchkbx = document.getElementById("footerintablewithoutborder");
+
+    var headeravailabilitywithoutborder = document.getElementById("headeravailabilitywithoutborder");
+    var footeravailabilitywithoutborder = document.getElementById("footeravailabilitywithoutborder");
+
+    var multipage;
+
+    var top_margin;
+    var bottom_margin;
+
+    var header_availability;
+    var footer_availability;
+
+    if (tblstrtsb4hdrchkbx.checked == true) {
+      header_included_in_table = "True";
+    } else {
+      header_included_in_table = "False";
+    }
+
+    if (tblstrtsb4ftrchkbx.checked == true) {
+      footer_included_in_table = "True";
+    } else {
+      footer_included_in_table = "False";
+    }
+
+    if (headeravailabilitywithoutborder.checked == true) {
+      header_availability = "True";
+    } else {
+      header_availability = "False";
+    }
+
+    if (footeravailabilitywithoutborder.checked == true) {
+      footer_availability = "True";
+    } else {
+      footer_availability = "False";
+    }
+
+    if (enablemultipagetablewithoutborder.checked == true) {
+      multipagetable = "True"
+      top_margin = document.getElementById("topmarginwithoutborder").value;
+      bottom_margin = document.getElementById("bottommarginwithoutborder").value;
+    } else {
+      multipagetable = "False"
+      top_margin = "100";
+      bottom_margin = "100";
+    }
+
+    // alert (top_margin);
+    // alert (bottom_margin);
+
+    var group_into_row = document.getElementById("grouprows").value;
+    var group_into_column = document.getElementById("groupcolumns").value;
+    var detect_superscripts = document.getElementById("superscript_withoutborder").options[document.getElementById("superscript_withoutborder").selectedIndex].value;
+    var cut_text = document.getElementById("cuttext_withoutborder").options[document.getElementById("cuttext_withoutborder").selectedIndex].value;
+    var text_edge_tol = document.getElementById("edgetol").value;
+
+    var formdata = new FormData();
+    formdata.append('timestamp', timestamp);
+    formdata.append('originalwidth', originalwidth_to_model_creation);
+    formdata.append('originalheight', originalheight_to_model_creation);
+    formdata.append('header', header);
+    formdata.append('header_included_in_table', header_included_in_table);
+    formdata.append('footer', footer);
+    formdata.append('footer_included_in_table', footer_included_in_table);
+    formdata.append('multipagetable', multipagetable);
+    formdata.append('top_margin', top_margin);
+    formdata.append('bottom_margin', bottom_margin);
+    formdata.append('group_into_row', group_into_row);
+    formdata.append('group_into_column', group_into_column);
+    formdata.append('detect_superscripts', detect_superscripts);
+    formdata.append('cut_text', cut_text);
+    formdata.append('text_edge_tol', text_edge_tol);
+    formdata.append('header_availability', header_availability);
+    formdata.append('footer_availability', footer_availability);
+
+    fetch('gettablewithoutborder', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          document.getElementById("withoutborderloading").style.width = "0px";
+          console.log('Looks like there was a problem. Status Code: ' + response.text);
+          alert("Please check if all fields are entered correctly");
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            document.getElementById("withoutborderloading").style.width = "0px";
+            console.log(text);
+            // document.getElementById("capturedvalue").value = text;
+            // var array = JSON.parse(text);
+            // sendtoscanwithheaderandfooter(array)
+            var dt = new Date().toString();
+            var URLToOpen = "static/outputtables/" + timestamp + ".html?TimeStamp=" + dt;
+            window.open(URLToOpen);
+          });
+        }
+      }
+    ).catch(function (err) {
+      document.getElementById("withoutborderloading").style.width = "0px";
+      console.log('Fetch Error :-S', err);
+      alert("Please check if all fields are entered correctly");
+    });
+    return;
+
+  }
+
+
+  // Capture table with border
+  function gettablewithborder() {
+
+    document.getElementById("withborderloading").style.width = "385px";
+
+    var header = document.getElementById("tableheaderwithborder").value.trim();
+    var header_included_in_table;
+    var footer = document.getElementById("tablefooterwithborder").value.trim();
+    var footer_included_in_table;
+
+    var tblstrtsb4hdrchkbx = document.getElementById("headerintablewithborder");
+    var tblstrtsb4ftrchkbx = document.getElementById("footerintablewithborder");
+
+    var headeravailabilitywithborder = document.getElementById("headeravailabilitywithborder");
+    var footeravailabilitywithborder = document.getElementById("footeravailabilitywithborder");
+
+    var multipage;
+
+    var top_margin;
+    var bottom_margin;
+
+    var header_availability;
+    var footer_availability;
+
+    if (tblstrtsb4hdrchkbx.checked == true) {
+      header_included_in_table = "True";
+    } else {
+      header_included_in_table = "False";
+    }
+
+    if (tblstrtsb4ftrchkbx.checked == true) {
+      footer_included_in_table = "True";
+    } else {
+      footer_included_in_table = "False";
+    }
+
+    if (headeravailabilitywithborder.checked == true) {
+      header_availability = "True";
+    } else {
+      header_availability = "False";
+    }
+
+    if (footeravailabilitywithborder.checked == true) {
+      footer_availability = "True";
+    } else {
+      footer_availability = "False";
+    }
+
+    if (enablemultipagetablewithborder.checked == true) {
+      multipagetable = "True";
+      top_margin = document.getElementById("topmarginwithborder").value;
+      bottom_margin = document.getElementById("bottommarginwithborder").value;
+    } else {
+      multipagetable = "False";
+      top_margin = "100";
+      bottom_margin = "100";
+    }
+
+    // alert (top_margin);
+    // alert (bottom_margin);
+
+    var process_bg_lines = document.getElementById("bglines").value;
+    var cuttext = document.getElementById("cuttext").value;
+    var detect_superscripts = document.getElementById("superscript").options[document.getElementById("superscript").selectedIndex].value;
+    var smalllines = document.getElementById("smalllines").value;
+    var text_edge_tol = document.getElementById("edgetolwithborder").value;
+
+    var formdata = new FormData();
+    formdata.append('timestamp', timestamp);
+    formdata.append('originalwidth', originalwidth_to_model_creation);
+    formdata.append('originalheight', originalheight_to_model_creation);
+    formdata.append('header', header);
+    formdata.append('header_included_in_table', header_included_in_table);
+    formdata.append('footer', footer);
+    formdata.append('footer_included_in_table', footer_included_in_table);
+    formdata.append('multipagetable', multipagetable);
+    formdata.append('top_margin', top_margin);
+    formdata.append('bottom_margin', bottom_margin);
+
+    formdata.append('process_bg_lines', process_bg_lines);
+    formdata.append('cuttext', cuttext);
+    formdata.append('detect_superscripts', detect_superscripts);
+    formdata.append('smalllines', smalllines);
+
+    formdata.append('text_edge_tol', text_edge_tol);
+    formdata.append('header_availability', header_availability);
+    formdata.append('footer_availability', footer_availability);
+
+    formdata.append('columns_list', columns_list);
+
+    fetch('gettablewithborder', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          document.getElementById("withborderloading").style.width = "0px";
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          alert("Please check if all fields are entered correctly");
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            console.log(text);
+            document.getElementById("withborderloading").style.width = "0px";
+            // document.getElementById("capturedvalue").value = text;
+            // var array = JSON.parse(text);
+            // sendtoscanwithheaderandfooter(array)
+            var dt = new Date().toString();
+            var URLToOpen = "static/outputtables/" + timestamp + ".html?TimeStamp=" + dt;
+            window.open(URLToOpen);
+          });
+        }
+      }
+    ).catch(function (err) {
+      document.getElementById("withborderloading").style.width = "0px";
+      alert("Please check if all fields are entered correctly");
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+
+  }
+
+
+  // show post processing modal
+  function showcolumnnames() {
+    $("#columnnamesmodal").modal();
+    // captured_value = document.getElementById("keybasedcapturedvalue").value
+    // document.getElementById("keybasedcapturedvalueinmodal").value = captured_value
+
+  }
+
+
+  // enter column names modal
+  function addcolumn() {
+    columncount = columncount + 1;
+
+
+    keycolumn = "keycolumn" + columncount;
+    mandatory = "mandatory" + columncount;
+    multiline = "multiline" + columncount;
+    columnname = "columnname" + columncount;
+    columnorientation = "columnorientation" + columncount;
+    columnrow = "columnrow" + columncount;
+
+    console.log("here");
+
+
+    var tablehtml = `
+      <td>
+        <input type="checkbox" id="${keycolumn}">
+      </td>
+      <td>
+        <input type="checkbox" id="${mandatory}">
+      </td>
+      <td>
+        <input type="checkbox" id="${multiline}">
+      </td>
+      <td>
+        <input type="text" id="${columnname}" placeholder="Column name" style="width: 100%;">
+      </td>
+      <td>
+        <select id="${columnorientation}" style="width: 100%;">
+          <option value="top">Top</option>
+          <option value="center">Center</option>
+          <option value="bottom">Bottom</option>
+        </select>
+      </td>
+    `
+    var conditionrow = document.createElement('tr');
+    conditionrow.innerHTML = tablehtml;
+    conditionrow.id = columnrow;
+    var existingcolumnstable = document.getElementById("existingcolumnstable");
+    existingcolumnstable.appendChild(conditionrow);
+  }
+
+  function removecolumn(parameterrow) {
+
+    columnrowtoberemoved = "#columnrow" + columncount;
+    $(columnrowtoberemoved).remove();
+    columncount = columncount - 1;
+  }
+
+  function savecolumns() {
+    // var total_condition_count = $("#existingmodalpostprocessingtable > div").length;
+    // alert (total_condition_count);
+
+    for (i = 0; i < columncount; i++) {
+
+      currentcolumn = i + 1;
+
+      condition_list = []
+
+      var keycolumnid = "keycolumn" + (i + 1);
+      var mandatoryid = "mandatory" + (i + 1);
+      var multilineid = "multiline" + (i + 1);
+      var columnnameid = "columnname" + (i + 1);
+      var columnorientationid = "columnorientation" + (i + 1);
+
+      var keycolumncheckbox = document.getElementById(keycolumnid);
+      var keycolumn;
+
+      if (keycolumncheckbox.checked == true) {
+        keycolumn = "True";
+      } else {
+        keycolumn = "False";
+      }
+
+      var mandatorycheckbox = document.getElementById(mandatoryid);
+      var mandatory;
+
+      if (mandatorycheckbox.checked == true) {
+        mandatory = "True";
+      } else {
+        mandatory = "False";
+      }
+
+      var multilinecheckbox = document.getElementById(multilineid);
+      var multiline;
+
+      if (multilinecheckbox.checked == true) {
+        multiline = "True";
+      } else {
+        multiline = "False";
+      }
+
+      var columnname = document.getElementById(columnnameid).value;
+      var columnorientation = document.getElementById(columnorientationid).options[document.getElementById(columnorientationid).selectedIndex].value;
+
+      condition_list.push(keycolumn);
+      condition_list.push(mandatory);
+      condition_list.push(multiline);
+      condition_list.push(columnname);
+      condition_list.push(columnorientation);
+      // post_processing_conditions.push(condition_list)
+      // post_processing_conditions["post_processing_condition_" + (i + 1).toString()] = condition_list
+      columns_list.push(condition_list);
+
+    }
+    console.log(columns_list)
+
+    // finalvalue = document.getElementById("keybasedpostprocessedvalueinmodal").value;
+    // document.getElementById("keybasedcapturedvalue").value = finalvalue;
+
+    closemodalcolumnnames();
+  }
+
+
+
+  function togglemultipageoptions_with_border() {
+    visiblity = document.getElementById("multipageoptionswithborder").style.display;
+    if (visiblity == "none") {
+      document.getElementById("multipageoptionswithborder").style.display = "inline";
+    } else {
+      document.getElementById("multipageoptionswithborder").style.display = "none";
+    }
+  }
+
+  function togglemultipageoptions_without_border() {
+    visiblity = document.getElementById("multipageoptionswithoutborder").style.display;
+    if (visiblity == "none") {
+      document.getElementById("multipageoptionswithoutborder").style.display = "inline";
+    } else {
+      document.getElementById("multipageoptionswithoutborder").style.display = "none";
+    }
+  }
+
+
+  // function togglemultipageoptions(){
+  //   visiblity = document.getElementById("headerfooterdiv").style.display;
+  //   if (visiblity == "none") {
+  //     document.getElementById("headerfooterdiv").style.display = "inline";
+  //   } else {
+  //     document.getElementById("headerfooterdiv").style.display = "none";
+  //   }
+  // }
+
+
+  // Create JSON
+  function savepostprocessvalue(tab) {
+
+    var total_condition_count = ($("#existingmodalpostprocessingtable > div").length);
+    // alert(total_condition_count);
+
+    for (i = 0; i < total_condition_count; i++) {
+
+      condition_list = []
+
+      var modalfirstdropdownid = "modalfirstdropdownid" + (i + 1);
+      var modalseconddropdownid = "modalseconddropdownid" + (i + 1);
+      var modalkeywordid = "modalkeywordid" + (i + 1);
+
+      var modalfirstdropdownid_text = document.getElementById(modalfirstdropdownid).value;
+      var modalseconddropdownid_text = document.getElementById(modalseconddropdownid).value;
+      var modalkeywordid_text = document.getElementById(modalkeywordid).value;
+      if (modalkeywordid_text == "") {
+        modalkeywordid_text = "-";
+      }
+
+      condition_list.push(modalfirstdropdownid_text);
+      condition_list.push(modalseconddropdownid_text);
+      condition_list.push(modalkeywordid_text);
+      // post_processing_conditions.push(condition_list)
+      post_processing_conditions["post_processing_condition_" + (i + 1).toString()] = condition_list
+    }
+    console.log(post_processing_conditions)
+
+    finalvalue = document.getElementById("keybasedpostprocessedvalueinmodal").value;
+
+    // alert (tab);
+
+    if (tab == "keybased") {
+      // alert (tab)
+      document.getElementById("keybasedcapturedvalue").value = finalvalue;
+    } else if (tab == "regionbased") {
+      // alert (tab)
+      document.getElementById("capturedvalueregionbased").value = finalvalue;
+    } else if (tab == "fullocr") {
+      // alert (tab)
+      document.getElementById("capturedvaluefullocr").value = finalvalue;
+    } else if (tab == "fromdb") {
+      // alert (tab)
+      document.getElementById("capturedvaluefullocr").value = finalvalue;
+    } else if (tab == "static") {
+      // alert (tab)
+      document.getElementById("capturedvaluefullocr").value = finalvalue;
+    }
+
+    preprocessingcount = 1;
+
+    closemodal();
+
+  }
+
+  function savekeybasedvalue() {
+
+    values = {}
+
+    var keybasedlabel = document.getElementById("keybasedlabel").value;
+    var keybasedcapturedvalue = document.getElementById("keybasedcapturedvalue").value;
+    var page = document.getElementById("pagekeybased").value;
+    if (page == "") {
+      page = "-";
+    }
+
+    if (keybasedlabel != "") {
+      values["type"] = "keybased";
+      values["label"] = keybasedlabel;
+      values["value_captured"] = keybasedcapturedvalue;
+      values["page"] = page;
+      values["post_processing"] = post_processing_conditions;
+
+
+      var total_condition_count = $("#existingparametertable > div").length;
+
+      main_conditions = {}
+
+      for (i = 0; i < total_condition_count; i++) {
+
+        condition_list = []
+
+        var keywordid = "keywordid" + (i + 1);
+        var positionid = "positionid" + (i + 1);
+        var widthid = "widthid" + (i + 1);
+        var heightid = "heightid" + (i + 1);
+
+        var keywordid_text = document.getElementById(keywordid).value;
+        var positionid_text = document.getElementById(positionid).value;
+        var widthid_text = document.getElementById(widthid).value;
+        if (widthid_text == "") {
+          widthid_text = "5000";
+        }
+        var heightid_text = document.getElementById(heightid).value;
+        if (heightid_text == "") {
+          heightid_text = "0";
+        }
+
+        condition_list.push(keywordid_text);
+        condition_list.push(positionid_text);
+        condition_list.push(widthid_text);
+        condition_list.push(heightid_text);
+        main_conditions["condition_" + (i + 1).toString()] = condition_list
+      }
+
+      values["main_conditions"] = main_conditions;
+      console.log(values);
+
+      final_json_to_model['keyvalues'].push(values);
+
+      var parameterstablediv = document.getElementById("capturedparameterstableid");
+      parameterstablediv.style.display = "inline";
+
+      var parameterstable = document.getElementById("capturedparameterstable");
+
+
+      var row = parameterstable.insertRow();
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+
+      cell1.innerHTML = keybasedlabel;
+      cell2.innerHTML = "keybased";
+      cell3.innerHTML = '<button value="X" ;="" onclick="removeRow(this)">×</button>';
+
+      console.log(final_json_to_model);
+
+      current_value_captured = "";
+
+      document.getElementById("keybasedlabel").value = "";
+      document.getElementById("keybasedcapturedvalue").value = "";
+      document.getElementById("pagekeybased").value = "";
+      document.getElementById("keywordid1").value = "";
+      document.getElementById("positionid1").value = "top";
+      document.getElementById("widthid1").value = "";
+      document.getElementById("heightid1").value = "";
+
+      post_processing_conditions = {};
+
+
+      // final_json_to_model["values"]
+    } else {
+      alert("Enter label");
+    }
+
+
+  }
+
+  function saveregionbasedvalue() {
+
+    values = {}
+
+    var regionbasedlabel = document.getElementById("regionbasedlabel").value;
+    var regionbasedcapturedvalue = document.getElementById("capturedvalueregionbased").value;
+
+    if (regionbasedlabel != "") {
+
+      var page = document.getElementById("selectedpage").value;
+      var x0 = document.getElementById("x0").value;
+      var y0 = document.getElementById("y0").value;
+      var x1 = document.getElementById("x1").value;
+      var y1 = document.getElementById("y1").value;
+
+      values["type"] = "regionbased";
+      values["label"] = regionbasedlabel;
+      values["value_captured"] = regionbasedcapturedvalue;
+      values["page"] = page;
+      values["x0"] = x0;
+      values["y0"] = y0;
+      values["x1"] = x1;
+      values["y1"] = y1;
+      values["post_processing"] = post_processing_conditions;
+
+      final_json_to_model['keyvalues'].push(values);
+
+      var parameterstablediv = document.getElementById("capturedparameterstableid");
+      parameterstablediv.style.display = "inline";
+
+      var parameterstable = document.getElementById("capturedparameterstable");
+
+
+      var row = parameterstable.insertRow();
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+
+      cell1.innerHTML = regionbasedlabel;
+      cell2.innerHTML = "regionbased";
+      cell3.innerHTML = '<button value="X" ;="" onclick="removeRow(this)">X</button>';
+
+      console.log(final_json_to_model);
+
+      current_value_captured = "";
+      document.getElementById("regionbasedlabel").value = "";
+      document.getElementById("capturedvalueregionbased").value = "";
+      document.getElementById("selectedpage").value = "";
+      document.getElementById("x0").value = "";
+      document.getElementById("y0").value = "";
+      document.getElementById("x1").value = "";
+      document.getElementById("y1").value = "";
+
+      post_processing_conditions = {};
+
+    } else {
+      alert("Enter label");
+    }
+
+  }
+
+  function savefullocrvalue() {
+
+    values = {}
+
+    var fullocrlabel = document.getElementById("fullocrlabel").value;
+    var fullocrcapturedvalue = document.getElementById("capturedvaluefullocr").value;
+
+    if (fullocrlabel != "") {
+      values["type"] = "fullocr";
+      values["label"] = fullocrlabel;
+      values["value_captured"] = fullocrcapturedvalue;
+      // values["post_processing"] = post_processing_conditions;
+
+
+      var total_condition_count = ($("#existingfullocrparametertable > div").length) - 1;
+
+      main_conditions = {}
+
+      for (i = 0; i < total_condition_count; i++) {
+
+        condition_list = []
+
+        var fullocrfirstdropdownid = "fullocrfirstdropdownid" + (i + 1);
+        var fullocrseconddropdownid = "fullocrseconddropdownid" + (i + 1);
+        var fullocrkeywordid = "fullocrkeywordid" + (i + 1);
+        // var heightid = "heightid" + (i + 1);
+
+        var fullocrfirstdropdownid_text = document.getElementById(fullocrfirstdropdownid).value;
+        var fullocrseconddropdownid_text = document.getElementById(fullocrseconddropdownid).value;
+        var fullocrkeywordid_text = document.getElementById(fullocrkeywordid).value;
+
+        if (fullocrkeywordid_text == "") {
+          fullocrkeywordid_text = "-";
+        }
+        // var heightid_text = document.getElementById(heightid).value;
+        // if (heightid_text == "") {
+        //   heightid_text = "-";
+        // }
+
+        condition_list.push(fullocrfirstdropdownid_text);
+        condition_list.push(fullocrseconddropdownid_text);
+        condition_list.push(fullocrkeywordid_text);
+        // condition_list.push(heightid_text);
+        main_conditions["condition_" + (i + 1).toString()] = condition_list
+      }
+
+      values["main_conditions"] = main_conditions;
+      console.log(values);
+
+      final_json_to_model['keyvalues'].push(values);
+
+      var parameterstablediv = document.getElementById("capturedparameterstableid");
+      parameterstablediv.style.display = "inline";
+
+      var parameterstable = document.getElementById("capturedparameterstable");
+
+
+      var row = parameterstable.insertRow();
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+
+      cell1.innerHTML = fullocrlabel;
+      cell2.innerHTML = "full ocr";
+      cell3.innerHTML = '<button value="X" ;="" onclick="removeRow(this)">X</button>';
+
+      console.log(final_json_to_model);
+
+      current_value_captured = "";
+
+      document.getElementById("fullocrlabel").value = "";
+      document.getElementById("capturedvaluefullocr").value = "";
+      document.getElementById("fullocrfirstdropdownid1").value = "add";
+      document.getElementById("fullocrseconddropdownid1").value = "characters";
+      document.getElementById("fullocrkeywordid1").value = "";
+      // document.getElementById("widthid1").value = "";
+      // document.getElementById("heightid1").value = "";
+
+      // post_processing_conditions = {};
+
+
+      // final_json_to_model["values"]
+    } else {
+      alert("Enter label");
+    }
+
+
+  }
+
+  function savestaticvalue() {
+    values = {}
+
+    var staticlabel = document.getElementById("staticlabel").value;
+    var capturedvaluestatic = document.getElementById("capturedvaluestatic").value;
+
+    if (staticlabel != "") {
+
+      var staticfirstdropdownvalue = document.getElementById("staticfirstdropdownid").value;
+      var statickeywordvalue = document.getElementById("statickeywordid").value;
+
+      values["type"] = "static";
+      values["label"] = staticlabel;
+      values["value_captured"] = capturedvaluestatic;
+      values["staticfirstdropdownvalue"] = staticfirstdropdownvalue;
+      values["statickeywordvalue"] = statickeywordvalue;
+
+
+      final_json_to_model['keyvalues'].push(values);
+
+      var parameterstablediv = document.getElementById("capturedparameterstableid");
+      parameterstablediv.style.display = "inline";
+
+      var parameterstable = document.getElementById("capturedparameterstable");
+
+
+      var row = parameterstable.insertRow();
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+
+      cell1.innerHTML = staticlabel;
+      cell2.innerHTML = "static";
+      cell3.innerHTML = '<button value="X" ;="" onclick="removeRow(this)">X</button>';
+
+      console.log(final_json_to_model);
+
+      // current_value_captured = "";
+      document.getElementById("staticlabel").value = "";
+      document.getElementById("capturedvaluestatic").value = "";
+      document.getElementById("staticfirstdropdownid").value = "statictext";
+      document.getElementById("statickeywordid").value = "";
+
+      // post_processing_conditions = {};
+
+    } else {
+      alert("Enter label");
+    }
+  }
+
+
+  function savetablewithoutborder() {
+
+    table_meta_data = {};
+
+    var table_name = document.getElementById("tablenamewithoutborder").value;
+    if ((table_name != "") && (header != "") && (footer != "")) {
+      var header = document.getElementById("tableheaderwithoutborder").value;
+      var header_included_in_table;
+      var footer = document.getElementById("tablefooterwithoutborder").value;
+      var footer_included_in_table;
+
+      var tblstrtsb4hdrchkbx = document.getElementById("headerintablewithoutborder");
+      var tblstrtsb4ftrchkbx = document.getElementById("footerintablewithoutborder");
+
+      var headeravailabilitywithoutborder = document.getElementById("headeravailabilitywithoutborder");
+      var footeravailabilitywithoutborder = document.getElementById("footeravailabilitywithoutborder");
+
+      var enablemultipagetablewithoutborder = document.getElementById("enablemultipagetablewithoutborder");
+
+      var is_multipage;
+
+      var top_margin;
+      var bottom_margin;
+
+      var header_availability;
+      var footer_availability;
+
+      if (tblstrtsb4hdrchkbx.checked == true) {
+        header_included_in_table = "True";
+      } else {
+        header_included_in_table = "False";
+      }
+
+      if (tblstrtsb4ftrchkbx.checked == true) {
+        footer_included_in_table = "True";
+      } else {
+        footer_included_in_table = "False";
+      }
+
+      if (headeravailabilitywithoutborder.checked == true) {
+        header_availability = "True";
+      } else {
+        header_availability = "False";
+      }
+
+      if (footeravailabilitywithoutborder.checked == true) {
+        footer_availability = "True";
+      } else {
+        footer_availability = "False";
+      }
+
+      if (enablemultipagetablewithoutborder.checked == true) {
+        is_multipage = "True";
+        top_margin = document.getElementById("topmarginwithoutborder").value;
+        bottom_margin = document.getElementById("bottommarginwithoutborder").value;
+      } else {
+        is_multipage = "False";
+        top_margin = "-";
+        bottom_margin = "-";
+      }
+
+      var group_into_row = document.getElementById("grouprows").value;
+      var group_into_column = document.getElementById("groupcolumns").value;
+      var detect_superscripts = document.getElementById("superscript_withoutborder").options[document.getElementById("superscript_withoutborder").selectedIndex].value;
+      var cut_text = document.getElementById("cuttext_withoutborder").options[document.getElementById("cuttext_withoutborder").selectedIndex].value;
+      var text_edge_tol = document.getElementById("edgetol").value;
+
+      table_meta_data["table_type"] = "withoutborder";
+      table_meta_data["table_name"] = table_name;
+      table_meta_data["header"] = header;
+      table_meta_data["header_included_in_table"] = header_included_in_table;
+      table_meta_data["footer"] = footer;
+      table_meta_data["footer_included_in_table"] = footer_included_in_table;
+      table_meta_data["header_availability"] = header_availability;
+      table_meta_data["footer_availability"] = footer_availability;
+      table_meta_data["is_multipage"] = is_multipage;
+      table_meta_data["top_margin"] = top_margin;
+      table_meta_data["bottom_margin"] = bottom_margin;
+      table_meta_data["group_into_row"] = group_into_row;
+      table_meta_data["group_into_column"] = group_into_column;
+      table_meta_data["detect_superscripts"] = detect_superscripts;
+      table_meta_data["cut_text"] = cut_text;
+      table_meta_data["text_edge_tol"] = text_edge_tol;
+
+      table_meta_data["columns_list"] = columns_list;
+
+      console.log(table_meta_data);
+      final_json_to_model['tables'].push(table_meta_data);
+
+      table_meta_data = [];
+      columncount = 1;
+
+
+
+      var tablestablediv = document.getElementById("capturedtablestableid");
+      tablestablediv.style.display = "inline";
+
+      var tablestable = document.getElementById("capturedtablestable");
+
+
+      var row = tablestable.insertRow();
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+
+      cell1.innerHTML = table_name;
+      cell2.innerHTML = header;
+      cell3.innerHTML = '<button value="X" ;="" onclick="removeRowtable(this)">×</button>';
+
+      document.getElementById("tablenamewithoutborder").value = "";
+      document.getElementById("tableheaderwithoutborder").value = "";
+      document.getElementById("tablefooterwithoutborder").value = "";
+      document.getElementById("grouprows").value = "10";
+      document.getElementById("groupcolumns").value = "10";
+      document.getElementById("superscript_withoutborder").value = "True";
+      document.getElementById("cuttext_withoutborder").value = "True";
+      document.getElementById("edgetol").value = "50";
+
+
+
+      console.log(final_json_to_model);
+    } else {
+      alert("Enter all fields")
+    }
+
+
+  }
+
+  function savetablewithborder() {
+
+    table_meta_data = {};
+
+    var table_name = document.getElementById("tablenamewithborder").value;
+    var header = document.getElementById("tableheaderwithborder").value;
+    var footer = document.getElementById("tablefooterwithborder").value;
+
+    if ((table_name != "") && (header != "") && (footer != "")) {
+
+      var header_included_in_table;
+      var footer_included_in_table;
+
+      var tblstrtsb4hdrchkbx = document.getElementById("headerintablewithborder");
+      var tblstrtsb4ftrchkbx = document.getElementById("footerintablewithborder");
+
+      var headeravailabilitywithborder = document.getElementById("headeravailabilitywithborder");
+      var footeravailabilitywithborder = document.getElementById("footeravailabilitywithborder");
+
+      var enablemultipagetablewithborder = document.getElementById("enablemultipagetablewithborder");
+
+      var is_multipage;
+
+      var top_margin;
+      var bottom_margin;
+
+      var header_availability;
+      var footer_availability;
+
+      if (tblstrtsb4hdrchkbx.checked == true) {
+        header_included_in_table = "True";
+      } else {
+        header_included_in_table = "False";
+      }
+
+      if (tblstrtsb4ftrchkbx.checked == true) {
+        footer_included_in_table = "True";
+      } else {
+        footer_included_in_table = "False";
+      }
+
+      if (headeravailabilitywithborder.checked == true) {
+        header_availability = "True";
+      } else {
+        header_availability = "False";
+      }
+
+      if (footeravailabilitywithborder.checked == true) {
+        footer_availability = "True";
+      } else {
+        footer_availability = "False";
+      }
+
+      if (enablemultipagetablewithborder.checked == true) {
+        is_multipage = "True";
+        top_margin = document.getElementById("topmarginwithborder").value;
+        bottom_margin = document.getElementById("bottommarginwithborder").value;
+      } else {
+        is_multipage = "False";
+        top_margin = "100";
+        bottom_margin = "100";
+      }
+
+      // var group_into_row = document.getElementById("grouprows").value;
+      // var group_into_column = document.getElementById("groupcolumns").value;
+      // var detect_superscripts = document.getElementById("superscript_withoutborder").options[document.getElementById("superscript_withoutborder").selectedIndex].value;
+      // var cut_text = document.getElementById("cuttext_withoutborder").options[document.getElementById("cuttext_withoutborder").selectedIndex].value;
+      // var text_edge_tol = document.getElementById("edgetol").value;
+
+      var process_bg_lines = document.getElementById("bglines").value;
+      var cuttext = document.getElementById("cuttext").value;
+      var detect_superscripts = document.getElementById("superscript").options[document.getElementById("superscript").selectedIndex].value;
+      var smalllines = document.getElementById("smalllines").value;
+      var text_edge_tol = document.getElementById("edgetolwithborder").value;
+
+      table_meta_data["table_type"] = "withborder";
+      table_meta_data["table_name"] = table_name;
+      table_meta_data["header"] = header;
+      table_meta_data["header_included_in_table"] = header_included_in_table;
+      table_meta_data["footer"] = footer;
+      table_meta_data["footer_included_in_table"] = footer_included_in_table;
+      table_meta_data["header_availability"] = header_availability;
+      table_meta_data["footer_availability"] = footer_availability;
+      table_meta_data["is_multipage"] = is_multipage;
+      table_meta_data["top_margin"] = top_margin;
+      table_meta_data["bottom_margin"] = bottom_margin;
+
+      table_meta_data["process_bg_lines"] = process_bg_lines;
+      table_meta_data["cuttext"] = cuttext;
+      table_meta_data["detect_superscripts"] = detect_superscripts;
+      table_meta_data["smalllines"] = smalllines;
+      table_meta_data["text_edge_tol"] = text_edge_tol;
+
+      table_meta_data["columns_list"] = columns_list;
+
+      console.log(table_meta_data);
+      final_json_to_model['tables'].push(table_meta_data);
+
+      table_meta_data = [];
+      columncount = 1;
+
+
+
+      var tablestablediv = document.getElementById("capturedtablestableid");
+      tablestablediv.style.display = "inline";
+
+      var tablestable = document.getElementById("capturedtablestable");
+
+
+      var row = tablestable.insertRow();
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+
+      cell1.innerHTML = table_name;
+      cell2.innerHTML = header;
+      cell3.innerHTML = '<button value="X" ;="" onclick="removeRowtable(this)">×</button>';
+
+      document.getElementById("tablenamewithborder").value = "";
+      document.getElementById("tableheaderwithborder").value = "";
+      document.getElementById("tablefooterwithborder").value = "";
+      document.getElementById("bglines").value = "True";
+      document.getElementById("cuttext").value = "True";
+      document.getElementById("superscript").value = "True";
+      document.getElementById("smalllines").value = "15";
+      document.getElementById("edgetolwithborder").value = "50";
+
+
+
+
+      console.log(final_json_to_model);
+    } else {
+      alert("Enter all fields")
+    }
+
+
+  }
+
+  function createmodel() {
+
+    var model_lang = document.getElementById("language").options[document.getElementById("language").selectedIndex].value;
+    var modelname = document.getElementById("modelname").value;
+    var description = document.getElementById("description").value;
+
+    if ((modelname != "") & (description != "")) {
+
+      document.getElementById("createmodelloading").style.width = "385px";
+
+      var togglemultipagecheckbox = document.getElementById("togglemultipagecheckbox");
+      var is_doc_multipage;
+      var doc_header;
+      var doc_footer;
+
+      if (togglemultipagecheckbox.checked == true) {
+        is_doc_multipage = "True";
+        doc_header = document.getElementById("doc_header").value;
+        doc_footer = document.getElementById("doc_footer").value;
+      } else {
+        doc_header = "-";
+        doc_footer = "-";
+      }
+
+      final_json_to_model['model_lang'] = model_lang;
+      final_json_to_model['modelname'] = modelname;
+      final_json_to_model['description'] = description;
+      final_json_to_model['is_doc_multipage'] = is_doc_multipage;
+      final_json_to_model['doc_header'] = doc_header;
+      final_json_to_model['doc_footer'] = doc_footer;
+
+      final_json_to_model['originalwidth'] = originalwidth_to_model_creation;
+      final_json_to_model['originalheight'] = originalheight_to_model_creation;
+
+      var final_json_to_model_string = JSON.stringify(final_json_to_model)
+
+      var xhr = new XMLHttpRequest();
+      var url = "createnewmodel";
+      xhr.open("POST", url, true);
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.setRequestHeader("modelname", modelname);
+      xhr.setRequestHeader("description", description);
+      xhr.setRequestHeader("timestamp", timestamp);
+      xhr.setRequestHeader("modeljson", final_json_to_model_string);
+      xhr.send();
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var json = JSON.parse(xhr.responseText);
+          document.getElementById("createmodelloading").style.width = "0px";
+          // alert(json.string);
+          window.location.href = 'modelspage'
+        }
+      }
+    } else {
+      alert("Enter model name and Description");
+    }
+  }
+
+  function removeRow(oButton) {
+
+    var empTab = document.getElementById('capturedparameterstable');
+    empTab.deleteRow((oButton.parentNode.parentNode.rowIndex));
+
+    var string = oButton.parentNode.parentNode.innerHTML
+
+    var innerHTML = string.substr(0, string.indexOf('/'));
+    innerHTML = innerHTML.replace("<td>", "");
+    innerHTML = innerHTML.replace("<", "");
+
+    // alert (innerHTML);
+
+    var keyvalues_in_json = final_json_to_model.keyvalues;
+
+    for (let [i, keyvalue] of keyvalues_in_json.entries()) {
+      if (keyvalue.label == innerHTML) {
+        keyvalues_in_json.splice(i, 1);
+      }
+    }
+
+    final_json_to_model.keyvalues = keyvalues_in_json;
+
+    console.log(final_json_to_model);
+
+    // count = count - 1;
+  }
+
+  function removeRowtable(oButton) {
+
+    var empTab = document.getElementById('capturedtablestable');
+    empTab.deleteRow((oButton.parentNode.parentNode.rowIndex));
+
+    var string = oButton.parentNode.parentNode.innerHTML
+
+    var innerHTML = string.substr(0, string.indexOf('/'));
+    innerHTML = innerHTML.replace("<td>", "");
+    innerHTML = innerHTML.replace("<", "");
+
+    alert(innerHTML);
+
+    var tables_in_json = final_json_to_model.tables;
+
+    for (let [i, table] of tables_in_json.entries()) {
+      if (table.table_name == innerHTML) {
+        tables_in_json.splice(i, 1);
+      }
+    }
+
+    final_json_to_model.tables = tables_in_json;
+
+    console.log(final_json_to_model);
+
+  }
+
+
+  setActiveMenuItem('#models-new-menu')
+</script>
+{% endblock %}

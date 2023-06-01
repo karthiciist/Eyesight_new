@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/style-responsive.css" rel="stylesheet">
+  <style>
+  .modal-header, h4, .close {
+    background-color: #5cb85c;
+    color:white;
+    text-align: center;
+    font-size: 30px;
+  }
+  .modal-footer {
+    background-color: #f9f9f9;
+  }
+  .wrapperhere {
+    text-align: center;
+    display: inline-block;
+    display: inline-block;
+    margin-top: 10px;
+    padding-left: 15px;
+    /* padding-right: 15px; */
+    /* padding-bottom: 15px; */
+    padding-top: 0px;
+    width: 100%;
+    }
+  </style>
+</head>
+<body id="body">
+
+<div class="container">
+  <h2>Modal Login Example</h2>
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-default btn-lg" id="myBtn">Login</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+
+
+        <div class="modal-header" style="padding:10px 10px;">
+          <button type="button" class="close" data-dismiss="modal" id="closebtn">&times;</button>
+          <h4>Enter below details</h4>
+        </div>
+
+
+        <div class="modal-body" style="padding:10px 50px;">
+          <div><h5 style="font-weight: bold;">Cropped image :</h5></div>
+          <center><div style="margin: 10px;"><img id="croppedimg" src="logo.png"></div></center>
+          <div><h5 style="font-weight: bold; margin-top: 20px;">Text found in this image :</h5></div>
+          <center><div style="font-weight:bolder; font-style: italic;" ><p id="foundtxt">KARTHI SRINIVASAN D</p></div></center>
+          <form role="form">
+            <div class="form-group" style="margin-top: 15px;">
+              <input type="text" class="form-control" id="labeltxt" placeholder="Enter label for this text">
+            </div>
+            <div class="checkbox" id="headercheckbox">
+              <label><input type="checkbox" value="" onchange="showheaderoptions(this)">This is header attribute</label>
+            </div>
+            <div id="headeroptions">
+                <label for="cars" style="margin-right: 5px; margin-left: 50px;">This header text can be found at which part of the image ?</label>
+                <select id="cars">
+                <option value="volvo">Top</option>
+                <option value="saab">Middle</option>
+                <option value="opel">Bottom</option>
+                </select>
+
+                <label for="cars" style="margin-right: 5px; margin-left: 50px;">Select the tolerence error percentage</label>
+                <select id="cars">
+                <option value="10">10 %</option>
+                <option value="20">20 %</option>
+                <option value="30">30 %</option>
+                <option value="40">40 %</option>
+                <option value="50">50 %</option>
+                </select>
+            </div>
+
+            <div class="checkbox" id="footercheckbox">
+              <label><input type="checkbox" value="" onchange="showfooteroptions(this)">This is footer attribute</label>
+            </div>
+            <div id="footeroptions">
+                <label for="cars" style="margin-right: 5px; margin-left: 50px;">This footer text can be found at which part of the image ?</label>
+                <select id="cars">
+                <option value="volvo">Top</option>
+                <option value="saab">Middle</option>
+                <option value="opel">Bottom</option>
+                </select>
+
+                <label for="cars" style="margin-right: 5px; margin-left: 50px;">Select the tolerence error percentage</label>
+                <select id="cars">
+                <option value="10">10 %</option>
+                <option value="20">20 %</option>
+                <option value="30">30 %</option>
+                <option value="40">40 %</option>
+                <option value="50">50 %</option>
+                </select>
+            </div>
+            <!-- <div>
+                <label for="cars" style="margin-right: 5px;">Select the tolerence error percentage</label>
+                <select id="cars">
+                <option value="10">10 %</option>
+                <option value="20">20 %</option>
+                <option value="30">30 %</option>
+                <option value="40">40 %</option>
+                <option value="50">50 %</option>
+                </select>
+            </div> -->
+          </form>
+          <div class="wrapperhere">
+            <!-- <button class="btn-cardsave" id="cancel">Cancel</button> -->
+            <button class="btn-cardsave" id="savedata">Save</button>
+          </div>
+
+          <!-- <center>
+            <div class="btn-toolbar" style="padding-left: 15px; align-self: center;">
+                <button class="btn btn-primary" id="changeimg">Save</button>
+                <button class="btn btn-primary" id="cancel">Cancel</button>
+              </div>
+          </center> -->
+          
+        </div>
+
+
+        <!-- <div class="modal-footer">
+          <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+          <p>Not a member? <a href="#">Sign Up</a></p>
+          <p>Forgot <a href="#">Password?</a></p>
+        </div> -->
+
+
+      </div>
+      
+    </div>
+  </div> 
+</div>
+ 
+<script>
+$(document).ready(function(){
+  $("#headeroptions").css("display", "none");
+  $("#footeroptions").css("display", "none");
+  $("#myBtn").click(function(){
+    $("#myModal").modal();
+    $("myModal").ready(function(){
+      $("#croppedimg").attr("src", "C:/Users/ET437GL/Pictures/cropped.jpg");
+        $("#savedata").click(function(){
+          // call api here
+          alert("call api");
+        })
+    })
+  });
+});
+
+function showheaderoptions(obj) {
+  if($(obj).is(":checked")){
+    $("#headeroptions").css("display", "inline");
+    $("#footercheckbox").css("display", "none");
+    $("#page-header-inner").addClass("sticky");
+  }else{
+    $("#headeroptions").css("display", "none");
+    $("#footercheckbox").css("display", "block");
+  }
+}
+
+function showfooteroptions(obj) {
+  if($(obj).is(":checked")){
+    $("#footeroptions").css("display", "inline");
+    $("#page-header-inner").addClass("sticky");
+    $("#headercheckbox").css("display", "none");
+  }else{
+    $("#footeroptions").css("display", "none");
+    $("#headercheckbox").css("display", "block");
+  }
+}
+
+
+$(function(){
+    $('#closebtn').click(function() {
+        $('.checkbox').prop("checked", false);
+        $("input:checkbox").prop("checked", false);
+        $("p").text("Cannot detect text in this image");
+        $("input:text").val("");
+        $("#headercheckbox").css("display", "block");
+        $("#footercheckbox").css("display", "block");
+        $("#footeroptions").css("display", "none");
+        $("#headeroptions").css("display", "none");
+    });
+});
+
+
+</script>
+
+</body>
+</html>

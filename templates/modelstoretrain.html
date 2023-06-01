@@ -1,0 +1,182 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="ml-0 pt-3 row" id="modelcontainer">
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="application/javascript">
+    fetchmodels();
+
+    $(document).ready(function () {
+        $("#good").hide();
+    });
+
+    function formcard(modelnames) {
+        var count = 0;
+        for (modelname in modelnames) {
+            model = modelnames[modelname];
+            btnname = 'btn' + model
+            var html = `
+            <h3 id="modelname" class="text-uppercase">${model}</h3>
+            
+            <div class="d-flex justify-content-around align-items-center actions pt-2">
+                <div class="d-flex flex-column action" onclick="sendtoconsume('${model}')" role="button">
+                    <i id="${btnname}" class="fa fa-check" aria-hidden="true" title="Retrain"></i>
+                    <span>Retrain</span>
+                </div>
+                <div class="d-flex flex-column action" onclick="sendtodelete('${model}')" title="Delete" role="button">
+                    <i id="${btnname}" class="fa fa-trash-o" aria-hidden="true"></i>
+                    <span>Delete</span>
+                </div>
+            </div>`
+            var card = document.createElement('div');
+            card.setAttribute('id', model + 'flashcard');
+            card.setAttribute('class', 'card d-flex flex-column mb-0');
+            card.innerHTML = html;
+            var col = document.getElementById("modelcontainer");
+            col.appendChild(card);
+            document.getElementById(model + "flashcard").style.marginRight = "1%";
+        }
+    }
+
+    function sendtoconsume(model) {
+        localStorage.setItem("modelname", model);
+        var name = localStorage.getItem("modelname");
+        window.location.href = 'retrainwithmodalpage'
+    }
+
+
+    function myNavFunction(id) {
+        $("#date-popover").hide();
+        var nav = $("#" + id).data("navigation");
+        var to = $("#" + id).data("to");
+        console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+    }
+
+    function fetchmodels() {
+        var data = "";
+        var xhr = new XMLHttpRequest();
+
+        xhr.addEventListener("readystatechange", function () {
+          if (this.readyState === 4) {
+            createnewrow(this.responseText)
+            // alert(this.responseText);
+          }
+        });
+
+        xhr.open("POST", "fetchmodels");
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.send(data);
+        // var data = "";
+        // var xhr = new XMLHttpRequest();
+        // xhr.addEventListener("readystatechange", function () {
+        //     if (this.readyState === 4) {
+        //         createnewrow(this.responseText)
+        //     }
+        // });
+        // xhr.open("POST", "fetchmodels");
+        // xhr.setRequestHeader("Content-Type", "application/json");
+        // xhr.send(data);
+    }
+
+    function createnewrow(response) {
+        console.log(response);
+
+        var jsonobj = JSON.parse(response);
+
+        var length = jsonobj.length;
+
+        console.log(length);
+        console.log(jsonobj);
+
+        for (i = 0; i < length; i++) {
+          var modelanddesc = jsonobj[i];
+          console.log(modelanddesc);
+
+          // var jsonrow = JSON.parse(modelanddesc);
+
+          formcard1(modelanddesc[0], modelanddesc[1]);
+        }
+
+        if (length > 0) {
+          $("#emptyscreen").removeClass('d-flex').addClass('d-none')
+        }
+        // var modelsarray = response.split(",");
+        // var length = modelsarray.length;
+        // var i;
+        // var modelnames = [];
+        // for (i = 0; i < length; i++) {
+        //     model = modelsarray[i];
+        //     model = model.replace("\"", "");
+        //     model = model.replace("[", "");
+        //     model = model.replace("]", "");
+        //     model = model.replace(" ", "");
+        //     model = model.replace("\"", "");
+        //     console.log(model);
+        //     if ((model != "sysdiagrams") & (model != "models")) {
+        //         modelnames.push(model);
+        //     }
+        // }
+        // formcard(modelnames);
+    }
+
+    function formcard1(modelname, description) {
+
+        btnname = 'btn' + modelname
+        dltbtnname = 'dltbtn' + modelname
+
+        // var html = '<div class="card"><h3 id ="modelname">' + modelname + '</h3><p>' + description + '</p><a href="{{ url_for('consumepage') }}"><button class="btn-consumenow" id="' + btnname + '" onclick="sendtoconsume(\'' + modelname + '\')">' + 'Consume now' + '</button></a><div><center><button class="btn-viewnow" id="' + btnname + '" onclick="sendtoview(\'' + modelname + '\')">' + 'View' + '</button><button class="btn-deletenow" id="' + btnname + '" onclick="sendtodelete(\'' + modelname + '\')">' + 'Delete' + '</button></center></div></div>'
+
+        var html = `
+          <h3 id="modelname" class="text-uppercase">${modelname}</h3>
+            <div class="description flex-fill overflow-auto border-bottom">Description</div>
+            <div class="d-flex justify-content-around align-items-center actions pt-2">
+                <div class="d-flex flex-column action" onclick="sendtoconsume('${modelname}')" role="button">
+                    <i id="${btnname}" class="fa fa-check" aria-hidden="true" title="Retrain"></i>
+                    <span>Retrain</span>
+                </div>
+                <div class="d-flex flex-column action" onclick="sendtodelete('${modelname}')" title="Delete" role="button">
+                    <i id="${btnname}" class="fa fa-trash-o" aria-hidden="true"></i>
+                    <span>Delete</span>
+                </div>
+            </div>`
+
+        var card = document.createElement('div');
+        card.setAttribute('id', modelname + 'flashcard');
+        card.setAttribute('class', 'card d-flex flex-column mb-0');
+        card.innerHTML = html;
+        var col = document.getElementById("modelcontainer");
+        col.appendChild(card);
+        document.getElementById(modelname + "flashcard").style.marginRight = "1%";
+
+
+        // for (modelname in modelnames) {
+
+        //   model = modelnames[modelname];
+        //   btnname = 'btn' + model
+        //   dltbtnname = 'dltbtn' + model
+
+
+
+        //   var html = '<div class="card"><h3 id ="modelname">' + model + '</h3><p>Description</p><a href="{{ url_for('consumepage') }}"><button class="btn-consumenow" id="' + btnname + '" onclick="sendtoconsume(\'' + model + '\')">' + 'Consume now' + '</button></a><div><center><button class="btn-viewnow" id="' + btnname + '" onclick="sendtoview(\'' + model + '\')">' + 'View' + '</button><button class="btn-deletenow" id="' + btnname + '" onclick="sendtodelete(\'' + model + '\')">' + 'Delete' + '</button></center></div></div>'
+        //   var card = document.createElement('div');
+        //   card.setAttribute('id', model + 'flashcard');
+        //   card.innerHTML = html;
+        //   var col = document.getElementById("modelcontainer");
+        //   col.appendChild(card);
+        //   document.getElementById(model + "flashcard").style.marginRight = "1%";
+        // }
+        // console.log(modelnames.length);
+        // if (modelnames.length > 0) {
+        //   var empty = document.getElementById("emptyscreen");
+        //   empty.style.display = "none";
+        // }
+    }
+
+    setActiveMenuItem('#model-store-train-menu')
+</script>
+{% endblock %}

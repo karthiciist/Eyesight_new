@@ -1,0 +1,556 @@
+body {
+	background-image: url(../images/website-bg.png);
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 100vh;
+	font-size: 12px;
+	color: #fff;
+	font-weight: 400;
+	line-height: 1.5;
+}
+
+body.login-screen {
+	background-image: url(../images/login-bg.png) !important;
+	background-size: 100% 100%;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: rgb(239, 230, 0) !important;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: rgb(239, 230, 0) !important;
+}
+
+/* bootstrap classes override start*/
+.d-flex {
+	display: flex !important;
+	flex-direction: row;
+}
+
+.flex-column {
+	flex-direction: column !important;
+}
+
+.flex-fill {
+	flex: 1 1 auto !important;
+}
+
+.align-items-center {
+	align-items: center !important;
+}
+
+.p-1 {
+	padding: .25rem !important;
+}
+
+.p-2 {
+	padding: 1.5rem !important;
+}
+
+.pr-2,
+.px-2 {
+	padding-right: .5rem !important;
+}
+
+.pl-2,
+.px-2 {
+	padding-left: .5rem !important;
+}
+
+.pl-4,
+.px-4 {
+	padding-left: 1.5rem !important;
+}
+
+.pt-1,
+.py-1 {
+	padding-top: .25rem !important;
+}
+
+.pb-1,
+.py-1 {
+	padding-bottom: .25rem !important;
+}
+
+.pb-2,
+.py-2 {
+	padding-bottom: .5rem !important;
+}
+
+.pt-2,
+.py-2 {
+	padding-top: .5rem !important;
+}
+
+.pt-3,
+.py-3 {
+	padding-top: 2rem !important;
+}
+
+.pb-3,
+.py-3 {
+	padding-bottom: 2rem !important;
+}
+
+.mr-2,
+.mx-2 {
+	margin-right: .5rem !important;
+}
+
+.mr-3,
+.mx-3 {
+	margin-right: 1rem !important;
+}
+
+.font-weight-bold {
+	font-weight: 700 !important;
+}
+
+.btn-group-sm>.btn,
+.btn-sm {
+	padding: .25rem .5rem;
+	font-size: .875rem;
+	line-height: 1.5;
+	border-radius: .2rem;
+}
+
+.border-bottom {
+	border-bottom: 1px solid #dee2e6 !important;
+}
+
+.btn {
+	display: inline-block;
+	font-weight: 400;
+	color: #212529;
+	text-align: center;
+	vertical-align: middle;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	background-color: transparent;
+	border: 1px solid transparent;
+	padding: .375rem .75rem;
+	font-size: 1.5rem;
+	line-height: 1.5;
+	border-radius: .25rem;
+	transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.btn-outline-light {
+	color: #f8f9fa;
+	border-color: #f8f9fa;
+}
+
+.btn-outline-light:hover {
+	color: #212529;
+	background-color: #f8f9fa;
+	border-color: #f8f9fa;
+}
+
+.justify-content-center {
+	-ms-flex-pack: center !important;
+	justify-content: center !important;
+}
+
+.justify-content-between {
+	justify-content: space-between !important;
+}
+
+.justify-content-around {
+	justify-content: space-around !important;
+}
+
+.m-0 {
+	margin: 0 !important;
+}
+
+.mb-0,
+.my-0 {
+	margin-bottom: 0 !important;
+}
+
+.btn:not(:disabled):not(.disabled) {
+	cursor: pointer;
+}
+
+.text-center {
+	text-align: center !important;
+}
+
+.ml-0,
+.mx-0 {
+	margin-left: 0 !important;
+}
+
+.ml-3,
+.mx-3 {
+	margin-left: 3rem !important;
+}
+
+.ml-auto,
+.mx-auto {
+	margin-left: auto !important;
+}
+
+.h-100 {
+	height: 100% !important;
+}
+
+.w-100 {
+	width: 100% !important;
+}
+
+.d-none {
+	display: none !important;
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	/* margin-right: -15px;
+	margin-left: -15px; */
+}
+
+.position-absolute {
+	position: absolute !important;
+}
+
+.position-relative {
+	position: relative !important;
+}
+
+.overflow-auto {
+	overflow: auto !important;
+}
+
+/* bootstrap classes override end*/
+
+select {
+	padding: 3px;
+}
+
+.modal-header {
+	background-color: #ffe600;
+}
+
+.modal-header * {
+	color: black !important;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.login-container {
+	background-color: rgba(0, 0, 0, 0.4);
+
+}
+
+.clean-slate {
+	background-color: transparent !important;
+	outline: none !important;
+	border: none !important;
+}
+
+.login-input {
+	font-size: 12px;
+	color: #fff;
+	background-color: rgba(0, 0, 0, 0.2) !important;
+	padding: 10px;
+	width: 280px;
+}
+
+.action-button {
+	background-color: white !important;
+	clip-path: polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px, 0 7px, 7px 0, 8px 0, 0 8px);
+	cursor: pointer;
+	color: rgb(0, 0, 0);
+	letter-spacing: 1.5px;
+	padding: 5px 20px;
+	justify-content: center;
+	align-items: center;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.action-button:hover,
+.dm-icon:hover {
+	background-color: #ffe600 !important;
+	color: black;
+}
+
+.no-left-edge {
+	clip-path: polygon(0 10px, 10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+}
+
+.hamburger-icon {
+	font-size: 20px;
+}
+
+.logo {
+	font-size: 24px;
+}
+
+.logo.large {
+	font-size: 36px;
+}
+
+a.logo span,
+.logo .highlight {
+	color: #ffe600;
+}
+
+.theme-bg {
+	background-color: rgb(48, 48, 48);
+}
+
+.header {
+	border-bottom: 1px solid #393d46;
+}
+
+.sidenav {
+	min-width: 115px;
+	width: 115px;
+}
+
+.sidenav .icon {
+	color: #fff;
+}
+
+.sidenav .icon i {
+	font-size: 30px;
+	margin-bottom: 5px;
+}
+
+.sidenav .icon:hover,
+.sidenav .icon.active {
+	color: #ffe600;
+	text-decoration: none;
+	background-color: transparent;
+}
+
+.grey-panel {
+	background: rgba(0, 0, 0, 0.2);
+}
+
+.grey-panel .grey-header {
+	background-color: transparent;
+	border-bottom: 1px solid white;
+}
+
+.ds {
+	background-color: rgb(48, 48, 48);
+	height: auto;
+}
+
+.donut-chart h2 {
+	color: #ffe600;
+}
+
+ul.top-menu>li>.logout {
+	background-color: transparent;
+	border-color: #ffe600 !important;
+}
+
+ul.top-menu>li>a:hover,
+ul.top-menu>li>a:focus {
+	background-color: #ffe600 !important;
+	border-color: #ffe600 !important;
+	color: black !important;
+}
+
+.ds .desc:hover {
+	background-color: transparent;
+	cursor: pointer;
+}
+
+.ds .desc:hover a {
+	color: #ffe600;
+}
+
+.ds a {
+	color: white;
+}
+
+.bg-theme {
+	background-color: #ffe600;
+}
+
+.ds .badge i {
+	color: black;
+}
+
+.desc:hover i,
+.desc:hover {
+	color: #ffe600;
+}
+
+.custom-bar-chart .bar .value {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+.custom-bar-chart .bar .value:hover {
+	background-color: #ffe600;
+}
+
+.ocrcard,
+.cardpdf {
+	margin-top: 10px;
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+.ocrcard .footer {
+	border-top: 1px solid whitesmoke;
+}
+
+.ds table button,
+#updateimgbtn,
+.inputfile-6:focus+label strong,
+.inputfile-6.has-focus+label strong,
+.inputfile-6+label:hover strong,
+.btn-send:hover,
+.btn-send,
+.btn-cardsave,
+.btn-consumenow {
+	background-color: #ffe600;
+	color: black;
+	font-weight: bold;
+	outline: none;
+	border: none;
+}
+
+#updateimgbtn,
+.ds table button {
+	padding: 5px;
+}
+
+.card h3 {
+	color: #ffe600;
+}
+
+.card {
+	background-color: rgba(0, 0, 0, 0.2);
+	margin-top: 10px;
+	width: 250px;
+	/* height: 290px; */
+}
+
+.card .action i {
+	padding-top: 5px;
+	font-size: 20px;
+}
+
+.card .action span {
+	font-size: 10px;
+}
+
+.card .action:hover {
+	color: #ffe600;
+}
+
+.card .description {
+	height: 100px;
+}
+
+.card .actions i.yellow {
+	color: #ffe600;
+}
+
+.card .actions i.green {
+	color: green;
+}
+
+.card .actions i.red {
+	color: red;
+}
+
+.btn-consumenow,
+.btn-viewnow,
+.btn-deletenow {
+	font-weight: bold;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.btn-viewnow,
+.btn-deletenow {
+	background: transparent;
+}
+
+.btn-consumenow {
+	/* color: #ffe600; */
+	margin-bottom: 10px;
+}
+
+.btn-consumenow.small {
+	width: auto;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.btn-viewnow {
+	color: green;
+}
+
+.btn-deletenow {
+	color: red;
+}
+
+.modal-content {
+	background-color: rgb(48, 48, 48);
+}
+
+.inputfile-6+label {
+	border: 1px solid whitesmoke;
+}
+
+button,
+input,
+select,
+textarea {
+	color: black;
+}
+
+.ds table,
+.ds th,
+.ds td {
+	border: none;
+}
+
+.ds table {
+	border-top: 1px solid white;
+}
+
+#ascrail2000>div {
+	background-color: #ffe600 !important;
+}
+
+.dmbox,
+.content-panel {
+	background-color: transparent;
+	border: 1px solid white;
+	box-shadow: none;
+}
+
+.accordion-heading .accordion-toggle {
+	background-color: transparent;
+	color: white;
+	font-weight: 900;
+	border-top-width: 3px;
+}

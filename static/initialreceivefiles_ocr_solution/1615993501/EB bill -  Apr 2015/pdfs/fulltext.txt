@@ -1,0 +1,492 @@
+dustrialConsumption Units 
+@Rs 
+6.35per Unit 
+17 ,84,468 
+1,13,31,371.80 
+ak 
+Hr. 
+Consumption 
+Units 
+@Rs 
+1.27per 
+Unit 
+3,409,993 
+4,33,061.11 
+ght 
+Hr Consumption 
+5% Rebate 
+@Rs 
+6.35per Unit 
+6,41,304(-) 
+2,93,614.02 
+arters Consumption 
+@ 
+©. 
+mnercial 
+Consumption 
+® 
+0.00 
+tal 
+Energy Charges 
+1,15,60,818.89 
+mand Charges 
+at 
+Rs 
+350.00 
+per 
+KVA 
+5,460.75 
+19,11,262.50 
+tal 
+Demand 
+and 
+Energy Charges 
+1,34,72,081.39 
+r Non-Availing 
+the 
+supply 
+at 
+the Required Voltage 
+33 
+KV 
+at 
+.100 
+Rs. 
+per Unit 
+®@.00 
+dd Meter 
+Rent 
+2,900.00 
+dd Belated 
+Payment Surcharge 
+i) 
+dd 
+Extra 
+Levy 
+for exceeding limits 
+Quota Consumption Units 
+at 
+Rs. 
+12.70 
+per 
+Unit 
+®.00 
+©.00 
+Quota Demand 
+at 
+Rs. 
+70.90 
+per 
+KVA 
+362.514 
+2,53,759.80 
+Contracted Max.Dmd 
+at 
+Rs. 
+79@.90 
+per 
+KVA 
+®@. 900 
+®.90 
+Compensation Charges 
+for 
+Low 
+PF 
+®.%0 
+Comp.Charges 
+for 
+WM 
+PF RKVAHR 
+2,946.00 
+Evening 
+Peak 
+Energy 
+& Demand 
+25,21,423.80 
+ind Mill Service Charge 
+2,700.00 
+dd/Less Adjustment Charge 
+23,008.00 
+eliability Charge 
+, 
+®.00 
+lectricity 
+Tax 
+(incl 
+rel.chg) 
+6,83,784.86 
+ounding 
+Off 
+®@.21 
+ssessment 
+Amount 
+1,69,61,794.00 
+ther Adjustment 
+7 ,62,306,.00 
+elf 
+Generation 
+Tax 
+61,178.00 
+ett 
+Total 
+1,77,85,188.00 
+he 
+last 
+day 
+of 
+the 
+due 
+date 
+happens 
+to 
+be 
+a 
+holiday, 
+the 
+due date 
+shall 
+be 
+nded 
+till 
+the 
+next 
+working 
+day. 
+*KK 
+Payment 
+of 
+CC charges 
+through RTGS facility 
+shall 
+be-availed 
+***k#* 
+Lys Banal 
+bonded 
+O.€ 
+ACCOUNT 
+SER ICER 7 REVENUE
+Pe I De NF 
+ROVE
+tle 
+code 
+0404 
+. 
+Service 
+No 
+1028 
+Total 
+Normal 
+Peak 
+sumption 
+Summed 
+23,96,250 
+12,08,325 
+4,67,850 
+oss(Recorded)energy consumed] 
+Computed 
+Cons. 
+® 
+Transformer 
+Loss 
+® 
+3 Other Consn 
+: 
+® 
+-able 
+Power 
+o 
+®@ 
+@ 
+® 
+a 
+® 
+‘d 
+Party 
+adj 
+® 
+e 
+® 
+‘d 
+Party outage 
+® 
+e 
+@ 
+adjustment 
+7) 
+@ 
+® 
+outage 
+® 
+@ 
+® 
+Igr2 adjustment 
+6,11,782 
+4,006,154 
+1,26,857 
+lari 
+adjustment 
+® 
+® 
+@ 
+» Residential Consn 
+® 
+Commercial 
+Consn 
+® 
+Industrial 
+Consn 
+17,864,468 
+8,092,171 
+3,409,993 
+HK 
+25,21,725 
+AH 
+7,73,250 
+r 
+Factor 
+-95 
+Eve.peak energy(units) 
+Eve.peak demand(KVA) 
+(6-10PM) 
+(6-10PM) 
+ing 
+cons.& 
+dmd 
+: 
+1,99,725.00 
+4.433.250 
+anarav 
+2% 
+Ams 
+a 
+AQ 
+142 
+AKA 
+ais 
+mig 
+Off 
+peak 
+7,200,075 
+6,411,304
+Concession, Adjustments 
+Adj.affect 
+Adj.Not Affect 
+23,908.00 
+7,62,306.90 
+ist.Code 
+Description 
+Amount 
+\ 
+WINDMILL 
+- RKVAHR 
+2946.00 
+, 
+SCHEDU. 
+AND 
+SYSTEM 
+OPER. 
+CHRGS 
+127980. 00 
+3 
+LTOA TRANSMISSION 
+CHARGES 
+495369 ..00 
+, 
+OM CHRGS COLL.FROM WIND 
+GEN 
+92400. 08 
+' 
+WHEELING 
+CHGS 
+LOSS 
+COMP 
+CHGS 
+46557 .00 
+, 
+OLD 
+ENERGY 
+CHARGES 
+23008. OO 
+Demand Details 
+Quota 
+MD/PMD 
+RECMD 
+Days 
+Tot 
+Days 
+MD 
+Rate 
+RType 
+4,143.000 
+5,460.75 
+31 
+31 
+350.00 
+RE 
+le code 
+0404 
+Service 
+No 
+1028 
+Wind 
+Adjustment DETAILS 
+wing 
+Grp2 units 
+Wind 
+grpl 
+Units 
+ial 
+3,94,738 
+@ 
+(6-9am) 
+89,125 
+® 
+peak 
+78,771 
+© 
+6-9pm 
+37,732 
+@ 
+9-19pm 
+11,416 
+®@
+‘er 
+type 
+Peak 
+iding Date 
+26/04/15 
+Meter 
+No 
+2 
+Readtype Code 
+BE 
+MF 
+¢ 
+7,500.00 
+KWHR 
+KVAHR 
+RKVAHR 
+KVAMD 
+ial 
+Reading 
+1,510.38 
+@.%0 
+@. 08 
+®. 000 
+tial 
+Reading 
+1,468.17 
+0.00 
+®. 00 
+®@. 000 
+f 
+Reading 
+42.21 
+®.%8 
+@.00 
+sumption 
+3,16,575 
+® 
+o 
+®.90 
+er 
+type 
+Off 
+Peak 
+ding Date 
+26/04/15 
+Meter 
+No 
+3 
+Readtype Code 
+RE 
+MF 
+: 
+7,500.00 
+KWHR 
+KVAHR 
+RKVAHR 
+KVAMD 
+al 
+Reading 
+3,584.30 
+%.00 
+®@. 00 
+®. 000 
+tial 
+Reading 
+3,488.29 
+@.99 
+@.00 
+@. 000 
+f 
+Reading 
+96.01 
+®.%O 
+®. 
+9 
+sumption 
+7,209,075 
+® 
+®@ 
+@.0O 
+er 
+type 
+Total 
+ding Date 
+26/04/15 
+Meter 
+No 
+1 
+Readtype Code 
+RE 
+MF 
+: 
+7,500.00 
+KWHR2 
+KVAMD2 
+al 
+Reading 
+481.77 
+@.557 
+tial 
+Reading 
+475.31 
+O. 000 
+F 
+Reading 
+6.46 
+%.000 
+sumption 
+48,450 
+4,175.250 
+ar 
+type 
+Peak 
+ting Date 
+26/04/15 
+Meter 
+No 
+2 
+Readtype Code 
+RE 
+MF 
+: 
+7,500.00 
+KWHR2 
+KVAMD2 
+al 
+Reading 
+1,441.65 
+@.591 
+tial Reading 
+1,420.88 
+@. 000 
+* 
+Reading 
+29.17 
+&.900 
+sumption 
+1,51,275 
+4,433.250
+

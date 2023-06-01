@@ -1,0 +1,304 @@
+<head>
+	<center><h1>EYesight</h1></center>
+	<link rel="stylesheet" href="C:\Users\ET437GL\Desktop\ahmed\cropperjs-master\cropperjs-master\dist\cropper.css">
+	<style>
+	    img {
+	      max-width: 100%;
+	    }
+	    td, th {
+		  border: 1px solid #dddddd;
+		  text-align: center;
+		  padding: 1px;
+		}
+  	</style>
+</head>
+
+<body>
+	<script src="C:\Users\ET437GL\Desktop\ahmed\cropperjs-master\cropperjs-master\dist\cropper.js"></script>
+	<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+	<script src="canvas2image.js"></script>
+	<center>
+		<div>
+		<form method="post" enctype="multipart/form-data">
+			<input id="inputId" name="photo" type="file" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0]), updateImageDisplay()">
+			<button id="btnCrop" type="button">Crop & Scan</button>
+			<button id="btnCreateModel" type="button" onclick="createmodel()">Create model</button>
+		</form>
+	</div>
+	</center>
+	<center>
+		<div>
+		<img id="output">
+	</div>
+	</center>
+	<center>
+		<table id="table1" align="center" style="border: oldlace">
+	        <tr>
+	            <td style="font-family: Arial, Helvetica, sans-serif">Lable</td>
+	            <td style="width:500px"><input type="text" id="lable" style="width:500px" /></td>
+	        </tr>
+	        <tr>
+	            <td style="font-family: Arial, Helvetica, sans-serif">Model name</td>
+	            <td style="width:500px"><input type="text" id="modelname" style="width:500px" /></td>
+	        </tr>
+    	</table>
+	</center>
+	<center>
+		<div>
+			<img id="cropped">
+		</div>
+	</center>
+	<div style="padding-top: 10px; font-family: Arial, Helvetica, sans-serif">
+        <table id="myTable" style="width:100%" align="center">
+            <tr>
+                <th COLSPAN="13">
+                    <h3>Results</h3>
+                </th>
+            </tr>
+            <tr>
+                <th>S.no</th>
+                <th>x-axis</th>
+                <th>y-axis</th>
+                <th>width</th>
+                <th>height</th>
+                <th>rotate</th>
+                <th>scaleX</th>
+                <th>scaleY</th>
+                <th>full width</th>
+                <th>full height</th>
+                <th>Lable</th>
+                <th>Text from OCR</th>
+                <th></th>
+            </tr>
+        </table>
+    </div>
+	<script>
+
+		var count = 2;
+		var xaxis;
+		var yaxis;
+		var width;
+		var heigth;
+		var rotate;
+		var scaleX;
+		var scaleY;
+		var fullheight;
+		var fullwidth;
+
+		function updateImageDisplay(){
+
+			var Cropper = window.Cropper;
+
+			var image = document.getElementById('output');
+
+			var cropper = new Cropper(image, {
+				crop(event) {
+				  xaxis = event.detail.x;
+				  yaxis = event.detail.y;
+				  width = event.detail.width;
+				  height = event.detail.height;
+				  rotate = event.detail.rotate;
+				  scaleX = event.detail.scaleX;
+				  scaleY = event.detail.scaleY;
+				}
+			});
+
+
+			// imageData = cropper.getImageData();
+
+			
+			// console.log(canvasData.naturalwidth());
+			// console.log(canvasData);
+
+			document.getElementById("btnCrop").onclick = function (event) {
+
+	        // alert("x-axis - " + xaxis + "\n" + "y-axis - " + yaxis + "\n" + "width - " + width + "\n" + "height - " + height + "\n" + "rotate - " + rotate + "\n" + "scaleX - " + scaleX + "\n" + "scaleY - " + scaleY + "\n" + "full height - " + fullheight  + "\n" + "full width - " + fullwidth);
+
+			fullwidth = image.width;
+	        fullheight = image.height;
+	        // console.log(fullwidth + " " + fullheight);
+	        updateTable(cropper, fullheight, fullwidth);
+	      	}
+		}
+
+		function updateTable(cropper, fullheight, fullwidth){
+
+			var inputs = document.getElementById('lable').value;
+
+			if (inputs == "") {
+                alert("Please enter the lable");
+            }
+            else {
+            	createnewrow(count);
+
+            	var myTable = document.getElementById('myTable');
+            	myTable.rows[count].cells[10].innerHTML = inputs;
+
+				xaxis = Math.round(xaxis);
+				yaxis = Math.round(yaxis);
+				width = Math.round(width);
+				height = Math.round(height);
+	            myTable.rows[count].cells[1].innerHTML = xaxis;
+	            myTable.rows[count].cells[2].innerHTML = yaxis;
+	            myTable.rows[count].cells[3].innerHTML = width;
+	            myTable.rows[count].cells[4].innerHTML = height;
+	            myTable.rows[count].cells[5].innerHTML = rotate;
+	            myTable.rows[count].cells[6].innerHTML = scaleX;
+	            myTable.rows[count].cells[7].innerHTML = scaleY;
+	            myTable.rows[count].cells[8].innerHTML = fullwidth;
+	            myTable.rows[count].cells[9].innerHTML = fullheight;
+
+	            var imageData = cropper.getCroppedCanvas();
+
+		        var croppedimg = imageData.toDataURL("image/png");
+
+				document.getElementById('cropped').src = croppedimg;
+
+				const imgFile = document.getElementById('cropped').files;
+
+				var xhr = new XMLHttpRequest();
+
+				xhr.open('POST', 'http://localhost:3000/extracttext', true);
+				xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+				xhr.send(JSON.stringify({ "thumbnail": croppedimg}));
+				xhr.onreadystatechange = function(){
+			        if(xhr.readyState != 4) return;
+			        if(xhr.status != 200){
+			            console.log("Status: " + xhr.status);
+			        }else{
+			            console.log(xhr.responseText);
+			            response = xhr.responseText;
+			            str = response.substring(response.indexOf("string\":"));
+			            str1 = str.substring(str.indexOf(":")+3);
+			            str2 = str1.slice(0, -4);
+			            console.log(str2);
+			            myTable.rows[count-1].cells[11].innerHTML = str2;
+			        }
+			    };
+
+				count = count + 1;
+				// console.log(count);
+				document.getElementById('lable').value = "";
+            }
+
+			
+		}
+
+		function createmodel(){
+
+			var modelname = document.getElementById('modelname').value;
+
+			if (modelname == "") {
+                alert("Please enter the model name");
+            }
+            else {
+
+            	var http = new XMLHttpRequest();
+				var url = 'http://localhost:3000/createmodel';
+				var params = 'modelname=' + modelname;
+				http.open('POST', url, true);
+
+				http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+				http.onreadystatechange = function() {
+				    if(http.readyState == 4 && http.status == 200) {
+				        alert(http.status);
+				        if (http.status == 200){
+				        	trainmodel(modelname);
+				        } else {
+				        	alert("failed to create a model")
+				        }
+				    }
+				}
+				http.send(params);
+            }
+
+		}
+
+		function trainmodel(modelname){
+			var modelname = modelname;
+			var json = [];
+			var myTab = document.getElementById('myTable');
+	        for (i = 2; i < myTab.rows.length; i++) {
+	            var objCells = myTab.rows.item(i).cells;
+
+	            var sno = objCells.item(0).innerHTML;
+	            var xaxisl = objCells.item(1).innerHTML;
+	            var yaxisl = objCells.item(2).innerHTML;
+	            var widthl = objCells.item(3).innerHTML;
+	            var heightl = objCells.item(4).innerHTML;
+	            var rotatel = objCells.item(5).innerHTML;
+	            var scalexl = objCells.item(6).innerHTML;
+	            var scaleyl = objCells.item(7).innerHTML;
+	            var fullwidthl = objCells.item(8).innerHTML;
+	            var fullheightl = objCells.item(9).innerHTML;
+	            var labell = objCells.item(10).innerHTML;
+	            var textl = objCells.item(11).innerHTML;
+
+                builderstring = '"' + sno + '": {"xaxis":"' + xaxisl + '", "yaxis":"' + yaxisl + '", "width":"' + widthl + '", "height":"' + heightl + '", "rotate":"' + rotatel + '", "scalex":"' + scalexl + '", "scaley":"' + scaleyl + '", "fullwidth":"' + fullwidthl + '", "fullheight":"' + fullheightl + '", "lable":"' + labell + '", "text":"' + textl + '"}';
+
+                json.push(builderstring);
+	           
+	        }
+	        json = json.toString();
+	        json = "{" + json + "}"
+	        console.log(json);
+	        loaddata(json, modelname);
+		}
+
+		function loaddata(json, modelname){
+			var xhr = new XMLHttpRequest();
+			var url = "http://localhost:3000/trainmodel";
+			xhr.open("POST", url, true);
+			xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			xhr.setRequestHeader("modelname", modelname);
+			// xhr.send(JSON.stringify(json));
+			xhr.send(json);
+			xhr.onreadystatechange = function () {
+			    if (xhr.readyState === 4 && xhr.status === 200) {
+			        var json = JSON.parse(xhr.responseText);
+			        var output = xhr.response;
+			        alert ("output")
+			    }
+			}
+		}
+
+		function createnewrow() {
+
+			var table = document.getElementById("myTable");
+			var row = table.insertRow(count);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			var cell3 = row.insertCell(2);
+			var cell4 = row.insertCell(3);
+			var cell5 = row.insertCell(4);
+			var cell6 = row.insertCell(5);
+			var cell7 = row.insertCell(6);
+			var cell8 = row.insertCell(7);
+			var cell9 = row.insertCell(8);
+			var cell10 = row.insertCell(9);
+			var cell11 = row.insertCell(10);
+			var cell12 = row.insertCell(11);
+			var cell13 = row.insertCell(12);
+
+            var button = document.createElement('input');
+
+            button.setAttribute('type', 'button');
+            button.setAttribute('value', 'Remove');
+            button.setAttribute('onclick', 'removeRow(this)');
+
+            cell13.appendChild(button);
+
+			cell1.innerHTML = count - 1;
+        }
+
+
+    function removeRow(oButton) {
+
+	    var empTab = document.getElementById('myTable');
+	    empTab.deleteRow(oButton.parentNode.parentNode.rowIndex);
+	    count = count - 1;
+    }
+
+  </script>
+</body>

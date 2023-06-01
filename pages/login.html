@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+form {border: 3px solid #f1f1f1;}
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #4ECDC4;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+
+.imgcontainer {
+  text-align: center;
+  /*margin: 24px 0 12px 0;*/
+}
+
+.container {
+  padding: 16px;
+  max-width:100%;
+}
+
+.containerform {
+  padding: 16px;
+  max-width:30%;
+}
+
+span.psw {
+  float: right;
+  padding-top: 16px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 50px) {
+  span.psw {
+     display: block;
+     float: none;
+  }
+}
+</style>
+</head>
+
+
+<body>
+
+<div style="height:40px"></div>
+
+<center>
+	<div class="imgcontainer">
+	    <img src="img/logo.png" alt="Avatar" class="avatar" height="120" width="200">
+	</div>
+</center>
+
+<center>
+  <div>
+    <h2 style="color:grey;">Intelligent OCR</h2>
+  </div>
+</center>
+
+<div style="height:100px"></div>
+
+<center>
+	<form class="containerform" onsubmit="return loginnew()">
+	  <div class="container";>
+	    <input id="uid" type="text" placeholder="Enter Username" name="id" required>
+	    <input id="pwd" type="password" placeholder="Enter Password" name="password" required>
+	        
+	    <button type="submit">Login</button>
+	  </div>
+	</form>
+</center>
+
+<script type="text/javascript">
+	
+	// function login(){
+	// 	console.log("reached here")
+		
+	// 	console.log()
+
+	// 	if (userid == "admin"){
+	// 		if (password == "ey@123"){
+	// 			 window.location.href = 'file:///C:/Users/ET437GL/Documents/EYESIGHT/EYESIGHT_final/ongoing/index.html'
+	// 		} else {
+	// 			alert ("incorrect password")
+	// 		}
+	// 	} else {
+	// 		alert ("user id not found")
+	// 	}
+	// }
+
+
+	function loginnew(){
+        var data = new FormData();
+        data.append('id', document.getElementById("uid").value);
+        data.append('password', document.getElementById("pwd").value);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "http://localhost:3000/login", true);
+        xhr.onload = function() {
+          if (xhr.status == 200) {
+            var response = JSON.parse(this.response);
+            if (response.status == 200) {
+              window.location.href = 'file:///C:/Users/ET437GL/Documents/EYESIGHT/EYESIGHT_final/ongoing/dashboard.html'
+            } else {
+              alert(response.message);
+            }
+          } else {
+            alert("Incorrect credentials");
+          }
+        };
+        xhr.send(data);
+        return false;
+      }
+
+
+
+</script>
+
+</body>
+</html>

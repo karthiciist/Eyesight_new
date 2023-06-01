@@ -1,0 +1,67 @@
+ 
+Tax Invoice/Bill of Supply/Cash Memo
+(Original for Recipient)
+*ASSPL-Amazon Seller Services Pvt. Ltd., ARIPL-Amazon Retail India Pvt. Ltd. (only where Amazon Retail India Pvt. Ltd. fulfillment center is co-located) 
+Customers desirous of availing input GST credit are requested to create a Business account and purchase on Amazon.in/business from Business eligible offers 
+Please note that this invoice is not a demand for payment
+Page 1 of 1
+For Cloudtail India Private Limited:
+Authorized Signatory
+Order Number: 402-0252996-2274730
+Invoice Number : IN-BLR7-10943006
+Order Date: 12.10.2020
+Invoice Details : KA-BLR7-1004-2021
+Invoice Date : 12.10.2020
+Sl.
+No Description
+Unit Price Qty Net
+Amount
+Tax
+Rate
+Tax
+Type
+Tax
+Amount
+Total
+Amount
+1 AO Smith X8 Green RO 9 Litre Wall Mountable , Table Top
+RO+SCMT Black 9 Litre Water Purifier | B0758DYRHB (
+B0758DYRHB ) 
+HSN:8421
+₹14,728.81 1 ₹14,728.81 18% IGST ₹2,651.19 ₹17,380.00
+TOTAL:
+₹2,651.19 ₹17,380.00
+Amount in Words:
+Seventeen Thousand Three Hundred And Eighty only
+Whether tax is payable under reverse charge - No
+Sold By :
+Cloudtail India Private Limited
+* Sy No. 524/1,2,3,4,6, 525/1,2,3,4,5,6,
+526/3,4,5,6,527 of madivala village, and Sy
+no.51/1 of thatanahalli village, kasaba hobli,
+anekal taluk, Bangalore urban district 
+Bangalore, Karnataka, 562107
+IN
+PAN No: AAQCS4259Q
+GST Registration No: 29AAQCS4259Q1Z6
+Billing Address :
+Karthic Srinivasan
+Plot no 4, Bharathiyar Salai,, Mahalakshmi Nagar,
+Madippakam
+CHENNAI, TAMIL NADU, 600091
+IN
+State/UT Code: 33
+Shipping Address :
+Karthic Srinivasan 
+Karthic Srinivasan
+Plot no 4, Bharathiyar Salai,, Mahalakshmi Nagar,
+Madippakam
+CHENNAI, TAMIL NADU, 600091
+IN
+State/UT Code: 33 
+Place of supply: TAMIL NADU 
+Place of delivery: TAMIL NADU
+Digitally Signed by DS CLOUDTAIL INDIA PRIVATE LIMITED 2
+Date: 2020.10.12 11:59:45 UTC
+Reason: Invoice
+

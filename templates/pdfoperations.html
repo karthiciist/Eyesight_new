@@ -1,0 +1,1468 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="static/styles/cropper.css">
+{{ super() }}
+
+<style>
+  #canvas {
+    width: 700x;
+    height: 800px;
+    border: 10px solid blue;
+  }
+
+  .rectangle {
+    border: 1px solid #000000;
+    position: absolute;
+  }
+
+  table,
+  th,
+  td {
+    border: solid 1px #CCC;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 0;
+    text-align: center;
+  }
+</style>
+{% endblock%}
+
+{% block body%}
+<div class="row js flex-fill">
+  <div class="col-lg-9 main-chart">
+    <center>
+      <div class="box">
+        <form method="post" enctype="multipart/form-data">
+          <input type="file" name="filename[]" id="inputId" class="inputfile inputfile-6" accept="application/pdf"
+            data-multiple-caption="{count} files selected" multiple accept="image/*"
+            onchange="sendafile(this.files[0])">
+          <label for="inputId"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17"
+                viewBox="0 0 20 17">
+                <path
+                  d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+              </svg> Choose a PDF&hellip;</strong></label>
+        </form>
+      </div>
+    </center>
+
+    <center>
+      <div id="pdfnavbtns">
+        <button id="btnBack" type="button" class="btn-consumenow" onclick="backpage()"
+          style="width: 50px;">Back</button>
+        <button id="btnNext" type="button" class="btn-consumenow" onclick="nextpage()"
+          style="width: 50px;">Next</button>
+
+      </div>
+    </center>
+
+    <center>
+      <object id="pdfviewer" width="700px" height="800px"></object>
+    </center>
+    <center>
+      <div id="croppertoggle">
+        <img id="pdfviewercanvas" style="border: 0px solid blue"></img>
+      </div>
+
+    </center>
+    <!-- <div id="imgoutput">
+      <center>
+        <div>
+          <img id="output" style="width: 900px; height: 900px;" src="C:\Users\ET437GL\Documents\EYESIGHT\filename.png">
+        </div>
+      </center>
+    </div> -->
+    <div style="padding-top: 10px; display: none; margin-top: 100px;">
+      <table id="myTable" style="width:100%" align="center">
+        <tr>table
+          <th COLSPAN="12">
+            <h3 style="margin-top: 1000px;">Results</h3>
+          </th>
+        </tr>
+        <tr>
+          <th>S.no</th>
+          <th>page</th>
+          <th>flavor</th>
+          <th>bglines</th>
+          <th>cuttext</th>
+          <th>superscript</th>
+          <th>smalllines</th>
+          <th>grouprow</th>
+          <th>groupcol</th>
+          <th>edgetol</th>
+          <th>tablearea</th>
+          <th>tablename</th>
+          <th></th>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+
+
+  <div class="col-lg-3 ds">
+
+    <div style="margin-bottom: 10px;">
+      <table>
+        <tbody>
+          <tr>
+            <td><input type="radio" name="capture" id="capturevalue" value="value" checked="checked"></td>
+            <td>Capture values</td>
+            <td><input type="radio" name="capture" id="capturetable" value="table"></td>
+            <td>Capture tables</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="valueoptions">
+      <center>
+        <button id="btnCaptureValues" type="button" class="btn-consumenow" onclick="captureValue()">Capture
+          Value</button>
+      </center>
+      <!-- <center>
+        <button id="btnCreateModel" type="button" class="btn-consumenow" onclick="createModel()">Create Model</button>
+      </center> -->
+
+      <div style="padding-top: 2px;">
+        <table id="myTable2" style="width:100%" align="center">
+          <tr>
+            <th COLSPAN="3" style="text-align:center;">
+              <h4 style="text-align:center; margin-top: 10px;">Captured Parameters</h4>
+            </th>
+          </tr>
+          <tr>
+            <th style="text-align:center;">Key</th>
+            <th style="text-align:center;">Value Location</th>
+            <th></th>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+
+    <div id="tableoptions">
+      <div>
+        <div style="margin-bottom: 10px;">
+          Enter pages
+          <input style="float: right; width: 100px;" id="pages" value="1">
+        </div>
+      </div>
+
+      <div style="margin-bottom: 10px;">
+        <p>example inputs: 1,3 or 5-8 or 1-end or all</p>
+      </div>
+
+      <div style="padding-top: 30px;">
+        <label for="flavor" style="margin-right: 5px;">Select flavor</label>
+        <select id="flavor" style="float: right; width: 100px;" onchange="ShowHideDiv()">
+          <option value="lattice">Lattice</option>
+          <option value="stream">Stream</option>
+        </select>
+      </div>
+      <div style="margin-bottom: 10px;">
+        <p>Stream - tables with whitespace between cells</p>
+        <p>Lattice -tables with lines between cells</p>
+      </div>
+
+      <div id="latticeoptions">
+        <div style="padding-top: 30px;">
+          <label for="bglines" style="margin-right: 5px;">Process background lines</label>
+          <select id="bglines" style="float: right; width: 100px;">
+            <option value="True">True</option>
+            <option value="False">False</option>
+          </select>
+        </div>
+        <div style="padding-top: 30px;">
+          <label for="cuttext" style="margin-right: 5px;">Cut text</label>
+          <select id="cuttext" style="float: right; width: 100px;">
+            <option value="True">True</option>
+            <option value="False">False</option>
+          </select>
+        </div>
+        <div style="margin-top: 10px;">
+          <p>Cut text along column separators</p>
+        </div>
+        <div style="padding-top: 30px;">
+          <label for="superscript" style="margin-right: 5px;">Detect superscripts</label>
+          <select id="superscript" style="float: right; width: 100px;">
+            <option value="True">True</option>
+            <option value="False">False</option>
+          </select>
+        </div>
+        <div style="padding-top: 30px;">
+          Detect small lines
+          <input style="float: right; width: 100px;" id="smalllines" value="15">
+        </div>
+        <div style="margin-top: 10px;">
+          <p>Small lines can be detected by increasing this value. Range: 15-100</p>
+        </div>
+      </div>
+
+      <div id="streamoptions">
+        <div style="padding-top: 10px;">
+          Group into row
+          <input style="float: right; width: 100px;" id="grouprows" , value="10">
+        </div>
+        <div style="margin-top: 10px;">
+          <p>Group vertically closer text lines together into the same row. Range: 10-50</p>
+        </div>
+        <div style="padding-top: 10px;">
+          Group into column
+          <input style="float: right; width: 100px;" id="groupcolumns" , value="10">
+        </div>
+        <div style="margin-top: 10px;">
+          <p>Group horizontally closer text lines together into the same column. Range: 10-50</p>
+        </div>
+        <div style="padding-top: 10px;">
+          <label for="superscript" style="margin-right: 5px;">Detect superscripts</label>
+          <select id="superscript" style="float: right; width: 100px;">
+            <option value="True">True</option>
+            <option value="False">False</option>
+          </select>
+        </div>
+        <div style="padding-top: 30px;">
+          <label for="cuttext" style="margin-right: 5px;">Cut text</label>
+          <select id="cuttext" style="float: right; width: 100px;">
+            <option value="True">True</option>
+            <option value="False">False</option>
+          </select>
+        </div>
+        <div style="margin-top: 10px;">
+          <p>Cut text along column separators</p>
+        </div>
+
+        <div style="padding-top: 10px;">
+          Text edge tolrence
+          <input style="float: right; width: 100px;" id="edgetol" value="50">
+        </div>
+        <div style="margin-top: 10px;">
+          <p>Adjust this value to cover columns far apart. Default: 50</p>
+        </div>
+
+      </div>
+
+      <div style="padding-top: 30px;">
+        <center>
+          <button id="btnTableCrop" type="button" class="btn-consumenow" onclick="showtablecapturemethodmodal()">Crop
+            and
+            Capture
+            Tables</button>
+        </center>
+        <center>
+          <button id="btnviewdldata" type="button" class="btn-consumenow" onclick="sendtoscan()">Detect tables</button>
+        </center>
+        <!-- <center>
+          <button id="btnremovecropper" type="button" class="btn-consumenow" onclick="removecropper()">Remove
+            cropper</button>
+        </center> -->
+        <center>
+          <button id="btncreatemodel" type="button" class="btn-consumenow" onclick="showmodal2()">Create
+            model</button>
+        </center>
+      </div>
+
+      <div style="padding-top: 2px;">
+        <table id="myTable1" style="width:100%" align="center">
+          <tr>
+            <th COLSPAN="3" style="text-align:center;">
+              <h4 style="text-align:center; margin-top: 10px;">Captured tables</h4>
+            </th>
+          </tr>
+          <!-- <tr>
+            <th COLSPAN="3" style="text-align:center;"><button id="btnparametercapture"
+                onclick="selectocrmode('parameter')">Capture a parameter</button></th>
+          </tr> -->
+          <tr>
+            <th style="text-align:center;">page</th>
+            <th style="text-align:center;">Table name</th>
+            <th></th>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Model Modal -->
+<div class="modal fade" id="myModal2" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="padding:10px 10px;">
+        <button type="button" class="close" data-dismiss="modal" id="closebtn">&times;</button>
+        <center>
+          <h4 style="color: white;">Enter model name</h4>
+        </center>
+      </div>
+
+      <div class="modal-body" style="padding:10px 50px;">
+        <form role="form">
+          <div class="form-group" style="margin-top: 15px;">
+            <input type="text" class="form-control" id="modelname" placeholder="Enter model name">
+            <input type="text" class="form-control" id="description" placeholder="Enter model description here"
+              style="margin-top: 10px;">
+          </div>
+        </form>
+        <div>
+          <center><button class="btn-cardsave" id="createmodel">Create model</button></center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- tablename Modal -->
+<div class="modal fade" id="tablenamemodal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+
+      <div class="modal-header" style="padding:10px 10px;">
+        <button type="button" class="close" data-dismiss="modal" id="closebtn">&times;</button>
+        <center>
+          <h4 style="color: white;">Enter a name for this table</h4>
+        </center>
+      </div>
+
+      <div class="modal-body" style="padding:10px 50px;">
+        <form role="form">
+          <div class="form-group" style="margin-top: 15px;">
+            <input type="text" class="form-control" id="tablename" placeholder="Enter table name">
+          </div>
+        </form>
+        <div>
+          <center><button class="btn-cardsave" id="done">Done</button></center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Capture value Modal -->
+<div class="modal fade" id="captureValueModal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+
+
+      <div class="modal-header" style="padding:10px 10px;">
+        <button type="button" class="close" data-dismiss="modal" id="closebtnocr">&times;</button>
+        <center>
+          <h4 style="color: white;">Enter below details</h4>
+        </center>
+      </div>
+
+
+      <div class="modal-body" style="padding:10px 50px;">
+
+        <div style="margin-top: 20px;">
+          <h5 style="font-weight: bold;">Captured value :</h5>
+        </div>
+
+        <form role="form">
+          <div class="form-group" style="margin-top: 15px;">
+            <input type="text" class="form-control" id="capturedvalue" placeholder="Value captured from pdf">
+          </div>
+        </form>
+
+
+
+        <div style="display: table-row; width: 100%;">
+
+          <div style="display: table-cell; width: 40%; padding-right: 10px;">
+            <h5 style="font-weight: bold; ">Keyword :</h5>
+            <div>
+              <input type="text" class="form-control" id="keywordmain" placeholder="Enter key">
+            </div>
+          </div>
+
+          <div style="display: table-cell; width: 20%; padding-right: 10px;">
+            <h5 style="font-weight: bold;">Position :</h5>
+            <div style="display:flex; ">
+              <div style="width: 100%;">
+                <select id="positionmain" class="form-control">
+                  <option value="top">Top</option>
+                  <option value="bottom">Bottom</option>
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: table-cell; width: 20%; padding-right: 10px;">
+            <h5 style="font-weight: bold; ">Width :</h5>
+            <div>
+              <input type="text" class="form-control" id="searchwidth" placeholder="Enter width">
+            </div>
+          </div>
+
+          <div style="display: table-cell; width: 20%; ">
+            <h5 style="font-weight: bold; ">Height :</h5>
+            <div>
+              <input type="text" class="form-control" id="searchheight" placeholder="Enter height">
+            </div>
+          </div>
+        </div>
+
+        <div id="condition1div" style="display: table-row; width: 100%;">
+
+          <div style="display: table-cell; width: 40%; padding-right: 10px;">
+            <h5 style="font-weight: bold; ">Keyword :</h5>
+            <div>
+              <input type="text" class="form-control" id="keywordcondition1" placeholder="Enter key">
+            </div>
+          </div>
+
+          <div style="display: table-cell; width: 20%; padding-right: 10px;">
+            <h5 style="font-weight: bold;">Position :</h5>
+            <div style="display:flex; ">
+              <div style="width: 100%;">
+                <select id="positioncondition1" class="form-control">
+                  <option value="top">Top</option>
+                  <option value="bottom">Bottom</option>
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: table-cell; width: 20%; padding-right: 10px;">
+            <h5 style="font-weight: bold; ">Width :</h5>
+            <div>
+              <input type="text" class="form-control" id="searchwidthcondition1" placeholder="Enter width">
+            </div>
+          </div>
+
+          <div style="display: table-cell; width: 20%; ">
+            <h5 style="font-weight: bold; ">Height :</h5>
+            <div>
+              <input type="text" class="form-control" id="searchheightcondition1" placeholder="Enter height">
+            </div>
+          </div>
+          <div id="removecondition1">
+            x
+          </div>
+        </div>
+
+        <div id="condition2div" style="display: table-row; width: 100%;">
+
+          <div style="display: table-cell; width: 40%; padding-right: 10px;">
+            <h5 style="font-weight: bold; ">Keyword :</h5>
+            <div>
+              <input type="text" class="form-control" id="keywordcondition2" placeholder="Enter key">
+            </div>
+          </div>
+
+          <div style="display: table-cell; width: 20%; padding-right: 10px;">
+            <h5 style="font-weight: bold;">Position :</h5>
+            <div style="display:flex; ">
+              <div style="width: 100%;">
+                <select id="positioncondition2" class="form-control">
+                  <option value="top">Top</option>
+                  <option value="bottom">Bottom</option>
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: table-cell; width: 20%; padding-right: 10px;">
+            <h5 style="font-weight: bold; ">Width :</h5>
+            <div>
+              <input type="text" class="form-control" id="searchwidthcondition2" placeholder="Enter width">
+            </div>
+          </div>
+
+          <div style="display: table-cell; width: 20%; ">
+            <h5 style="font-weight: bold; ">Height :</h5>
+            <div>
+              <input type="text" class="form-control" id="searchheightcondition2" placeholder="Enter height">
+            </div>
+          </div>
+          <div id="removecondition2">
+            x
+          </div>
+        </div>
+
+        <div>
+          <div>
+            <center>
+              <button class="btn-cardsave" id="trycurrentvalue" onclick="trycurrentvalue()"
+                style="width:150px">Try</button>
+              <button class="btn-cardsave" id="capturecurrentvalue" onclick="savecurrentvalue()"
+                style="width:150px">Save</button>
+              <button class="btn-cardsave" id="addcondition" onclick="addcondition()" style="width:150px">Add a
+                condition</button>
+            </center>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- TableCaptureTypeModal -->
+<div class="modal fade" id="tableCaptureTypeModal" role="dialog">
+  <div class="modal-dialog" style="width: 550px;">
+
+    <!-- TableCaptureTypeModal content-->
+    <div class="modal-content">
+      <div class="modal-body" style="padding:30px 30px;">
+        <div>
+          <center>
+            <h3>Table capture type</h3>
+          </center>
+        </div>
+        <div>
+          <center>
+            <button class="btn-cardsave" id="tablecropbtn" type="button" style="width:200px" class="btn-consumenow">Crop
+              table region</button>
+            <button class="btn-cardsave" id="headandfootbtn" type="button" style="width:200px"
+              class="btn-consumenow">Header and footer</button>
+          </center>
+        </div>
+        <div id="hdrftroptionsdiv">
+          <div style="margin-top: 20px;">
+            <input type="text" class="form-control" id="tableheadertxt" placeholder="Enter Table Header">
+            <div class="checkbox" id="tblstrtsb4hdrdiv">
+              <label><input type="checkbox" value="" id="tblstrtsb4hdrchkbx">Table starts after Header</label>
+            </div>
+            <div class="checkbox" id="tblstrtsaftrhdrdiv">
+              <label><input type="checkbox" value="" id="tblstrtsaftrhdrchkbx">Header is included in table</label>
+            </div>
+          </div>
+          <div>
+            <input type="text" class="form-control" id="tablefootertxt" placeholder="Enter Table Footer">
+            <div class="checkbox" id="tblstrtsb4ftrdiv">
+              <label><input type="checkbox" value="" id="tblstrtsb4ftrchkbx">Table ends before Footer</label>
+            </div>
+            <div class="checkbox" id="tblstrtsaftrftrdiv">
+              <label><input type="checkbox" value="" id="tblstrtsaftrftrchkbx">Footer is included in table</label>
+            </div>
+          </div>
+          <center>
+            <button class="btn-cardsave" id="tblcptrandsavebtn" type="button" style="width:200px"
+              class="btn-consumenow">Capture and Save</button>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts%}
+
+<script src="static/lib/cropper.js"></script>
+<script src="static/lib/custom-file-input.js"></script>
+<script src="http://cdn.jsdelivr.net/g/filesaver.js"></script>
+<script src="static/lib/cropper.js"></script>
+<script src="static/lib/canvas2image.js"></script>
+{{ super() }}
+<script>
+  // var cropper;
+  var xaxis;
+  var yaxis;
+  var x2axis;
+  var y2axis;
+  var cropper;
+  var fullwidth;
+  var fullheight;
+  var pagecount = 1;
+  var count = 2;
+  var tablelist;
+  var tablename;
+  var noofcondition = 0;
+
+  $('#condition1div').hide();
+  $('#condition2div').hide();
+  $('#tableoptions').hide();
+
+  $('input[name="capture"]').bind('change', function () {
+    var showOrHidetable = ($(this).val() == "table") ? true : false;
+    var showOrHidevalue = ($(this).val() == "value") ? true : false;
+    $('#tableoptions').toggle(showOrHidetable);
+    $('#valueoptions').toggle(showOrHidevalue);
+  });
+
+  var model = {};
+  model.values = new Array();
+
+  // initDraw(document.getElementById('pdfviewercanvas'));
+
+  var flavor = document.getElementById("flavor");
+  var latticeoptions = document.getElementById("latticeoptions");
+  var streamoptions = document.getElementById("streamoptions");
+
+  latticeoptions.style.display = flavor.value == "lattice" ? "block" : "none";
+  streamoptions.style.display = flavor.value == "stream" ? "block" : "none";
+
+  document.getElementById("pdfnavbtns").style.display = "none";
+  document.getElementById("btnTableCrop").style.display = "none";
+  document.getElementById("btnviewdldata").style.display = "none";
+
+  var filenameinserver;
+
+  var imageview = document.getElementById('pdfviewercanvas');
+  var pdfview = document.getElementById('pdfviewer');
+  imageview.style.display = "none";
+  pdfview.style.display = "inline";
+
+  // document.getElementById("btnremovecropper").style.display = "none";
+  document.getElementById("btncreatemodel").style.display = "none";
+
+  // when pdf is loaded
+  function sendafile(file) {
+    var formdata = new FormData();
+    formdata.append('file', file);
+
+    fetch('receiveinitialpdf', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            console.log(text);
+            filenameinserver = text;
+            urlpath = "static/initialreceivepdf/" + text;
+            console.log(urlpath);
+            $("#pdfviewer").attr("data", urlpath);
+            document.getElementById("btnviewdldata").style.display = "inline";
+            document.getElementById("btncreatemodel").style.display = "inline";
+          });
+
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+  }
+
+  // flavors dropdown hide and show
+  function ShowHideDiv() {
+    var flavor = document.getElementById("flavor");
+    var latticeoptions = document.getElementById("latticeoptions");
+    var streamoptions = document.getElementById("streamoptions");
+
+    latticeoptions.style.display = flavor.value == "lattice" ? "block" : "none";
+    streamoptions.style.display = flavor.value == "stream" ? "block" : "none";
+  }
+
+  // View and Download Data btn clicked
+  function sendtoscan() {
+
+    var imageview = document.getElementById('pdfviewercanvas');
+    filepath = "static/eyesightpdfvision/" + filenameinserver.substr(0, filenameinserver.indexOf('.')) + "/" +
+      pagecount + ".jpg";
+    imageview.setAttribute("src", filepath);
+
+    var pages = document.getElementById("pages").value;
+
+    var flavor = document.getElementById("flavor");
+    var bglines = document.getElementById("bglines");
+    var cuttext = document.getElementById("cuttext");
+    var superscript = document.getElementById("superscript");
+
+    var flavortxt = flavor.options[flavor.selectedIndex].value;
+    var bglinestxt = bglines.options[bglines.selectedIndex].value;
+    var cuttexttxt = cuttext.options[cuttext.selectedIndex].value;
+    var superscripttxt = superscript.options[superscript.selectedIndex].value;
+
+    var grouprows = document.getElementById("grouprows").value;
+    var groupcolumns = document.getElementById("groupcolumns").value;
+
+    var smalllines = document.getElementById("smalllines").value;
+    var edgetol = document.getElementById("edgetol").value;
+
+    if (cropper != null) {
+      tableposition = xaxis + "," + yaxis + "," + x2axis + "," + y2axis;
+      alert(tableposition);
+      showtablenamemodal(tableposition);
+    } else {
+      tableposition = "['" + "-" + "," + "-" + "," + "-" + "," + "-" + "']";
+    }
+
+    if (pages == "") {
+      alert("Please enter pages");
+    } else {
+      var formdata = new FormData();
+      formdata.append('filename', filenameinserver);
+      formdata.append('pages', pages);
+
+      formdata.append('flavor', flavortxt);
+      formdata.append('processbglines', bglinestxt);
+      formdata.append('cuttext', cuttexttxt);
+      formdata.append('superscripts', superscripttxt);
+      formdata.append('smalllines', smalllines);
+      formdata.append('edgetol', edgetol);
+      formdata.append('grouprows', grouprows);
+      formdata.append('groupcolumns', groupcolumns);
+
+      formdata.append('tableposition', tableposition);
+
+      console.log(formdata);
+
+      fetch('processpdf', {
+        // mode: 'no-cors',
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            // cropper.destroy();
+            try {
+              removecropper();
+            } catch (error) {
+              console.log("no cropper found");
+            }
+
+            document.getElementById("btnTableCrop").style.display = "inline";
+            return response.text().then(function (text) {
+              var dt = new Date().toString();
+              var URLToOpen = "static/outputtables/" + filenameinserver + ".html?TimeStamp=" + dt;
+              window.open(URLToOpen);
+              // window.open("static/outputtables/" + filenameinserver + ".html", '_blank');
+            });
+
+          }
+        }
+      ).catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+    }
+  }
+
+  // View and Download Data btn clicked
+  function sendtoscanwithheaderandfooter(tableposition) {
+
+    // var imageview = document.getElementById('pdfviewercanvas');
+    // filepath = "static/eyesightpdfvision/" + filenameinserver.substr(0, filenameinserver.indexOf('.')) + "/" +
+    //   pagecount + ".jpg";
+    // imageview.setAttribute("src", filepath);
+
+    var pages = document.getElementById("pages").value;
+
+    var flavor = document.getElementById("flavor");
+    var bglines = document.getElementById("bglines");
+    var cuttext = document.getElementById("cuttext");
+    var superscript = document.getElementById("superscript");
+
+    var flavortxt = flavor.options[flavor.selectedIndex].value;
+    var bglinestxt = bglines.options[bglines.selectedIndex].value;
+    var cuttexttxt = cuttext.options[cuttext.selectedIndex].value;
+    var superscripttxt = superscript.options[superscript.selectedIndex].value;
+
+    var grouprows = document.getElementById("grouprows").value;
+    var groupcolumns = document.getElementById("groupcolumns").value;
+
+    var smalllines = document.getElementById("smalllines").value;
+    var edgetol = document.getElementById("edgetol").value;
+
+    $('#tableCaptureTypeModal').modal('hide');
+    showtablenamemodal(tableposition);
+
+    // if (cropper != null) {
+    //   tableposition = xaxis + "," + yaxis + "," + x2axis + "," + y2axis;
+    //   alert(tableposition);
+      
+    // } else {
+    //   tableposition = "['" + "-" + "," + "-" + "," + "-" + "," + "-" + "']";
+    // }
+
+    if (pages == "") {
+      alert("Please enter pages");
+    } else {
+      var formdata = new FormData();
+      formdata.append('filename', filenameinserver);
+      formdata.append('pages', pages);
+
+      formdata.append('flavor', flavortxt);
+      formdata.append('processbglines', bglinestxt);
+      formdata.append('cuttext', cuttexttxt);
+      formdata.append('superscripts', superscripttxt);
+      formdata.append('smalllines', smalllines);
+      formdata.append('edgetol', edgetol);
+      formdata.append('grouprows', grouprows);
+      formdata.append('groupcolumns', groupcolumns);
+
+      formdata.append('tableposition', tableposition);
+
+      console.log(formdata);
+
+      fetch('processpdf', {
+        // mode: 'no-cors',
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            // cropper.destroy();
+            try {
+              removecropper();
+            } catch (error) {
+              console.log("no cropper found");
+            }
+
+            document.getElementById("btnTableCrop").style.display = "inline";
+            return response.text().then(function (text) {
+              var dt = new Date().toString();
+              var URLToOpen = "static/outputtables/" + filenameinserver + ".html?TimeStamp=" + dt;
+              window.open(URLToOpen);
+              // window.open("static/outputtables/" + filenameinserver + ".html", '_blank');
+            });
+
+          }
+        }
+      ).catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+    }
+  }
+
+  // show table capture method modal
+  function showtablecapturemethodmodal() {
+
+    document.getElementById("hdrftroptionsdiv").style.display = "none";
+
+    $("#tableCaptureTypeModal").modal();
+
+    document.getElementById("tablecropbtn").onclick = function (event) {
+      showimagefield()
+    }
+
+    document.getElementById("headandfootbtn").onclick = function (event) {
+      document.getElementById("hdrftroptionsdiv").style.display = "inline";
+      document.getElementById("tblcptrandsavebtn").onclick = function (event) {
+        gettableareafromheaderfooter();
+      }
+    }
+  }
+
+  //Crop and Capture Tables btn clicked
+  function showimagefield() {
+    $('#tableCaptureTypeModal').modal('hide');
+    document.getElementById("btnTableCrop").style.display = "none";
+    document.getElementById("pdfnavbtns").style.display = "inline";
+    var imageview = document.getElementById('pdfviewercanvas');
+    var pdfview = document.getElementById('pdfviewer');
+    imageview.style.display = "inline";
+    pdfview.style.display = "none";
+    filepath = "static/eyesightpdfvision/" + filenameinserver.substr(0, filenameinserver.indexOf('.')) + "/" +
+      pagecount + ".jpg";
+    imageview.setAttribute("src", filepath);
+    updateImageDisplay("none");
+  }
+
+  function updateImageDisplay(task) {
+
+    if (task == "destroy") {
+      cropper.destroy();
+    } else {
+      var image = document.getElementById('pdfviewercanvas');
+      fullwidth = image.width;
+      fullheight = image.height;
+      console.log(fullwidth);
+      console.log(fullheight);
+
+      cropper = new Cropper(image, {
+        crop(event) {
+          xaxis = Math.round(event.detail.x);
+          yaxiscropper = Math.round(event.detail.y);
+          console.log("cropper y - " + yaxiscropper);
+          yaxis = Math.abs(fullheight - yaxiscropper);
+          console.log("pdf y - " + yaxis);
+
+          width = Math.round(event.detail.width);
+          height = Math.round(event.detail.height);
+          console.log("width" + width);
+          console.log("height" + height);
+
+          x2axis = xaxis + width;
+          y2axis = Math.round(event.detail.y) + height;
+          y2axis = Math.abs(fullheight - y2axis);
+          console.log("pdf y2 - " + y2axis);
+        }
+      });
+    }
+  }
+
+  function backpage() {
+    if (pagecount == 1) { } else {
+      pagecount = pagecount - 1;
+      var imageview = document.getElementById('pdfviewercanvas');
+      filepath = "static/eyesightpdfvision/" + filenameinserver.substr(0, filenameinserver.indexOf('.')) + "/" +
+        pagecount + ".jpg";
+      imageview.setAttribute("src", filepath);
+    }
+  }
+
+  function nextpage() {
+    pagecount = pagecount + 1;
+    var imageview = document.getElementById('pdfviewercanvas');
+    filepath = "static/eyesightpdfvision/" + filenameinserver.substr(0, filenameinserver.indexOf('.')) + "/" +
+      pagecount + ".jpg";
+    imageview.setAttribute("src", filepath);
+  }
+
+  function removecropper() {
+    document.getElementById("btnTableCrop").style.display = "inline";
+
+    var node = document.getElementById('croppertoggle');
+    node.innerHTML = "";
+
+    var img = document.createElement('img');
+    filepath = "static/eyesightpdfvision/" + filenameinserver.substr(0, filenameinserver.indexOf('.')) + "/" +
+      pagecount + ".jpg";
+
+    img.src = filepath;
+    img.id = "pdfviewercanvas";
+    document.getElementById('croppertoggle').appendChild(img);
+
+  }
+
+  function showmodal2() {
+
+    $("#myModal2").modal();
+    document.getElementById("createmodel").onclick = function (event) {
+      var modelname = $('#modelname').val();
+      var description = $('#description').val();
+      if (modelname == "" || description == "") {
+        alert("Enter a model name and description");
+      } else if (modelname != "") {
+        createmodel(modelname, description);
+        $("#modelname").val("");
+        $("#description").val("");
+        $('#myModal2').modal('toggle');
+      }
+    }
+  }
+
+  function updatetable(tablearea) {
+
+    var pages = document.getElementById("pages").value;
+    var flavor = document.getElementById("flavor");
+    var bglines = document.getElementById("bglines");
+    var cuttext = document.getElementById("cuttext");
+    var superscript = document.getElementById("superscript");
+
+    var flavortxt = flavor.options[flavor.selectedIndex].value;
+    var bglinestxt = bglines.options[bglines.selectedIndex].value;
+    var cuttexttxt = cuttext.options[cuttext.selectedIndex].value;
+    var superscripttxt = superscript.options[superscript.selectedIndex].value;
+
+    var grouprows = document.getElementById("grouprows").value;
+    var groupcolumns = document.getElementById("groupcolumns").value;
+
+    var smalllines = document.getElementById("smalllines").value;
+    var edgetol = document.getElementById("edgetol").value;
+
+    var rowcount = document.getElementById("myTable").rows.length;
+    var rowcount1 = document.getElementById("myTable1").rows.length;
+
+    createnewrow(rowcount, rowcount1);
+
+    var myTable1 = document.getElementById('myTable1');
+    myTable1.rows[rowcount1].cells[0].innerHTML = pagecount;
+    myTable1.rows[rowcount1].cells[1].innerHTML = tablename;
+    myTable1.rows[rowcount1].cells[2].innerHTML = "<button value='X'; onclick='removeRow(this)'>X</button>";
+
+    var myTable = document.getElementById('myTable');
+
+    paramArr = ["sno", pages, flavortxt, bglinestxt, cuttexttxt, superscripttxt, smalllines, grouprows, groupcolumns,
+      edgetol, tablearea, tablename
+    ];
+
+    for (i = 1; i < 13; i++) {
+
+      if (i == 12) {
+        myTable.rows[rowcount].cells[i].innerHTML = "<button value='Remove'; onclick='removeRow(this)'>Remove</button>";
+      } else {
+        myTable.rows[rowcount].cells[i].innerHTML = paramArr[i];
+      }
+
+    }
+
+    count = count + 1;
+  }
+
+  function createnewrow(rowcount, rowcount1) {
+
+    var table1 = document.getElementById("myTable1");
+    var row = table1.insertRow();
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var table = document.getElementById("myTable");
+    var row = table.insertRow(rowcount);
+
+    for (i = 1; i < 14; i++) {
+      var cell = row.insertCell(i - 1);
+      if (i == 11) { } else if (i == 1) {
+        cell.innerHTML = count - 1;
+      }
+    }
+  }
+
+  function createmodel(modelname, description) {
+
+    var rowcount = document.getElementById("myTable").rows.length;
+
+    if (rowcount == 2) {
+
+      var flavor = document.getElementById("flavor");
+      var bglines = document.getElementById("bglines");
+      var cuttext = document.getElementById("cuttext");
+      var superscript = document.getElementById("superscript");
+
+      var pages = document.getElementById("pages").value;
+      var flavortxt = flavor.options[flavor.selectedIndex].value;
+      var bglinestxt = bglines.options[bglines.selectedIndex].value;
+      var cuttexttxt = cuttext.options[cuttext.selectedIndex].value;
+      var superscripttxt = superscript.options[superscript.selectedIndex].value;
+      var smalllines = document.getElementById("smalllines").value;
+
+      var grouprows = document.getElementById("grouprows").value;
+      var groupcolumns = document.getElementById("groupcolumns").value;
+      var edgetol = document.getElementById("edgetol").value;
+
+      var formdata = new FormData();
+
+      formdata.append('modelname', modelname);
+      formdata.append('description', description);
+      formdata.append('pages', pages);
+      formdata.append('flavortxt', flavortxt);
+      formdata.append('bglinestxt', bglinestxt);
+      formdata.append('cuttexttxt', cuttexttxt);
+      formdata.append('superscripttxt', superscripttxt);
+      formdata.append('smalllines', smalllines);
+      formdata.append('grouprows', grouprows);
+      formdata.append('groupcolumns', groupcolumns);
+      formdata.append('edgetol', edgetol);
+      formdata.append('tables', "-");
+
+      // console.log(formdata);
+
+      fetch('createpdfmodel', {
+        // mode: 'no-cors',
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            return response.text().then(function (text) {
+              alert("model created")
+            });
+          }
+        }
+      ).catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+    } else {
+      // alert ("dai");
+      trainmodel(modelname, description);
+
+    }
+
+    var formdata = new FormData();
+    formdata.append('modeljson', JSON.stringify(model));
+    formdata.append('title', modelname);
+    fetch('createpdfmodelfromjson', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            console.log(text);
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+
+  }
+
+  function trainmodel(modelname, description) {
+    var json = [];
+    var myTab = document.getElementById('myTable');
+    for (i = 2; i < myTab.rows.length; i++) {
+      var objCells = myTab.rows.item(i).cells;
+      var sno = objCells.item(0).innerHTML;
+      var page = objCells.item(1).innerHTML;
+      var flavor = objCells.item(2).innerHTML;
+      var bglines = objCells.item(3).innerHTML;
+      var cuttext = objCells.item(4).innerHTML;
+      var superscript = objCells.item(5).innerHTML;
+      var smalllines = objCells.item(6).innerHTML;
+      var grouprow = objCells.item(7).innerHTML;
+      var groupcol = objCells.item(8).innerHTML;
+      var edgetol = objCells.item(9).innerHTML;
+      var tablearea = objCells.item(10).innerHTML;
+      var tablename = objCells.item(11).innerHTML;
+      builderstring = '"' + sno + '": {"page":"' + page + '", "flavor":"' + flavor + '", "bglines":"' + bglines +
+        '", "cuttext":"' + cuttext + '", "superscript":"' + superscript + '", "smalllines":"' + smalllines +
+        '", "grouprow":"' + grouprow + '", "groupcol":"' + groupcol + '", "edgetol":"' + edgetol + '", "tablearea":"' +
+        tablearea + '", "tablename":"' + tablename + '"}';
+      json.push(builderstring);
+
+    }
+    json = json.toString();
+    json = "{" + json + "}"
+    console.log(json);
+    loaddata(json, modelname, description);
+  }
+
+  function loaddata(json, modelname, description) {
+    var xhr = new XMLHttpRequest();
+    var url = "trainpdfmodel";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.setRequestHeader("modelname", modelname);
+    // xhr.send(JSON.stringify(json));
+    xhr.send(json);
+    console.log(json);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var json = JSON.parse(xhr.responseText);
+        var output = xhr.response;
+        // alert(output);
+        updatemodelstable(modelname, description);
+      }
+    }
+  }
+
+  function updatemodelstable(modelname, description) {
+
+    var xhr = new XMLHttpRequest();
+    var url = "updatepdfmodelstable";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.setRequestHeader("modelname", modelname);
+    xhr.setRequestHeader("descr", description);
+    // xhr.send(JSON.stringify(json));
+    var json = '{hi : hi}';
+    xhr.send(json);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var json = JSON.parse(xhr.responseText);
+        var output = xhr.response;
+        console.log(output);
+        alert("Model created successfully")
+        // window.location.href = 'file:///C:/Users/ET437GL/Documents/EYESIGHT/EYESIGHT_final/ongoing/trainedmodels.html'
+        window.location.href = "trainedpdfmodelspage"
+        // return "done";
+      }
+    }
+  }
+
+  function removeRow(oButton) {
+
+    var empTab = document.getElementById('myTable');
+    empTab.deleteRow((oButton.parentNode.parentNode.rowIndex));
+
+    var empTab1 = document.getElementById('myTable1');
+    empTab1.deleteRow(oButton.parentNode.parentNode.rowIndex);
+
+    count = count - 1;
+  }
+
+  function showtablenamemodal(tableposition) {
+    $("#tablenamemodal").modal();
+    document.getElementById("done").onclick = function (event) {
+      tablename = $('#tablename').val();
+      if (tablename == "") {
+        alert("Enter a table name");
+      } else if (tablename != "") {
+        $("#tablename").val("");
+        $('#tablenamemodal').modal('toggle');
+        updatetable(tableposition);
+      }
+    }
+  }
+
+  function captureValue() {
+    $('#captureValueModal').modal();
+  }
+
+  function addcondition() {
+
+    if (noofcondition == 0) {
+      $('#condition1div').show();
+      noofcondition = noofcondition + 1;
+
+      $('#removecondition1').hover(function () {
+        $(this).css('cursor', 'pointer');
+      });
+
+      $("#removecondition1").click(function () {
+        $("#condition1div").hide();
+        noofcondition = noofcondition - 1;
+      });
+
+    } else if (noofcondition == 1) {
+      $('#condition2div').show();
+      noofcondition = noofcondition + 1;
+
+      $('#removecondition2').hover(function () {
+        $(this).css('cursor', 'pointer');
+      });
+
+      $("#removecondition2").click(function () {
+        $("#condition2div").hide();
+        noofcondition = noofcondition - 1;
+      });
+    } else {
+      alert(noofcondition);
+    }
+
+  }
+
+  function trycurrentvalue() {
+
+    var keyword = document.getElementById("keywordmain").value;
+    var position = document.getElementById("positionmain").options[document.getElementById("positionmain")
+      .selectedIndex].text;;
+    var width = document.getElementById("searchwidth").value;
+    var height = document.getElementById("searchheight").value;
+
+    console.log(keyword);
+    console.log(position);
+    console.log(width);
+    console.log(height);
+
+    var formdata = new FormData();
+    formdata.append('filenameinserver', filenameinserver);
+    formdata.append('keyword', keyword);
+    formdata.append('position', position);
+    formdata.append('width', width);
+    formdata.append('height', height);
+
+    fetch('trycurrentvalue', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            console.log(text);
+            document.getElementById("capturedvalue").value = text;
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+
+  }
+
+  function savecurrentvalue() {
+
+    console.log(model);
+
+    var capturedvalue = document.getElementById("capturedvalue").value;
+    var keyword = document.getElementById("keywordmain").value;
+    var position = document.getElementById("positionmain").options[document.getElementById("positionmain")
+      .selectedIndex].text;;
+    var width = document.getElementById("searchwidth").value;
+    var height = document.getElementById("searchheight").value;
+
+    // updating table
+    var table1 = document.getElementById("myTable2");
+    var row = table1.insertRow();
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+
+    cell1.innerHTML = keyword;
+    cell2.innerHTML = position;
+    cell3.innerHTML = '<button value="X" ;="" onclick="removeRow(this)">X</button>';
+
+    // creating JSON object
+    if (noofcondition == 0) {
+      model.values.push({
+        keyword: {
+          "capturedvalue": capturedvalue,
+          "keyword": keyword,
+          "position": position,
+          "width": width,
+          "height": height
+        }
+      });
+      console.log(model);
+
+    } else if (noofcondition == 1) {
+
+      var keywordcondition1 = document.getElementById("keywordcondition1").value;
+      var positioncondition1 = document.getElementById("positioncondition1").options[document.getElementById(
+        "positioncondition1").selectedIndex].text;;
+      var searchwidthcondition1 = document.getElementById("searchwidthcondition1").value;
+      var searchheightcondition1 = document.getElementById("searchheightcondition1").value;
+
+      model.values.push({
+        keyword: {
+          "capturedvalue": capturedvalue,
+          "keyword": keyword,
+          "position": position,
+          "width": width,
+          "height": height,
+          "condition1": {
+            "keyword": keywordcondition1,
+            "position": positioncondition1,
+            "width": searchwidthcondition1,
+            "height": searchheightcondition1
+          }
+        }
+      });
+      console.log(model);
+    } else if (noofcondition == 2) {
+
+      var keywordcondition1 = document.getElementById("keywordcondition1").value;
+      var positioncondition1 = document.getElementById("positioncondition1").options[document.getElementById(
+        "positioncondition1").selectedIndex].text;;
+      var searchwidthcondition1 = document.getElementById("searchwidthcondition1").value;
+      var searchheightcondition1 = document.getElementById("searchheightcondition1").value;
+
+      var keywordcondition2 = document.getElementById("keywordcondition2").value;
+      var positioncondition2 = document.getElementById("positioncondition2").options[document.getElementById(
+        "positioncondition2").selectedIndex].text;;
+      var searchwidthcondition2 = document.getElementById("searchwidthcondition2").value;
+      var searchheightcondition2 = document.getElementById("searchheightcondition2").value;
+
+      model.values.push({
+        keyword: {
+          "capturedvalue": capturedvalue,
+          "keyword": keyword,
+          "position": position,
+          "width": width,
+          "height": height,
+          "condition1": {
+            "keyword": keywordcondition1,
+            "position": positioncondition1,
+            "width": searchwidthcondition1,
+            "height": searchheightcondition1
+          },
+          "condition2": {
+            "keyword": keywordcondition2,
+            "position": positioncondition2,
+            "width": searchwidthcondition2,
+            "height": searchheightcondition2
+          }
+        }
+      });
+      console.log(model);
+    }
+    $('#captureValueModal').modal('toggle');
+    $("#capturedvalue").val("");
+    $("#keywordmain").val("");
+    $("#searchwidth").val("");
+    $("#searchheight").val("");
+  }
+
+  function removeRow(oButton) {
+    var empTab1 = document.getElementById('myTable2');
+    empTab1.deleteRow(oButton.parentNode.parentNode.rowIndex);
+  }
+
+  function gettableareafromheaderfooter() {
+
+    var pdfpath = filenameinserver.replace(".html", "");
+    var header = document.getElementById("tableheadertxt").value;
+    var header_included_in_table;
+    var footer = document.getElementById("tablefootertxt").value;
+    var footer_included_in_table;
+
+    var tblstrtsb4hdrchkbx = document.getElementById("tblstrtsb4hdrchkbx");
+    var tblstrtsaftrhdrchkbx = document.getElementById("tblstrtsaftrhdrchkbx");
+    var tblstrtsb4ftrchkbx = document.getElementById("tblstrtsb4ftrchkbx");
+    var tblstrtsaftrftrchkbx = document.getElementById("tblstrtsaftrftrchkbx");
+
+    if (tblstrtsb4hdrchkbx.checked == true) {
+      header_included_in_table = "True";
+    } else if (tblstrtsaftrhdrchkbx.checked == true) {
+      header_included_in_table = "False";
+    }
+
+    if (tblstrtsb4ftrchkbx.checked == true) {
+      footer_included_in_table = "True";
+    } else if (tblstrtsaftrftrchkbx.checked == true) {
+      footer_included_in_table = "False";
+    }
+
+    var formdata = new FormData();
+    formdata.append('pdfpath', pdfpath);
+    formdata.append('header', header);
+    formdata.append('header_included_in_table', header_included_in_table);
+    formdata.append('footer', footer);
+    formdata.append('footer_included_in_table', footer_included_in_table);
+
+    fetch('gettableareafromheaderfooter', {
+      // mode: 'no-cors',
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            console.log(text);
+            // document.getElementById("capturedvalue").value = text;
+            var array = JSON.parse(text);
+            sendtoscanwithheaderandfooter(array)
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+    return;
+
+  }
+
+
+
+  setActiveMenuItem('#trained-model-menu')
+</script>
+{% endblock %}

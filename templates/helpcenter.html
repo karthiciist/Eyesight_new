@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" class="js">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>Welcome to EYESIGHT</title>
+
+  <link href="static/images/favicon.png" rel="icon">
+  <link href="static/images/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="static/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+  <link href="static/styles/style.css" rel="stylesheet">
+  <link href="static/styles/style-responsive.css" rel="stylesheet">
+  <link href="static/styles/new-ui.css" rel="stylesheet">
+
+  <script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
+  <style type="text/css">
+      *,
+      *:after,
+      *:before {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+
+      table, th, td {
+        border: solid 1px #CCC;
+      }
+
+      table {
+        width: 100%;
+      }
+
+      th, td {
+        padding: 0;
+        text-align: center;
+      }
+    </style>
+
+
+</head>
+
+<body>
+  <section id="container">
+ 
+    <header class="header black-bg">
+      <div class="sidebar-toggle-box">  
+        <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+      </div>
+      <!--logo start-->
+      <a href="dashboard.html" class="logo"><b>EY<span>ESIGHT</span></b></a>
+      <!--logo end-->
+      <div class="top-menu">
+        <ul class="nav pull-right top-menu">
+          <li><a class="logout" href="/eyesight">Logout</a></li>
+        </ul>
+      </div>
+    </header>
+    <aside>
+      <div id="sidebar" class="nav-collapse ">
+<!--        <ul class="sidebar-menu" id="nav-accordion">-->
+<!--          <li class="mt">-->
+<!--            <a href="dashboard.html">-->
+<!--              <i class="fa fa-dashboard"></i>-->
+<!--              <span>Dashboard</span>-->
+<!--              </a>-->
+<!--          </li>-->
+<!--          <li class="sub-menu">-->
+<!--            <a href="ocrsolutions.html">-->
+<!--              <i class="fa fa-eye"></i>-->
+<!--              <span>OCR Solutions</span>-->
+<!--              </a>-->
+<!--          </li>-->
+<!--          <li class="sub-menu">-->
+<!--            <a href="trainedmodels.html">-->
+<!--              <i class="fa fa-th"></i>-->
+<!--              <span>Trained models</span>-->
+<!--              </a>-->
+<!--          </li>-->
+<!--          <li class="sub-menu">-->
+<!--            <a href="createmodelwithmodal.html">-->
+<!--              <i class="fa fa-plus-square-o"></i>-->
+<!--              <span>Create a model</span>-->
+<!--              </a>-->
+<!--          </li>-->
+<!--          <li class="sub-menu">-->
+<!--            <a href="retrainwithmodal.html">-->
+<!--              <i class="fa fa-refresh"></i>-->
+<!--              <span>Retrain a model</span>-->
+<!--              </a>-->
+<!--          </li>-->
+<!--          <li class="sub-menu">-->
+<!--            <a href="pdfoperations.html">-->
+<!--              <i class="fa fa-cogs"></i>-->
+<!--              <span>PDF Operations</span>-->
+<!--              </a>-->
+<!--          </li>-->
+<!--          <li class="sub-menu">-->
+<!--            <a href="trainedpdfmodels.html">-->
+<!--              <i class="fa fa-cogs"></i>-->
+<!--              <span>PDF Trained models</span>-->
+<!--              </a>-->
+<!--          </li>-->
+<!--          <li class="sub-menu">-->
+<!--            <a class="active" href="helpcenter.html">-->
+<!--              <i class="fa fa-book"></i>-->
+<!--              <span>Help center</span>-->
+<!--              </a>-->
+<!--          </li>-->
+<!--          <li class="sub-menu">-->
+<!--            <a href="javascript:;">-->
+<!--              <i class="fa fa-cogs"></i>-->
+<!--              <span>Settings</span>-->
+<!--              </a>-->
+<!--          </li>-->
+        <ul class="sidebar-menu" id="nav-accordion">
+          <li class="mt">
+            <a href="dashboardpage">
+              <i class="fa fa-dashboard"></i>
+              <span>Dashboard</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+<!--            <a href="ocrsolutions.html">-->
+            <a href="ocrsolutionspage">
+              <i class="fa fa-eye"></i>
+              <span>OCR Solutions</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+<!--            <a href="trainedmodels.html">-->
+            <a href="trainedmodelspage">
+              <i class="fa fa-th"></i>
+              <span>Trained models</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+<!--            <a href="createmodelwithmodal.html">-->
+            <a href="createmodelwithmodalpage">
+              <i class="fa fa-plus-square-o"></i>
+              <span>Create a model</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+<!--            <a href="modelstoretrain.html">-->
+            <a href="modelstoretrainpage">
+              <i class="fa fa-refresh"></i>
+              <span>Retrain a model</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+<!--            <a href="pdfoperations.html">-->
+            <a href="pdfoperationspage">
+              <i class="fa fa-cogs"></i>
+              <span>PDF Operations</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+<!--            <a href="trainedpdfmodels.html">-->
+            <a href="trainedpdfmodelspage">
+              <i class="fa fa-cogs"></i>
+              <span>PDF Trained models</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+<!--            <a href="helpcenter.html">-->
+            <a class="active" href="helpcenterpage">
+              <i class="fa fa-book"></i>
+              <span>Help center</span>
+              </a>
+          </li>
+          <li class="sub-menu">
+            <a href="javascript:;">
+              <i class="fa fa-cogs"></i>
+              <span>Settings</span>
+              </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <section id="main-content">
+      <section class="wrapper site-min-height">
+        <div class="row mt mb">
+          <div class="col-lg-12" style="margin-top: 20px;">
+            <!-- <h3><i class="fa fa-angle-right"></i> F.A.Q</h3>
+            <br> -->
+            <div class="col-lg-4 col-md-4 col-sm-12">
+              <div class="dmbox">
+                <div class="service-icon">
+                  <a class="" href="faq.html#"><i class="dm-icon fa fa-question fa-3x"></i></a>
+                </div>
+                <h4>1. Knowledge-Base</h4>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry"s standard dummy text ever since the 1500s..</p>
+              </div>
+            </div>
+            <!-- end dmbox -->
+            <div class="col-lg-4 col-md-4 col-sm-12">
+              <div class="dmbox">
+                <div class="service-icon">
+                  <a class="" href="faq.html#"><i class="dm-icon fa fa-envelope-o fa-3x"></i></a>
+                </div>
+                <h4>2. Report a Bug</h4>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry"s standard dummy text ever since the 1500s..</p>
+              </div>
+            </div>
+            <!-- end dmbox -->
+            <div class="col-lg-4 col-md-4 col-sm-12">
+              <div class="dmbox">
+                <div class="service-icon">
+                  <a class="" href="faq.html#"><i class="dm-icon fa fa-random fa-3x"></i></a>
+                </div>
+                <h4>3. Submit a Ticket</h4>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry"s standard dummy text ever since the 1500s..</p>
+              </div>
+            </div>
+            <!-- end dmbox -->
+          </div>
+          <!--  /col-lg-12 -->
+        </div>
+        <!-- /row -->
+        <div class="row content-panel" style="margin-top: 20px;">
+          <h2 class="centered">Most Asked Questions</h2>
+          <div class="col-md-10 col-md-offset-1 mt mb">
+            <div class="accordion" id="accordion2">
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="faq.html#collapseOne">
+                    <em class="glyphicon glyphicon-chevron-right icon-fixed-width"></em>How EYESIGHT works?
+                    </a>
+                </div>
+                <div id="collapseOne" class="accordion-body collapse in">
+                  <div class="accordion-inner">
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
+                      specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="faq.html#collapseTwo">
+                    <em class="glyphicon glyphicon-chevron-right icon-fixed-width"></em>How can I install my server?
+                    </a>
+                </div>
+                <div id="collapseTwo" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
+                      specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="faq.html#collapseThree">
+                    <em class="glyphicon glyphicon-chevron-right icon-fixed-width"></em>How to change color schemes?
+                    </a>
+                </div>
+                <div id="collapseThree" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
+                      specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="faq.html#collapseFour">
+                    <em class="glyphicon glyphicon-chevron-right icon-fixed-width"></em>How to integrate Revolution Slider?
+                    </a>
+                </div>
+                <div id="collapseFour" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
+                      specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="faq.html#collapseFive">
+                    <em class="glyphicon glyphicon-chevron-right icon-fixed-width"></em>How Can I get Support?
+                    </a>
+                </div>
+                <div id="collapseFive" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type
+                      specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- end accordion -->
+          </div>
+          <!-- col-md-10 -->
+        </div>
+        <!--  /row -->
+      </section>
+    </section>
+    
+
+    
+
+  <script src="static/lib/jquery/jquery.min.js"></script>
+  <script src="static/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script type="application/javascript">
+
+  // fetchmodels();
+
+  
+
+  </script>
+</body>
+</html>

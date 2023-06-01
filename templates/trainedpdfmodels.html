@@ -1,0 +1,749 @@
+{% extends "layout.html" %}
+{% block body%}
+<style>
+  .sliderWrapper {
+    display: inline-block;
+    /* margin: 24px 24px 24px 24px; */
+    postion: relative;
+  }
+
+  .sliderWrapper div {
+    display: inline-block;
+    /* line-height: 60px; */
+  }
+
+  /* The switch - the box around the slider */
+  .switch {
+    vertical-align: middle;
+    position: relative;
+    display: inline-block;
+    padding: 0px;
+    width: 44px;
+    height: 18px;
+  }
+
+  /* Hide default HTML checkbox */
+  .switch input {
+    display: none;
+  }
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #505050;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 1px;
+    bottom: 1px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked+.slider {
+    background-color: #ffe600;
+  }
+
+  input:focus+.slider {
+    box-shadow: 0 0 1px #ffe600;
+  }
+
+  input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+</style>
+<div class="position-absolute h-100 w-100 d-flex align-items-center justify-content-center" id="emptyscreen">
+  <img src="static/images/loading.gif" alt="Loading..." width="150" height="150">
+</div>
+
+<div class="ml-0 pt-3 row" id="modelcontainer">
+
+  <div id="createflashcard" class="card d-flex flex-column mb-0" style="margin-right: 1%;">
+    <h3 class="text-uppercase">New model</h3>
+    
+    <div class="d-flex justify-content-around align-items-center actions pt-2">
+      
+      <div class="d-flex flex-column action" onclick="sendtonewmodel()" title="create" role="button">
+
+        <!-- <i id="plus" class="fa fa-plus" aria-hidden="true" title="Cretae"></i> -->
+
+        <div style="font-size: 24px;">
+          <i class="fa fa-plus fa-2x" style="font-size: 50px; margin-top: 30px;"></i>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- DeleteModal -->
+<div class="modal fade" id="myModal2" role="dialog">
+  <div class="modal-dialog" style="width: 350px;">
+    <!-- DeleteModal content-->
+    <div class="modal-content">
+      <div class="modal-body" style="padding:30px 30px;">
+        <div>
+          <center>
+            <p id="deletetext">
+            </p>
+          </center>
+        </div>
+        <div>
+          <center>
+            <button class="btn-cardsave" id="cancelbtn" type="button" style="width:100px"
+              class="btn-consumenow">Cancel</button>
+            <button class="btn-cardsave" id="deletebtn" type="button" style="width:100px"
+              class="btn-consumenow">Delete</button>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Model view Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+
+      <div class="modal-header" style="padding:10px 10px;">
+        <button type="button" class="close" data-dismiss="modal" id="closebtn">&times;</button>
+        <center>
+          <h4 style="color: white;" id="modaltitle">Model Details</h4>
+          <h5 style="color: white;" id="ocrtype">OCR details</h5>
+        </center>
+      </div>
+
+      <div class="modal-body" style="padding:10px 50px;">
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold;">Full Height :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputfullheight" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold;">Full Width :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputfullwidth" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Header Captured :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputheader" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Footer Captured :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputfooter" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Left Index Captured :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputleftindex" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Total Parameters :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputtotalparam" placeholder="Extracting text..."
+                  readonly="readonly">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Threshold Value :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefthre" placeholder="Extracting text...">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Colorcut Value :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefcolcut" placeholder="Extracting text...">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Eyesight Range (X) :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefeyerangex" placeholder="Extracting text...">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Eyesight Range (Y) :</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefeyerangey" placeholder="Extracting text...">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <center>
+          <div style="display: table-row; width: 100%;">
+            <div style="display: table-cell; width: 50%; padding-right: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Dilate:</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdefdilate" placeholder="Extracting text...">
+              </div>
+            </div>
+
+            <div style="display: table-cell; width: 50%; padding-left: 10px;">
+              <h5 style="font-weight: bold; margin-top: 20px;">Default Erode:</h5>
+              <div style="font-weight:bolder; font-style: italic;">
+                <input type="text" class="form-control" id="inputdeferode" placeholder="Extracting text...">
+              </div>
+            </div>
+          </div>
+        </center>
+
+        <div id="apiblock" style="border:1px solid gray; padding-left: 5px; margin-top: 10px;">
+          <div class="checkbox" id="thrediv">
+            <label><input type="checkbox" value="" onchange="showapioptions(this)" id="apicheckbox">Expose this model
+              as API</label>
+          </div>
+          <div id="apioptions">
+
+            <div style="margin-right: 5px; margin-bottom: 5px;">
+              <div>
+                <h5 style="font-weight: bold; margin-top: 5px;">URL :</h5>
+              </div>
+              <div style="font-weight:bolder; font-style: italic; display: inline-flex; width: 100%;">
+                <!-- <p id="foundtxt">Extracting text...</p> -->
+                <input type="text" class="form-control" id="apiurl" value="http://consumesampleocrmodel.eyesight.com"
+                  readonly="readonly">
+                <button type="button" class="apicopybtn" id="btncpyurl">Copy</button>
+              </div>
+
+              <div>
+                <h5 style="font-weight: bold; margin-top: 5px;">API Key :</h5>
+              </div>
+              <div style="font-weight:bolder; font-style: italic; display: inline-flex; width: 100%;">
+                <!-- <p id="foundtxt">Extracting text...</p> -->
+                <input type="text" class="form-control" id="apikey" value="A8JD93MFK3JMFIKK30058DJNMCK3"
+                  readonly="readonly">
+                <button type="button" class="apicopybtn" id="btncpykey">Copy</button>
+              </div>
+              <div style="margin-top: 5px;"><a href="abc.com">Learn more about how to consume this API</a></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div>
+          <div>
+            <center>
+              <button class="btn-cardsave" id="savedata" type="button" style="width:100px" class="btn-consumenow"
+                onclick="savedata()">Save</button>
+              <button class="btn-cardsave" id="close" type="button" style="width:100px" class="btn-consumenow"
+                data-dismiss="modal">Close</button>
+            </center>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script type="application/javascript">
+  fetchmodels();
+
+  $(document).ready(function () {
+    $("#apioptions").css("display", "none");
+    var apiurl = document.getElementById("apiurl");
+    var apikey = document.getElementById("apikey");
+    btncpyurl.onclick = function () {
+      apiurl.select();
+      document.execCommand("copy");
+    }
+    btncpykey.onclick = function () {
+      apikey.select();
+      document.execCommand("copy");
+    }
+    if ($(apicheckbox).is(":checked")) {
+      $("#apioptions").css("display", "inline");
+    } else {
+      $("#apioptions").css("display", "none");
+    }
+  });
+
+  function formcard(modelnames) {
+    for (modelname in modelnames) {
+      model = modelnames[modelname];
+      btnname = 'btn' + model
+      dltbtnname = 'dltbtn' + model
+      var html = `
+      <h3 id="modelname">${model}</h3>
+      <div class="description flex-fill overflow-auto border-bottom">This is a placeholder for description pertaining to the solution. A small summary of the solution will be displayed over here.</div>
+      <div class="d-flex justify-content-around align-items-center actions pt-2">
+        <div class="d-flex flex-column action" onclick="sendtoconsume('${model}')" role="button">
+          <i id="${btnname}" class="fa fa-check" aria-hidden="true" title="Consume Now"></i>
+          <span>Consume</span>
+        </div>
+        <div class="d-flex flex-column action" onclick="sendtoview('${model}')" title="View" role="button">
+          <i id="${btnname}" class="fa fa-eye" aria-hidden="true"></i>
+          <span>View</span>
+        </div>
+        <div class="d-flex flex-column action" onclick="sendtodelete('${model}')" title="Delete" role="button">
+          <i id="${btnname}" class="fa fa-trash-o" aria-hidden="true"></i>
+          <span>Delete</span>
+        </div>
+
+      </div>`
+      var card = document.createElement('div');
+      card.setAttribute('id', model + 'flashcard');
+      card.setAttribute('class', 'card d-flex flex-column mb-0');
+      card.innerHTML = html;
+      var col = document.getElementById("modelcontainer");
+      col.appendChild(card);
+      document.getElementById(model + "flashcard").style.marginRight = "1%";
+    }
+    console.log(modelnames.length);
+    if (modelnames.length > 0) {
+      var empty = document.getElementById("emptyscreen");
+      $("#emptyscreen").removeClass('d-flex').addClass('d-none')
+    }
+  }
+
+  function sendtonewmodel() {  
+    window.location.href = 'pdfoperationspage'
+  }
+
+  function sendtoconsume(model) {
+    localStorage.setItem("modelname", model);
+    var name = localStorage.getItem("modelname");
+    window.location.href = 'pdfconsumepage'
+  }
+
+  function sendtodelete(model) {
+    document.getElementById("deletetext").innerHTML = "Delete " + model + "?";
+    $("#myModal2").modal();
+
+    document.getElementById("cancelbtn").onclick = function (event) {
+      $('#myModal2').modal('hide');
+    }
+
+    document.getElementById("deletebtn").onclick = function (event) {
+      $('#myModal2').modal('hide');
+      var http = new XMLHttpRequest();
+      var url = 'deletepdfmodel';
+      var params = 'model=' + model;
+      http.open('POST', url, true);
+
+      http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+      http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+          if (http.status == 200) {
+            alert("deleted model")
+            location.reload();
+          } else {
+            alert("failed to delete a model")
+            location.reload();
+          }
+        }
+      }
+      http.send(params);
+    }
+  }
+
+  function sendtoview(model) {
+    // alert(model);
+    console.log(model);
+
+    document.getElementById("savedata").onclick = function (event) {
+      savedata(model);
+    }
+
+    var http = new XMLHttpRequest();
+    var url = 'getmodeledtails';
+    var params = 'model=' + model;
+    http.open('POST', url, true);
+
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    http.onreadystatechange = function () {
+      if (http.readyState == 4 && http.status == 200) {
+        if (http.status == 200) {
+          responselist = http.response;
+          str = responselist.substring(responselist.indexOf("string\":"));
+          str = str.substring(str.indexOf(":") + 3);
+          str = str.replace("[", "");
+          str = str.replace("]", "");
+          str = str.replace("\"", "");
+          str = str.replace("}", "");
+          str = str.replace("\n", "");
+          str = str.replace("(", "");
+          str = str.replace(")", "");
+          var element = str.split(', ');
+          console.log(element);
+
+          modelname = element[0].replace(/\'/g, "");
+          ocrtype = element[1].replace(/\'/g, "");
+          fullheight = element[2].replace(/\'/g, "");
+          fullwidth = element[3].replace(/\'/g, "");
+          noofparam = element[4].replace(/\'/g, "");
+          header = element[5].replace(/\'/g, "");
+          footer = element[6].replace(/\'/g, "");
+          leftind = element[7].replace(/\'/g, "");
+          defthre = element[8].replace(/\'/g, "");
+          defcolcut = element[9].replace(/\'/g, "");
+          defeyerangex = element[10].replace(/\'/g, "");
+          defeyerangey = element[11].replace(/\'/g, "");
+          apiexposed = element[12].replace(/\'/g, "");
+          apiurl = element[14].replace(/\'/g, "");
+          apikey = element[13].replace(/\'/g, "");
+
+          dilate = element[15].replace(/\'/g, "");
+          erode = element[16].replace(/\'/g, "");
+
+          if (ocrtype == "zocr") {
+            ocrtype = "Zonal OCR model"
+          } else if (ocrtype == "hocr") {
+            ocrtype = "Hybrid OCR model"
+          } else if (ocrtype == "socr") {
+            ocrtype = "Simple OCR model"
+          } else if (ocrtype == "kocr") {
+            ocrtype = "Key Based OCR model"
+          }
+
+          if (apiexposed == "true") {
+            $("#apicheckbox").prop("checked", true);
+            $("#apioptions").css("display", "inline");
+          } else if (apiexposed == "false") {
+            $("#apicheckbox").prop("checked", false);
+            $("#apioptions").css("display", "none");
+          }
+
+          document.getElementById("inputfullheight").value = fullheight;
+          document.getElementById("inputfullwidth").value = fullwidth;
+          document.getElementById("inputheader").value = header;
+          document.getElementById("inputfooter").value = footer;
+          document.getElementById("inputleftindex").value = leftind;
+          document.getElementById("inputtotalparam").value = noofparam;
+          document.getElementById("inputdefthre").value = defthre;
+          document.getElementById("inputdefcolcut").value = defcolcut;
+          document.getElementById("inputdefeyerangex").value = defeyerangex;
+          document.getElementById("inputdefeyerangey").value = defeyerangey;
+          document.getElementById("apiurl").value = apiurl;
+          document.getElementById("apikey").value = apikey;
+
+          document.getElementById("modaltitle").innerHTML = modelname;
+          document.getElementById("ocrtype").innerHTML = ocrtype;
+
+          // console.log(dilate + erode);
+
+          document.getElementById("inputdefdilate").value = dilate;
+          document.getElementById("inputdeferode").value = erode;
+
+          $('#myModal').modal('show');
+        } else {
+          alert("failed to get model data")
+        }
+      }
+    }
+    http.send(params);
+  }
+
+  function myNavFunction(id) {
+    $("#date-popover").hide();
+    var nav = $("#" + id).data("navigation");
+    var to = $("#" + id).data("to");
+    console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+  }
+
+  function fetchmodels() {
+
+    var data = "";
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        createnewrow(this.responseText)
+        // alert(this.responseText);
+      }
+    });
+
+    xhr.open("POST", "fetchpdfmodels");
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.send(data);
+  }
+
+  function createnewrow(response) {
+
+    console.log(response);
+
+    var jsonobj = JSON.parse(response);
+
+    var length = jsonobj.length;
+
+    console.log(length);
+    console.log(jsonobj);
+
+    for (i = 0; i < length; i++) {
+      var modelanddesc = jsonobj[i];
+      console.log(modelanddesc);
+
+      // var jsonrow = JSON.parse(modelanddesc);
+
+      formcard1(modelanddesc[0], modelanddesc[1]);
+    }
+
+    if (length > 0) {
+      $("#emptyscreen").removeClass('d-flex').addClass('d-none')
+    }
+
+    // var modelsarray = response.split(",");
+    // var length = modelsarray.length;
+    // var i;
+    // var modelnames = [];
+    // for (i = 0; i < length; i++) {
+    //   model = modelsarray[i];
+    //   model = model.replace("\"", "");
+    //   model = model.replace("[", "");
+    //   model = model.replace("]", "");
+    //   model = model.replace(" ", "");
+    //   model = model.replace("\"", "");
+    //   console.log(model);
+    //   if ((model != "sysdiagrams") & (model != "models")) {
+    //     // formnewrow(model);
+    //     modelnames.push(model);
+    //     // alert(model);
+    //   }
+    // }
+    // formcard(modelnames);
+  }
+
+  function formcard1(modelname, description) {
+
+    btnname = 'btn' + modelname
+    dltbtnname = 'dltbtn' + modelname
+
+    alertboxid = 'alertbox' + modelname
+    alerticonid = 'alertbtn' + modelname
+    alerttextid = 'alerttxt' + modelname
+
+    // var html = '<div class="card"><h3 id ="modelname">' + modelname + '</h3><p>' + description + '</p><a href="{{ url_for('consumepage') }}"><button class="btn-consumenow" id="' + btnname + '" onclick="sendtoconsume(\'' + modelname + '\')">' + 'Consume now' + '</button></a><div><center><button class="btn-viewnow" id="' + btnname + '" onclick="sendtoview(\'' + modelname + '\')">' + 'View' + '</button><button class="btn-deletenow" id="' + btnname + '" onclick="sendtodelete(\'' + modelname + '\')">' + 'Delete' + '</button></center></div></div>'
+
+    var html = `
+    <div class="sliderWrapper" style = "padding-left: 125px;">
+          <div>Publish</div>
+            <label class="switch">
+                <input type="checkbox"  onclick="publish('${modelname}')" name="data[SplashPage][firstname]">
+                <span class="slider"></span>
+            </label>
+        </div>
+      <h3 id="modelname">${modelname}</h3>
+      <div class="description flex-fill overflow-auto border-bottom">${description}</div>
+      <div class="d-flex justify-content-around align-items-center actions pt-2">
+
+        <!--<div class="btn-consumenow" onclick="sendtoconsume('${modelname}')">Consume</div>
+        <div class="btn-viewnow" onclick="sendtoview('${modelname}')">View</div>
+        <div class="btn-deletenow" onclick="sendtodelete('${modelname}')">Delete</div>
+        -->
+
+        <div class="d-flex flex-column action" onclick="sendtoconsume('${modelname}')" role="button">
+          <i id="${modelname}" class="fa fa-check" aria-hidden="true" title="Consume Now"></i>
+          <span>Consume</span>
+        </div>
+        <div class="d-flex flex-column action" onclick="sendtoview('${modelname}')" title="View" role="button">
+          <i id="${btnname}" class="fa fa-eye" aria-hidden="true"></i>
+          <span>View</span>
+        </div>
+        <div class="d-flex flex-column action" onclick="sendtodelete('${modelname}')" title="Delete" role="button">
+          <i id="${btnname}" class="fa fa-trash-o" aria-hidden="true"></i>
+          <span>Delete</span>
+        </div>
+      </div>
+      <div id="${alertboxid}" class="d-flex justify-content-around align-items-center actions pt-2" style="background-color: dimgray;margin-top: 10px; pointer-events: none;">
+
+        <div class="d-flex flex-column action" onclick="sendtoconsume('${modelname}')" role="button" style="margin-bottom: 5px;">
+          <i id="${alerticonid}" class="fa fa-exclamation-circle" aria-hidden="true"></i>
+          <span id="${alerttextid}">Not published yet</span>
+        </div>
+
+
+      </div>
+      `
+
+    var card = document.createElement('div');
+    card.setAttribute('id', modelname + 'flashcard');
+    card.setAttribute('id', modelname + 'flashcard');
+    card.setAttribute('class', 'card d-flex flex-column mb-0');
+    card.innerHTML = html;
+    var col = document.getElementById("modelcontainer");
+    col.appendChild(card);
+    document.getElementById(modelname + "flashcard").style.marginRight = "1%";
+
+
+    // for (modelname in modelnames) {
+
+    //   model = modelnames[modelname];
+    //   btnname = 'btn' + model
+    //   dltbtnname = 'dltbtn' + model
+
+
+
+    //   var html = '<div class="card"><h3 id ="modelname">' + model + '</h3><p>Description</p><a href="{{ url_for('consumepage') }}"><button class="btn-consumenow" id="' + btnname + '" onclick="sendtoconsume(\'' + model + '\')">' + 'Consume now' + '</button></a><div><center><button class="btn-viewnow" id="' + btnname + '" onclick="sendtoview(\'' + model + '\')">' + 'View' + '</button><button class="btn-deletenow" id="' + btnname + '" onclick="sendtodelete(\'' + model + '\')">' + 'Delete' + '</button></center></div></div>'
+    //   var card = document.createElement('div');
+    //   card.setAttribute('id', model + 'flashcard');
+    //   card.innerHTML = html;
+    //   var col = document.getElementById("modelcontainer");
+    //   col.appendChild(card);
+    //   document.getElementById(model + "flashcard").style.marginRight = "1%";
+    // }
+    // console.log(modelnames.length);
+    // if (modelnames.length > 0) {
+    //   var empty = document.getElementById("emptyscreen");
+    //   empty.style.display = "none";
+    // }
+  }
+
+  function showapioptions(obj) {
+    if ($(obj).is(":checked")) {
+      $("#apioptions").css("display", "inline");
+    } else {
+      $("#apioptions").css("display", "none");
+    }
+  }
+
+  function savedata(model) {
+    modelname = model;
+    defthreval = $("#inputdefthre").val();
+    defcolcutval = $("#inputdefcolcut").val();
+    defeyerangex = $("#inputdefeyerangex").val();
+    defeyerangey = $("#inputdefeyerangey").val();
+    defdilate = $("#inputdefdilate").val();
+    deferode = $("#inputdeferode").val();
+
+    if ($(apicheckbox).is(":checked")) {
+      apiexposed = "true";
+    } else {
+      apiexposed = "false";
+    }
+
+    var xhr = new XMLHttpRequest();
+    var url = "updatemodeledtails";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.setRequestHeader("modelname", modelname);
+    xhr.setRequestHeader("apiexposed", apiexposed);
+    xhr.setRequestHeader("defthre", defthreval);
+    xhr.setRequestHeader("defcolcut", defcolcutval);
+    xhr.setRequestHeader("defeyerangex", defeyerangex);
+    xhr.setRequestHeader("defeyerangey", defeyerangey);
+    xhr.setRequestHeader("defdilate", defdilate);
+    xhr.setRequestHeader("deferode", deferode);
+
+    // xhr.send(JSON.stringify(json));
+    json = '{hi:hi}'
+    xhr.send(json);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var json = JSON.parse(xhr.responseText);
+        var output = xhr.response;
+        console.log(output);
+        $('#myModal').modal('hide');
+        alert("Model updated successfully");
+        // return "done";
+      }
+    }
+  }
+  
+  function publish(modelname){
+    // alert (oButton.parentNode.parentNode.rowIndex);
+
+    var today = new Date();
+    var date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date+' '+time;
+
+    alertboxid = 'alertbox' + modelname;
+    var boxcol = document.getElementById(alertboxid).style.backgroundColor;
+    // alert (boxcol);
+    if (boxcol.toString() == "rgb(255, 230, 0)"){
+      // alert ("off");
+      alertboxid = 'alertbox' + modelname;
+      alerticonid = 'alertbtn' + modelname;
+      alerttextid = 'alerttxt' + modelname;
+
+
+      document.getElementById(alertboxid).style.backgroundColor = "dimgray";
+      document.getElementById(alerticonid).style.color = "white";
+      document.getElementById(alerticonid).className = "fa fa-exclamation-circle";
+      document.getElementById(alerttextid).innerHTML = "Not published yet";
+      document.getElementById(alerttextid).style.color = "white"
+    } else {
+      var deployed_date_time = "Published on " + dateTime;
+
+      alertboxid = 'alertbox' + modelname;
+      alerticonid = 'alertbtn' + modelname;
+      alerttextid = 'alerttxt' + modelname;
+
+
+      document.getElementById(alertboxid).style.backgroundColor = "#ffe600";
+      document.getElementById(alerticonid).style.color = "black";
+      document.getElementById(alerticonid).className = "fa fa-cloud-upload";
+      document.getElementById(alerttextid).innerHTML = deployed_date_time;
+      document.getElementById(alerttextid).style.color = "black"
+    }
+
+    
+  }
+  
+  setActiveMenuItem('#trained-model-menu')
+</script>
+{% endblock %}

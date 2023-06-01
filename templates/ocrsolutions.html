@@ -1,0 +1,2398 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<style>
+  .options {
+    color: white
+  }
+
+  .sliderWrapper {
+    display: inline-block;
+    /* margin: 24px 24px 24px 24px; */
+    postion: relative;
+  }
+
+  .sliderWrapper div {
+    display: inline-block;
+    /* line-height: 60px; */
+  }
+
+  /* The switch - the box around the slider */
+  .switch {
+    vertical-align: middle;
+    position: relative;
+    display: inline-block;
+    padding: 0px;
+    width: 44px;
+    height: 18px;
+  }
+
+  /* Hide default HTML checkbox */
+  .switch input {
+    display: none;
+  }
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #505050;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 1px;
+    bottom: 1px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked+.slider {
+    background-color: #ffe600;
+  }
+
+  input:focus+.slider {
+    box-shadow: 0 0 1px #ffe600;
+  }
+
+  input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  *,
+  *:after,
+  *:before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  table,
+  th,
+  td {
+    border: solid 1px #CCC;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 0;
+    text-align: center;
+  }
+</style>
+
+<!-- <div id="modelcontainer" class="pt-3">
+  <div class="row" id="row">
+    <div class="ocrcard card">
+      <img src="static/images/scanner1.png" alt="Avatar" style="width:70%; margin-top: 30px; margin-bottom: 30px;">
+      <div class="footer">
+        <h4 style="padding-top: 10px;"><b>Simple OCR</b></h4>
+        <div class="d-flex justify-content-around align-items-center actions pt-2">
+          <div id="simplecreatebtn" class="d-flex flex-column action" onclick="redirecttosimpleocr()"
+            title="Create Model" role="button">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            <span>Create Model</span>
+          </div>
+          <div id="simpleviewbtn" class="d-flex flex-column action" title="View Models" role="button">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+            <span>View Models</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ocrcard card">
+      <img src="static/images/scanner1.png" alt="Avatar" style="width:70%; margin-top: 30px; margin-bottom: 30px;">
+      <div class="footer">
+        <h4 style="padding-top: 10px;"><b>Zonal OCR</b></h4>
+        <div class="d-flex justify-content-around align-items-center actions pt-2">
+          <div id="zonalcreatebtn" class="d-flex flex-column action" onclick="redirecttozonalocr()" title="Create Model"
+            role="button">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            <span>Create Model</span>
+          </div>
+          <div id="zonalviewbtn" class="d-flex flex-column action" title="View Models" role="button">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+            <span>View Models</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ocrcard card">
+      <img src="static/images/scanner1.png" alt="Avatar" style="width:70%; margin-top: 30px; margin-bottom: 30px;">
+      <div class="footer">
+        <h4 style="padding-top: 10px;"><b>Key Based OCR</b></h4>
+        <div class="d-flex justify-content-around align-items-center actions pt-2">
+          <div id="keycreatebtn" class="d-flex flex-column action" onclick="redirecttokeyocr()" title="Create Model"
+            role="button">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            <span>Create Model</span>
+          </div>
+          <div id="keyviewbtn" class="d-flex flex-column action" title="View Models" role="button">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+            <span>View Models</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ocrcard card">
+      <img src="static/images/scanner1.png" alt="Avatar" style="width:70%; margin-top: 30px; margin-bottom: 30px;">
+      <div class="footer">
+        <h4 style="padding-top: 10px;"><b>Hybrid OCR</b></h4>
+        <div class="d-flex justify-content-around align-items-center actions pt-2">
+          <div id="hybridcreatebtn" class="d-flex flex-column action" onclick="redirecttohybridocr()"
+            title="Create Model" role="button">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            <span>Create Model</span>
+          </div>
+          <div id="hybridviewbtn" class="d-flex flex-column action" title="View Models" role="button">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+            <span>View Models</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="ml-0 pt-3 row" id="modelcontainer">
+
+  <div id="createflashcard" class="card d-flex flex-column mb-0" style="margin-right: 1%;">
+    <h3 class="text-uppercase">New Cluster</h3>
+
+    <div class="d-flex justify-content-around align-items-center actions pt-2">
+
+      <div class="d-flex flex-column action" onclick="showocrsolutionmodal()" title="create" role="button">
+
+        <!-- <i id="plus" class="fa fa-plus" aria-hidden="true" title="Cretae"></i> -->
+
+        <div style="font-size: 24px;">
+          <i class="fa fa-plus fa-2x" style="font-size: 50px; margin-top: 30px; height: 100px;"></i>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DeleteModal -->
+<div class="modal fade" id="myModal2" role="dialog">
+  <div class="modal-dialog" style="width: 350px;">
+
+    <!-- DeleteModal content-->
+    <div class="modal-content">
+      <div class="modal-body" style="padding:30px 30px;">
+        <div>
+          <center>
+            <p id="deletetext">
+            </p>
+          </center>
+        </div>
+        <div>
+          <center>
+            <button class="btn-cardsave" id="cancelbtn" type="button" style="width:100px"
+              class="btn-consumenow">Cancel</button>
+            <button class="btn-cardsave" id="deletebtn" type="button" style="width:100px"
+              class="btn-consumenow">Delete</button>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- Create OCR Solution Modal -->
+<div class="modal fade" id="createocrsolutionmodel" role="dialog">
+  <div class="modal-dialog" style="width: 400px;">
+
+    <!-- Create OCR Solution Modal content-->
+    <div class="modal-content">
+      <div class="modal-body" style="padding: 2px">
+        <button type="button" class="close" data-dismiss="modal" onclick="closemodal()" id="closebtn"
+          style="padding:5px 5px;">&times;</button>
+        <div style="padding:5px 10px;">
+          <center>
+            <h4 id="testtext">
+              Create OCR Solution
+            </h4>
+          </center>
+          <center>
+            <input type="text" class="form-control" id="ocrsolnametxtfield" placeholder="Enter OCR Solution Name"
+              style="margin-top: 10px; background: #232323; color: white;">
+            <input type="text" class="form-control" id="desctxtfield" placeholder="Enter short description"
+              style="margin-top: 10px; background: #232323; color: white;">
+          </center>
+
+          <div id="modelselectdiv" style="display: inline;">
+            <center>
+              <div class="container" id="classifierselectordiv" style="width: auto;">
+                <h4>Select models</h4>
+
+                <form>
+                  <select multiple="multiple" name="select_models" id="select_models"
+                    style="width: 200px; min-height: 300px; background: #232323;">
+                  </select>
+                </form>
+              </div>
+            </center>
+            <div style="display: table; width: 100%;">
+              <button type="button"
+                style="display: table-cell; color: white; float: right; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none; padding-top: 10px;"
+                onclick="showparametersdiv()">🡪</button>
+            </div>
+            <!-- <button type="button" style="color: white; float: right; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none;">🡪</button>   -->
+          </div>
+
+          <div id="parameterselectdiv" style="display: none;">
+            <center>
+              <div class="container" id="parameterselectdivcontainer" style="width: 100%; padding:0px">
+                <div style="display: table; width: 100%; padding:10px">
+                  <h4 style="display: table-cell; padding-left: 50px;">Enter Parameters</h4>
+                  <h4 style="display: table-cell; padding-right: 10px; cursor: pointer;" onclick="closeparameter()">
+                    &times;</h4>
+                  <h4 style="display: table-cell; cursor: pointer;" onclick="addparameter()">+</h4>
+                </div>
+                <div id="parametersdiv">
+                  <div id="table1div">
+                    <table border='1' id="tableid1" style="width:100%; background: #434343;" align="center">
+                      <tr>
+                        <th COLSPAN="3">
+                          <div style="display: table; width: 100%;">
+                            <h4 id="sno1"
+                              style="display: table-cell; padding-left: 5px; padding-right: 5px; font-size: 12px;">1
+                            </h4>
+                            <input type="text" class="form-control" id="enteredpramname1"
+                              placeholder="Enter Parameter Name"
+                              style="background: #232323; color: white; display: table-cell;">
+                            <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;"
+                              onclick="removemodelparam(this)">&times;</h4>
+                            <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;"
+                              onclick="addmodelparam(this)">+</h4>
+
+                          </div>
+                        </th>
+                      </tr>
+                      <tr id="selectorrowdiv11">
+                        <td style="width: 50%;">
+                          <div><select id="selectedmodelname11" style="width: 100%;">
+                              <option value="" readonly="true" hidden="true" selected>Select model</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td style="width: 50%;">
+                          <div><select id="selectedparamname11" style="width: 100%;">
+                            </select>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </center>
+            <div style="display: table; width: 100%;">
+              <button type="button"
+                style="display: table-cell; color: white; float: left; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none; padding-top: 10px;"
+                onclick="showmodelsdiv()">🡨</button>
+              <button type="button"
+                style="display: table-cell; color: white; float: right; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none; padding-top: 10px;"
+                onclick="showtablesdiv()">🡪</button>
+            </div>
+
+          </div>
+
+          <div id="tableselectdiv" style="display: none;">
+            <center>
+              <div class="container" id="tableselectdivcontainer" style="width: 100%; padding:0px">
+                <div style="display: table; width: 100%; padding:10px">
+                  <h4 style="display: table-cell; padding-left: 50px;">Enter Tables</h4>
+                  <h4 style="display: table-cell; padding-right: 10px; cursor: pointer;" onclick="closetable()">&times;
+                  </h4>
+                  <h4 style="display: table-cell; cursor: pointer;" onclick="addtable()">+</h4>
+                </div>
+                <div id="tablesdiv">
+                  <div id="tableintable1div">
+                    <table border='1' id="tableidintable1" style="width:100%; background: #434343;" align="center">
+                      <tr>
+                        <th COLSPAN="3">
+                          <div style="display: table; width: 100%;">
+                            <input type="text" class="form-control" id="enteredpramnameintable1"
+                              placeholder="Enter Table Name"
+                              style="background: #232323; color: white; display: table-cell;">
+                            <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;"
+                              onclick="deletetableparam(this)">&times;</h4>
+                            <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;"
+                              onclick="addtableparam(this)">+</h4>
+                          </div>
+                        </th>
+                      </tr>
+                      <tr id="selectorrowdivintable11">
+                        <td style="width: 50%;">
+                          <div><select id="selectedmodelnameintable11" style="width: 100%;">
+                              <option value="" readonly="true" hidden="true" selected>Select model</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td style="width: 50%;">
+                          <div><select id="selectedparamnameintable11" style="width: 100%;">
+                            </select>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </center>
+            <div style="display: table; width: 100%; margin-top: 10px;">
+              <button type="button"
+                style="display: table-cell; color: white; float: left; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none; padding-top: 10px;"
+                onclick="showparametersdiv()">🡨</button>
+              <button id="btncreateocrsolution" onclick="createocrsolution()" class="btn-consumenow"
+                style="width: 60px; display: table-cell; float: right; cursor: pointer;">Create</button>
+              <!-- <button type="button" style="display: table-cell; color: white; float: right; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none; padding-top: 10px;">🡪</button> -->
+            </div>
+            <!-- <button type="button" style="color: white; float: right; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none; padding-top: 10px;">🡪</button>   -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modify OCR Solution Modal -->
+<div class="modal fade" id="modifyocrsolutionmodel" role="dialog">
+  <div class="modal-dialog" style="width: 400px;">
+
+    <!-- Modify OCR Solution Modal content-->
+    <div class="modal-content">
+      <div class="modal-body" style="padding: 2px">
+        <button type="button" class="close" data-dismiss="modal" onclick="closemodalmodifyocrsolution()" id="closebtn"
+          style="padding:5px 5px;">&times;</button>
+        <div style="padding:5px 10px;">
+          <center>
+            <h4 id="testtext">
+              Create OCR Solution
+            </h4>
+          </center>
+          <center>
+            <input type="text" class="form-control" id="ocrsolnametxtfieldmodify" placeholder="Enter OCR Solution Name"
+              style="margin-top: 10px; background: #232323; color: white;">
+            <input type="text" class="form-control" id="desctxtfieldmodify" placeholder="Enter short description"
+              style="margin-top: 10px; background: #232323; color: white;">
+          </center>
+
+          <div id="modelselectdivmodify" style="display: inline;">
+            <center>
+              <div class="container" id="classifierselectordiv" style="width: auto;">
+                <h4>Select models</h4>
+
+                <form>
+                  <select multiple="multiple" name="select_models_modify" id="select_models_modify"
+                    style="width: 200px; min-height: 300px; background: #232323;">
+                  </select>
+                </form>
+              </div>
+            </center>
+            <div style="display: table; width: 100%;">
+              <button type="button"
+                style="display: table-cell; color: white; float: right; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none; padding-top: 10px;"
+                onclick="showparametersdivmodify()">🡪</button>
+            </div>
+            <!-- <button type="button" style="color: white; float: right; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none;">🡪</button>   -->
+          </div>
+
+          <div id="parameterselectdivmodify" style="display: none;">
+            <center>
+              <div class="container" id="parameterselectdivcontainer" style="width: 100%; padding:0px">
+                <div style="display: table; width: 100%; padding:10px">
+                  <h4 style="display: table-cell; padding-left: 50px;">Enter Parameters</h4>
+                  <h4 style="display: table-cell; padding-right: 10px; cursor: pointer;"
+                    onclick="closeparametermodify()">
+                    &times;</h4>
+                  <h4 style="display: table-cell; cursor: pointer;" onclick="addparametermodify()">+</h4>
+                </div>
+                <div id="parametersdivmodify">
+                  <div id="table1divmodify">
+                    <table border='1' id="tableid1modify" style="width:100%; background: #434343;" align="center">
+                      <tr>
+                        <th COLSPAN="3">
+                          <div style="display: table; width: 100%;">
+                            <h4 id="snomodify"
+                              style="display: table-cell; padding-left: 5px; padding-right: 5px; font-size: 12px;">1
+                            </h4>
+                            <input type="text" class="form-control" id="enteredpramname1modify"
+                              placeholder="Enter Parameter Name"
+                              style="background: #232323; color: white; display: table-cell;">
+                            <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;"
+                              onclick="removemodelparammodify(this)">&times;</h4>
+                            <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;"
+                              onclick="addmodelparammodify(this, '')">+</h4>
+
+                          </div>
+                        </th>
+                      </tr>
+                      <tr id="selectorrowdiv11modify">
+                        <td style="width: 50%;">
+                          <div><select id="selectedmodelname11modify" style="width: 100%;">
+                              <option value="" readonly="true" hidden="true" selected>Select model</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td style="width: 50%;">
+                          <div><select id="selectedparamname11modify" style="width: 100%;">
+                            </select>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </center>
+            <div style="display: table; width: 100%;">
+              <button type="button"
+                style="display: table-cell; color: white; float: left; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none; padding-top: 10px;"
+                onclick="showmodelsdivmodify()">🡨</button>
+              <button type="button"
+                style="display: table-cell; color: white; float: right; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none; padding-top: 10px;"
+                onclick="showtablesdivmodify()">🡪</button>
+            </div>
+
+          </div>
+
+          <div id="tableselectdivmodify" style="display: none;">
+            <center>
+              <div class="container" id="tableselectdivcontainer" style="width: 100%; padding:0px">
+                <div style="display: table; width: 100%; padding:10px">
+                  <h4 style="display: table-cell; padding-left: 50px;">Enter Tables</h4>
+                  <h4 style="display: table-cell; padding-right: 10px; cursor: pointer;" onclick="closetable()">&times;
+                  </h4>
+                  <h4 style="display: table-cell; cursor: pointer;" onclick="addtable()">+</h4>
+                </div>
+                <div id="tablesdivmodify">
+                  <div id="tableintable1divmodify">
+                    <table border='1' id="tableidintable1modify" style="width:100%; background: #434343;"
+                      align="center">
+                      <tr>
+                        <th COLSPAN="3">
+                          <div style="display: table; width: 100%;">
+                            <input type="text" class="form-control" id="enteredpramnameintable1modify"
+                              placeholder="Enter Table Name"
+                              style="background: #232323; color: white; display: table-cell;">
+                            <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;"
+                              onclick="deletetableparammodify(this)">&times;</h4>
+                            <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;"
+                              onclick="addtableparammodify(this)">+</h4>
+                          </div>
+                        </th>
+                      </tr>
+                      <tr id="selectorrowdivintable11modify">
+                        <td style="width: 50%;">
+                          <div><select id="selectedmodelnameintable11modify" style="width: 100%;">
+                              <option value="" readonly="true" hidden="true" selected>Select model</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td style="width: 50%;">
+                          <div><select id="selectedparamnameintable11modify" style="width: 100%;">
+                            </select>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </center>
+            <div style="display: table; width: 100%; margin-top: 10px;">
+              <button type="button"
+                style="display: table-cell; color: white; float: left; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none; padding-top: 10px;"
+                onclick="showparametersdivmodify()">🡨</button>
+              <button id="btncreateocrsolution" onclick="updateocrsolution()" class="btn-consumenow"
+                style="width: 60px; display: table-cell; float: right; cursor: pointer;">Update</button>
+              <!-- <button type="button" style="display: table-cell; color: white; float: right; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none; padding-top: 10px;">🡪</button> -->
+            </div>
+            <!-- <button type="button" style="color: white; float: right; cursor: pointer; font-size: large; background-color: Transparent; border: none; outline:none; padding-top: 10px;">🡪</button>   -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="application/javascript">
+
+  var conditioncount = 1;
+  var parametercount = 2;
+
+  var parametercountmodify = 2;
+
+  var tableconditioncount = 1;
+  var tablecount = 2;
+
+  var all_parameters_list = {};
+
+  // var modelslist = [];
+  var selectedmodels = [];
+  var selectedmodelsmodify = [];
+
+  fetchocrsolutions();
+
+  // fetchpublishedocrsolutions();
+
+  var select = document.getElementById("select_models");
+  var select_models_modify = document.getElementById("select_models_modify");
+
+  function sendtonewmodel() {
+    window.location.href = 'createocrsolutionpage'
+  }
+
+  function fetchocrsolutions() {
+
+    var data = "";
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        createnewrow(this.responseText)
+        // alert(this.responseText);
+        fetchpublishedocrsolutions();
+      }
+    });
+
+    xhr.open("POST", "fetchocrsolutions");
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.send(data);
+
+    // fetchpublishedocrsolutions();
+
+  }
+
+  function fetchpublishedocrsolutions() {
+
+    var data = "";
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        setswitchstate(this.responseText)
+        // alert(this.responseText);
+      }
+    });
+
+    xhr.open("POST", "fetchpublishedocrsolutions");
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.send(data);
+  }
+
+  function createnewrow(response) {
+
+    response = response.replace(/'/g, "\"");
+    var jsonobj = JSON.parse(response);
+    var length = jsonobj.length;
+
+    for (i = 0; i < length; i++) {
+      var ocrsolutionname = jsonobj[i];
+      console.log(ocrsolutionname);
+      ocrsolutionname = ocrsolutionname.replace(".json", "");
+      // alert (ocrsolutionname);
+      formcard1(ocrsolutionname);
+    }
+
+    if (length > 0) {
+      $("#emptyscreen").removeClass('d-flex').addClass('d-none')
+    }
+  }
+
+  function setswitchstate(response) {
+
+    response = response.replace(/'/g, "\"");
+    var jsonobj = JSON.parse(response);
+    var length = jsonobj.length;
+
+    for (i = 0; i < length; i++) {
+      var ocrsolutionname = jsonobj[i];
+      console.log(ocrsolutionname);
+      ocrsolutionname = ocrsolutionname.replace(".json", "");
+      // alert (ocrsolutionname);
+      document.getElementById("cb" + ocrsolutionname).checked = true;
+      // formcard1(ocrsolutionname);
+    }
+
+    // if (length > 0) {
+    //   $("#emptyscreen").removeClass('d-flex').addClass('d-none')
+    // }
+  }
+
+
+  function formcard1(fullname) {
+
+    // alert (fullname);
+
+    ocrsolutionname = fullname.split("$")[0];
+    description = fullname.split("$")[1];
+
+    // alert (description);
+
+    btnname = 'btn' + ocrsolutionname
+    dltbtnname = 'dltbtn' + ocrsolutionname
+
+    alertboxid = 'alertbox' + ocrsolutionname
+    alerticonid = 'alertbtn' + ocrsolutionname
+    alerttextid = 'alerttxt' + ocrsolutionname
+
+    var html = `
+    <div class="sliderWrapper" style = "padding-left: 125px;">
+          <div>Publish</div>
+            <label class="switch">
+                <input type="checkbox"  id="cb${fullname}" onclick="publish('${fullname}')" name="data[SplashPage][firstname]">
+                <span class="slider"></span>
+            </label>
+        </div>
+      <h3 id="ocrsolutionname" class="text-uppercase">${ocrsolutionname}</h3>
+
+      <div class="description flex-fill overflow-auto border-bottom">${description}</div>
+      <div class="d-flex justify-content-around align-items-center actions pt-2">
+
+        
+
+        <!--<div class="btn-consumenow" onclick="sendtoconsume('${ocrsolutionname}')">Consume</div>
+        <div class="btn-viewnow" onclick="sendtoview('${ocrsolutionname}')">View</div>
+        <div class="btn-deletenow" onclick="sendtodelete('${ocrsolutionname}')">Delete</div>
+        -->
+
+        <div class="d-flex flex-column action" onclick="sendtoconsume('${ocrsolutionname}')" role="button">
+          <i id="${btnname}" class="fa fa-check" aria-hidden="true" title="Consume Now"></i>
+          <span>Consume</span>
+        </div>
+
+        <div class="d-flex flex-column action" onclick="sendtoview('${fullname}')" title="View" role="button">
+          <i id="${btnname}" class="fa fa-eye" aria-hidden="true"></i>
+          <span>View</span>
+        </div>
+
+        <div class="d-flex flex-column action" onclick="sendtodelete('${fullname}')" title="Delete" role="button">
+          <i id="${btnname}" class="fa fa-trash-o" aria-hidden="true"></i>
+          <span>Delete</span>
+        </div>
+      </div>
+      <div id="${alertboxid}" class="d-flex justify-content-around align-items-center actions pt-2" style="background-color: dimgray;margin-top: 10px; pointer-events: none;">
+
+<div class="d-flex flex-column action" onclick="sendtoconsume('${ocrsolutionname}')" role="button" style="margin-bottom: 5px;">
+  <i id="${alerticonid}" class="fa fa-exclamation-circle" aria-hidden="true"></i>
+  <span id="${alerttextid}">Not published yet</span>
+</div>
+
+
+</div>
+      `
+
+    var card = document.createElement('div');
+    card.setAttribute('id', ocrsolutionname + 'flashcard');
+    card.setAttribute('class', 'card d-flex flex-column mb-0');
+    card.innerHTML = html;
+    var col = document.getElementById("modelcontainer");
+    col.appendChild(card);
+    document.getElementById(ocrsolutionname + "flashcard").style.marginRight = "1%";
+
+  }
+
+  function showocrsolutionmodal() {
+    $('#createocrsolutionmodel').modal('toggle');
+    fetchmodels();
+  }
+
+  function showparametersdiv() {
+
+    // selectedmodels = [];
+    for (var i = 0; i < select.length; i++) {
+      if (select.options[i].selected) selectedmodels.push(select.options[i].value);
+    }
+    console.log(selectedmodels);
+    if (selectedmodels.length == 0) {
+      alert("Select atleast one model");
+    } else {
+      document.getElementById("modelselectdiv").style.display = "none";
+      document.getElementById("parameterselectdiv").style.display = "inline";
+      document.getElementById("tableselectdiv").style.display = "none";
+
+      for (model in selectedmodels) {
+        modelname = selectedmodels[model];
+        var x = document.getElementById("selectedmodelname11");
+        var option = document.createElement("option");
+        option.text = modelname;
+        x.add(option);
+      }
+
+      $("#selectedmodelname11").change(function () {
+
+        var select = document.getElementById("selectedparamname11");
+        var length = select.options.length;
+        for (i = length - 1; i >= 0; i--) {
+          select.options[i] = null;
+        }
+
+        let selectedmodel = this.value;
+        var formdata = new FormData();
+        formdata.append('selectedmodel', selectedmodel);
+        fetch('getparametersfrommodels', {
+          method: 'POST',
+          body: formdata
+        }).then(
+          function (response) {
+            if (response.status !== 200) {
+              console.log('Looks like there was a problem. Status Code: ' + response.status);
+              return;
+            } else if (response.status == 200) {
+              return response.text().then(function (text) {
+                // console.log(text);
+                // alert (text);
+                var parameters = JSON.parse(text);
+                for (parameter in parameters) {
+                  parametername = parameters[parameter];
+                  var x = document.getElementById("selectedparamname11");
+                  var option = document.createElement("option");
+                  option.text = parametername;
+                  x.add(option);
+                }
+              });
+            }
+          }
+        ).catch(function (err) {
+          console.log('Fetch Error :-S', err);
+        });
+      });
+
+    }
+  }
+
+  function showparametersdivmodify() {
+
+    // selectedmodels = [];
+    for (var i = 0; i < select_models_modify.length; i++) {
+      if (select_models_modify.options[i].selected) selectedmodelsmodify.push(select_models_modify.options[i].value);
+    }
+    console.log(selectedmodelsmodify);
+    if (selectedmodelsmodify.length == 0) {
+      alert("Select atleast one model");
+    } else {
+      document.getElementById("modelselectdivmodify").style.display = "none";
+      document.getElementById("parameterselectdivmodify").style.display = "inline";
+      document.getElementById("tableselectdivmodify").style.display = "none";
+
+      // for (model in selectedmodelsmodify) {
+      //   modelname = selectedmodelsmodify[model];
+      //   var x = document.getElementById("selectedmodelname11modify");
+      //   var option = document.createElement("option");
+      //   option.text = modelname;
+      //   x.add(option);
+      // }
+
+      $("#selectedmodelname11modify").change(function () {
+
+        var select = document.getElementById("selectedparamname11modify");
+        var length = select.options.length;
+        for (i = length - 1; i >= 0; i--) {
+          select.options[i] = null;
+        }
+
+        let selectedmodel = this.value;
+        var formdata = new FormData();
+        formdata.append('selectedmodel', selectedmodel);
+        fetch('getparametersfrommodels', {
+          method: 'POST',
+          body: formdata
+        }).then(
+          function (response) {
+            if (response.status !== 200) {
+              console.log('Looks like there was a problem. Status Code: ' + response.status);
+              return;
+            } else if (response.status == 200) {
+              return response.text().then(function (text) {
+                // console.log(text);
+                // alert (text);
+                var parameters = JSON.parse(text);
+                for (parameter in parameters) {
+                  parametername = parameters[parameter];
+                  var x = document.getElementById("selectedparamname11modify");
+                  var option = document.createElement("option");
+                  option.text = parametername;
+                  x.add(option);
+                }
+              });
+            }
+          }
+        ).catch(function (err) {
+          console.log('Fetch Error :-S', err);
+        });
+      });
+
+    }
+  }
+
+  function showmodelsdiv() {
+    document.getElementById("modelselectdiv").style.display = "inline";
+    document.getElementById("parameterselectdiv").style.display = "none";
+    document.getElementById("tableselectdiv").style.display = "none";
+  }
+
+  function showmodelsdivmodify() {
+    document.getElementById("modelselectdivmodify").style.display = "inline";
+    document.getElementById("parameterselectdivmodify").style.display = "none";
+    document.getElementById("tableselectdivmodify").style.display = "none";
+  }
+
+  function showtablesdiv() {
+    document.getElementById("modelselectdiv").style.display = "none";
+    document.getElementById("parameterselectdiv").style.display = "none";
+    document.getElementById("tableselectdiv").style.display = "inline";
+
+    for (model in selectedmodels) {
+      modelname = selectedmodels[model];
+      var x = document.getElementById("selectedmodelnameintable11");
+      var option = document.createElement("option");
+      option.text = modelname;
+      x.add(option);
+    }
+
+    $("#selectedmodelnameintable11").change(function () {
+
+      var select = document.getElementById("selectedparamnameintable11");
+      var length = select.options.length;
+      for (i = length - 1; i >= 0; i--) {
+        select.options[i] = null;
+      }
+
+      let selectedmodel = this.value;
+      var formdata = new FormData();
+      formdata.append('selectedmodel', selectedmodel);
+      fetch('gettablesfrommodels', {
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            return response.text().then(function (text) {
+              var parameters = JSON.parse(text);
+              for (parameter in parameters) {
+                parametername = parameters[parameter];
+                var x = document.getElementById("selectedparamnameintable11");
+                var option = document.createElement("option");
+                option.text = parametername;
+                x.add(option);
+              }
+            });
+          }
+        }
+      ).catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+    });
+  }
+
+  function showtablesdivmodify() {
+    document.getElementById("modelselectdivmodify").style.display = "none";
+    document.getElementById("parameterselectdivmodify").style.display = "none";
+    document.getElementById("tableselectdivmodify").style.display = "inline";
+  }
+
+  function addparameter() {
+
+    if (parametercount == 1) {
+      parametercount = parametercount + 1;
+    }
+
+    var tablediv = "table" + parametercount + "div";
+    var tableid = "tableid" + parametercount;
+    var enteredpramname = "enteredpramname" + parametercount;
+    var selectorrowdiv = "selectorrowdiv" + parametercount + "1";
+    var selectedmodelname = "selectedmodelname" + parametercount + "1";
+    var selectedparamname = "selectedparamname" + parametercount + "1";
+    var selectorrowcontainerdiv = "selectorrowcontainerdiv" + parametercount;
+    var snoid = "sno" + parametercount;
+
+    var html = `
+    <table border='1' id="${tableid}" style="width:100%; background: #434343; margin-top: 10px;" align="center">
+      <tr>
+        <th COLSPAN="3">
+          <div style="display: table; width: 100%;">
+              <h4 id="${snoid}" style="display: table-cell; padding-left: 5px; padding-right: 5px; font-size: 12px;">1</h4>
+              <input type="text" class="form-control" id="${enteredpramname}" placeholder="Enter Parameter Name"
+                style="background: #232323; color: white; display: table-cell;">
+              <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;" onclick = "removemodelparam(this)">&times;</h4>
+              <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;" onclick = "addmodelparam(this)">+</h4>
+          </div>
+        </th>
+      </tr>
+      <tr id="${selectorrowdiv}">          
+        <td style="width: 50%;">
+          <div><select id="${selectedmodelname}" style="width: 100%;">
+            <option value="" readonly="true" hidden="true" selected>Select model</option>
+            </select>
+          </div>
+        </td>
+        <td>
+          <div><select id="${selectedparamname}" style="width: 100%;">
+            </select>
+          </div>
+        </td>
+      </tr>
+    </table>`
+
+    var parametercard = document.createElement('div');
+    parametercard.setAttribute('id', tablediv);
+    parametercard.innerHTML = html;
+    var col = document.getElementById("parametersdiv");
+    col.appendChild(parametercard);
+
+    document.getElementById(snoid).innerHTML = parametercount;
+
+    parametercount = parametercount + 1;
+
+    // alert (modelslist);
+    for (model in selectedmodels) {
+      modelname = selectedmodels[model];
+      var x = document.getElementById(selectedmodelname);
+      var option = document.createElement("option");
+      option.text = modelname;
+      x.add(option);
+    }
+
+    $("#" + selectedmodelname).change(function () {
+
+      var select = document.getElementById(selectedparamname);
+      var length = select.options.length;
+      for (i = length - 1; i >= 0; i--) {
+        select.options[i] = null;
+      }
+
+      let selectedmodel = this.value;
+      var formdata = new FormData();
+      formdata.append('selectedmodel', selectedmodel);
+      fetch('getparametersfrommodels', {
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            return response.text().then(function (text) {
+              var parameters = JSON.parse(text);
+              for (parameter in parameters) {
+                parametername = parameters[parameter];
+                var x = document.getElementById(selectedparamname);
+                var option = document.createElement("option");
+                option.text = parametername;
+                x.add(option);
+              }
+            });
+          }
+        }
+      ).catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+    });
+
+  }
+
+  function addparametermodify() {
+
+    if (parametercountmodify == 1) {
+      parametercountmodify = parametercountmodify + 1;
+    }
+
+    var tablediv = "table" + parametercountmodify + "divmodify";
+    var tableid = "tableid" + parametercountmodify + "modify";
+    var enteredpramname = "enteredpramname" + parametercountmodify + "modify";
+    var selectorrowdiv = "selectorrowdiv" + parametercountmodify + "1modify";
+    var selectedmodelname = "selectedmodelname" + parametercountmodify + "1modify";
+    var selectedparamname = "selectedparamname" + parametercountmodify + "1modify";
+    var selectorrowcontainerdiv = "selectorrowcontainerdiv" + parametercountmodify + "modify";
+    var snoid = "sno" + parametercountmodify;
+
+    var html = `
+<table border='1' id="${tableid}" style="width:100%; background: #434343; margin-top: 10px;" align="center">
+  <tr>
+    <th COLSPAN="3">
+      <div style="display: table; width: 100%;">
+        <h4 id="${snoid}" style="display: table-cell; padding-left: 5px; padding-right: 5px; font-size: 12px;">1</h4>
+        <input type="text" class="form-control" id="${enteredpramname}" placeholder="Enter Parameter Name"
+          style="background: #232323; color: white; display: table-cell;">
+          <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;" onclick = "removemodelparammodify(this)">&times;</h4>
+          <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;" onclick = "addmodelparammodify(this, '')">+</h4>
+      </div>
+    </th>
+  </tr>
+  <tr id="${selectorrowdiv}">          
+    <td style="width: 50%;">
+      <div><select id="${selectedmodelname}" style="width: 100%;">
+        <option value="" readonly="true" hidden="true" selected>Select model</option>
+        </select>
+      </div>
+    </td>
+    <td>
+      <div><select id="${selectedparamname}" style="width: 100%;">
+        </select>
+      </div>
+    </td>
+  </tr>
+</table>`
+
+    var parametercard = document.createElement('div');
+    parametercard.setAttribute('id', tablediv);
+    parametercard.innerHTML = html;
+    var col = document.getElementById("parametersdivmodify");
+    col.appendChild(parametercard);
+
+    document.getElementById(snoid).innerHTML = parametercountmodify;
+
+    parametercountmodify = parametercountmodify + 1;
+
+    // alert (modelslist);
+    for (model in selectedmodelsmodify) {
+      modelname = selectedmodelsmodify[model];
+      var x = document.getElementById(selectedmodelname);
+      var option = document.createElement("option");
+      option.text = modelname;
+      x.add(option);
+    }
+
+    $("#" + selectedmodelname).change(function () {
+
+      var select = document.getElementById(selectedparamname);
+      var length = select.options.length;
+      for (i = length - 1; i >= 0; i--) {
+        select.options[i] = null;
+      }
+
+      let selectedmodel = this.value;
+      var formdata = new FormData();
+      formdata.append('selectedmodel', selectedmodel);
+      fetch('getparametersfrommodels', {
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            return response.text().then(function (text) {
+              var parameters = JSON.parse(text);
+              for (parameter in parameters) {
+                parametername = parameters[parameter];
+                var x = document.getElementById(selectedparamname);
+                var option = document.createElement("option");
+                option.text = parametername;
+                x.add(option);
+              }
+            });
+          }
+        }
+      ).catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+    });
+
+  }
+
+  function closeparameter() {
+    if (parametercount != 2) {
+      parametercount_to_delete = parametercount - 1;
+      div_to_remove = "table" + parametercount_to_delete + "div";
+      $("#" + div_to_remove).remove();
+      parametercount = parametercount - 1;
+    }
+
+  }
+
+  function closeparametermodify() {
+    if (parametercountmodify != 2) {
+      parametercount_to_delete = parametercountmodify - 1;
+      div_to_remove = "table" + parametercount_to_delete + "divmodify";
+      $("#" + div_to_remove).remove();
+      parametercountmodify = parametercountmodify - 1;
+    }
+
+  }
+
+  function addmodelparam(table) {
+    selectorcount = table.parentNode.parentNode.parentNode.parentNode.parentNode.id;
+    // alert (selectorcount);
+    // var count = selectorcount.charAt(selectorcount.length - 1);
+    var count = selectorcount.replace(/\D/g, '');
+    // alert (count);
+
+
+    var noofrows = document.getElementById(selectorcount).rows.length;
+
+    // var selectorrowdiv = "selectorrowdiv" + (parametercount - 1) + (noofrows);
+    var selectorrowdiv = "selectorrowdiv" + count + (noofrows);
+    var selectedmodelname = "selectedmodelname" + count + (noofrows);
+    var selectedparamname = "selectedparamname" + count + (noofrows);
+
+    var html = `
+        <td>
+          <div><select id="${selectedmodelname}" style="width: 100%;">
+            <option value="" readonly="true" hidden="true" selected>Select model</option>
+            </select>
+          </div>
+        </td>
+        <td>
+          <div><select id="${selectedparamname}" style="width: 100%;">
+            </select>
+          </div>
+        </td>
+    `
+
+    var selectorscard = document.createElement('tr');
+    selectorscard.setAttribute('id', selectorrowdiv);
+    selectorscard.innerHTML = html;
+
+    var col = document.getElementById(selectorcount);
+    col.append(selectorscard);
+
+    for (model in selectedmodels) {
+      // alert(modelslist[model]);
+      var x = document.getElementById(selectedmodelname);
+      var option = document.createElement("option");
+      option.text = selectedmodels[model];
+      x.add(option);
+    }
+
+    $("#" + selectedmodelname).change(function () {
+
+      var select = document.getElementById(selectedparamname);
+      var length = select.options.length;
+      for (i = length - 1; i >= 0; i--) {
+        select.options[i] = null;
+      }
+
+      let selectedmodel = this.value;
+      var formdata = new FormData();
+      formdata.append('selectedmodel', selectedmodel);
+      fetch('getparametersfrommodels', {
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            return response.text().then(function (text) {
+              var parameters = JSON.parse(text);
+              for (parameter in parameters) {
+                parametername = parameters[parameter];
+                var x = document.getElementById(selectedparamname);
+                var option = document.createElement("option");
+                option.text = parametername;
+                x.add(option);
+              }
+            });
+          }
+        }
+      ).catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+    });
+  }
+
+  function addmodelparammodify(table, selectorcount) {
+
+    if (selectorcount == "") {
+      selectorcount = table.parentNode.parentNode.parentNode.parentNode.parentNode.id;
+    }
+    // alert (selectorcount);
+    // var count = selectorcount.charAt(selectorcount.length - 8);
+    var count = selectorcount.replace(/\D/g, '');
+    // alert (count);
+    var noofrows = document.getElementById(selectorcount).rows.length;
+
+    // var selectorrowdiv = "selectorrowdiv" + (parametercount - 1) + (noofrows);
+    var selectorrowdiv = "selectorrowdiv" + count + (noofrows) + "modify";
+    var selectedmodelname = "selectedmodelname" + count + (noofrows) + "modify";
+    var selectedparamname = "selectedparamname" + count + (noofrows) + "modify";
+
+    var html = `
+        <td>
+          <div><select id="${selectedmodelname}" style="width: 100%;">
+            <option value="" readonly="true" hidden="true" selected>Select model</option>
+            </select>
+          </div>
+        </td>
+        <td>
+          <div><select id="${selectedparamname}" style="width: 100%;">
+            </select>
+          </div>
+        </td>
+    `
+
+    var selectorscard = document.createElement('tr');
+    selectorscard.setAttribute('id', selectorrowdiv);
+    selectorscard.innerHTML = html;
+
+    var col = document.getElementById(selectorcount);
+    col.append(selectorscard);
+
+    for (model in selectedmodelsmodify) {
+      // alert(modelslist[model]);
+      var x = document.getElementById(selectedmodelname);
+      var option = document.createElement("option");
+      option.text = selectedmodelsmodify[model];
+      x.add(option);
+    }
+
+    $("#" + selectedmodelname).change(function () {
+
+      var select = document.getElementById(selectedparamname);
+      var length = select.options.length;
+      for (i = length - 1; i >= 0; i--) {
+        select.options[i] = null;
+      }
+
+      let selectedmodel = this.value;
+      var formdata = new FormData();
+      formdata.append('selectedmodel', selectedmodel);
+      fetch('getparametersfrommodels', {
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            return response.text().then(function (text) {
+              var parameters = JSON.parse(text);
+              for (parameter in parameters) {
+                parametername = parameters[parameter];
+                var x = document.getElementById(selectedparamname);
+                var option = document.createElement("option");
+                option.text = parametername;
+                x.add(option);
+              }
+            });
+          }
+        }
+      ).catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+    });
+  }
+
+  function removemodelparam(table) {
+    selectorcount = table.parentNode.parentNode.parentNode.parentNode.parentNode.id;
+    // var count = selectorcount.charAt(selectorcount.length - 1);
+    var count = selectorcount.replace(/\D/g, '');
+
+    var noofrows = document.getElementById(selectorcount).rows.length;
+    noofrows = noofrows - 1;
+
+    var dividtoremove = "selectorrowdiv" + count + noofrows;
+    var divtoremove = document.getElementById(dividtoremove);
+    divtoremove.remove();
+  }
+
+  function removemodelparammodify(table) {
+    selectorcount = table.parentNode.parentNode.parentNode.parentNode.parentNode.id;
+    // var count = selectorcount.charAt(selectorcount.length - 1);
+    var count = selectorcount.replace(/\D/g, '');
+
+    var noofrows = document.getElementById(selectorcount).rows.length;
+    noofrows = noofrows - 1;
+
+    var dividtoremove = "selectorrowdiv" + count + noofrows + "modify";
+    var divtoremove = document.getElementById(dividtoremove);
+    divtoremove.remove();
+
+
+  }
+
+  function addtable() {
+
+    if (tablecount == 1) {
+      tablecount = tablecount + 1;
+    }
+
+    var tablediv = "tableintable" + tablecount + "div";
+    var tableid = "tableidintable" + tablecount;
+    var enteredpramname = "enteredpramnameintable" + tablecount;
+    var selectorrowdiv = "selectorrowdivintable" + tablecount + "1";
+    var selectedmodelname = "selectedmodelnameintable" + tablecount + "1";
+    var selectedparamname = "selectedparamnameintable" + tablecount + "1";
+    var selectorrowcontainerdiv = "selectorrowcontainerdivintable" + tablecount;
+
+    var html = `
+    <table border='1' id="${tableid}" style="width:100%; background: #434343; margin-top: 10px;" align="center">
+      <tr>
+        <th COLSPAN="3">
+          <div style="display: table; width: 100%;">
+            <input type="text" class="form-control" id="${enteredpramname}" placeholder="Enter Parameter Name"
+              style="background: #232323; color: white; display: table-cell;">
+              <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;" onclick = "removemodeltable(this)">&times;</h4>
+              <h4 style="display: table-cell; padding-left: 10px; cursor: pointer;" onclick = "addtableparam(this)">+</h4>
+          </div>
+        </th>
+      </tr>
+      <tr id="${selectorrowdiv}">          
+        <td style="width: 50%;">
+          <div><select id="${selectedmodelname}" style="width: 100%;">
+            <option value="" readonly="true" hidden="true" selected>Select model</option>
+            </select>
+          </div>
+        </td>
+        <td>
+          <div><select id="${selectedparamname}" style="width: 100%;">
+            </select>
+          </div>
+        </td>
+      </tr>
+    </table>`
+
+    var parametercard = document.createElement('div');
+    parametercard.setAttribute('id', tablediv);
+    parametercard.innerHTML = html;
+    var col = document.getElementById("tablesdiv");
+    col.appendChild(parametercard);
+
+    tablecount = tablecount + 1;
+
+    // alert (modelslist);
+    for (model in selectedmodels) {
+      modelname = selectedmodels[model];
+      var x = document.getElementById(selectedmodelname);
+      var option = document.createElement("option");
+      option.text = modelname;
+      x.add(option);
+    }
+
+    $("#" + selectedmodelname).change(function () {
+
+      var select = document.getElementById(selectedparamname);
+      var length = select.options.length;
+      for (i = length - 1; i >= 0; i--) {
+        select.options[i] = null;
+      }
+
+      let selectedmodel = this.value;
+      var formdata = new FormData();
+      formdata.append('selectedmodel', selectedmodel);
+      fetch('gettablesfrommodels', {
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            return response.text().then(function (text) {
+              var parameters = JSON.parse(text);
+              for (parameter in parameters) {
+                parametername = parameters[parameter];
+                var x = document.getElementById(selectedparamname);
+                var option = document.createElement("option");
+                option.text = parametername;
+                x.add(option);
+              }
+            });
+          }
+        }
+      ).catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+    });
+
+
+  }
+
+  function closetable() {
+    if (tablecount != 2) {
+      tablecount_to_delete = tablecount - 1;
+      div_to_remove = "tableintable" + tablecount_to_delete + "div";
+      $("#" + div_to_remove).remove();
+      tablecount = tablecount - 1;
+    }
+
+  }
+
+  function addtableparam(table) {
+    selectorcount = table.parentNode.parentNode.parentNode.parentNode.parentNode.id;
+    // var count = selectorcount.charAt(selectorcount.length - 1);
+    var count = selectorcount.replace(/\D/g, '');
+
+    var noofrows = document.getElementById(selectorcount).rows.length;
+
+    var selectorrowdiv = "selectorrowdivintable" + count + (noofrows);
+    var selectedmodelname = "selectedmodelnameintable" + (tablecount - 1) + (noofrows);
+    var selectedparamname = "selectedparamnameintable" + (tablecount - 1) + (noofrows);
+
+    var html = `
+        <td>
+          <div><select id="${selectedmodelname}" style="width: 100%;">
+            <option value="" readonly="true" hidden="true" selected>Select model</option>
+            </select>
+          </div>
+        </td>
+        <td>
+          <div><select id="${selectedparamname}" style="width: 100%;">
+            </select>
+          </div>
+        </td>
+    `
+
+    var selectorscard = document.createElement('tr');
+    selectorscard.setAttribute('id', selectorrowdiv);
+    selectorscard.innerHTML = html;
+
+    var col = document.getElementById(selectorcount);
+    col.append(selectorscard);
+
+    for (model in selectedmodels) {
+      // alert(modelslist[model]);
+      var x = document.getElementById(selectedmodelname);
+      var option = document.createElement("option");
+      option.text = selectedmodels[model];
+      x.add(option);
+    }
+
+    $("#" + selectedmodelname).change(function () {
+
+      var select = document.getElementById(selectedparamname);
+      var length = select.options.length;
+      for (i = length - 1; i >= 0; i--) {
+        select.options[i] = null;
+      }
+
+      let selectedmodel = this.value;
+      var formdata = new FormData();
+      formdata.append('selectedmodel', selectedmodel);
+      fetch('gettablesfrommodels', {
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            return response.text().then(function (text) {
+              var parameters = JSON.parse(text);
+              for (parameter in parameters) {
+                parametername = parameters[parameter];
+                var x = document.getElementById(selectedparamname);
+                var option = document.createElement("option");
+                option.text = parametername;
+                x.add(option);
+              }
+            });
+          }
+        }
+      ).catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+    });
+  }
+
+
+  function fetchmodels() {
+    var data = "";
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        response = this.responseText.replace(/'/g, "\"");
+        var jsonobj = JSON.parse(response);
+        var length = jsonobj.length;
+
+        var models = [];
+        var select = document.getElementById("select_models");
+
+        for (i = 0; i < length; i++) {
+          var modelname = jsonobj[i];
+          modelname = modelname.replace(".json", "");
+          console.log(modelname);
+          models.push(modelname);
+        }
+        console.log(models);
+        updatetable(models);
+      }
+    });
+
+    xhr.open("POST", "fetchmodelnames");
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.send(data);
+
+  }
+
+  function updatetable(models) {
+
+    for (model in models) {
+      var optionselect = document.createElement("option");
+      model_without_dolar = models[model];
+      model_without_dolar = model_without_dolar.substr(0, model_without_dolar.indexOf('$'));
+      optionselect.text = model_without_dolar;
+      optionselect.className = "options"
+      console.log(models[model]);
+      select.add(optionselect);
+    }
+
+    for (model in models) {
+      var optionselect = document.createElement("option");
+      model_without_dolar = models[model];
+      model_without_dolar = model_without_dolar.substr(0, model_without_dolar.indexOf('$'));
+      optionselect.text = model_without_dolar;
+      optionselect.className = "options"
+      console.log(models[model]);
+      select_models_modify.add(optionselect);
+    }
+
+  }
+
+
+
+
+
+
+
+  function createocrsolution() {
+    var ocrsolname = document.getElementById("ocrsolnametxtfield").value;
+    var description = document.getElementById("desctxtfield").value;
+
+    var fulljson = {};
+
+    fulljson.models = selectedmodels;
+    fulljson.ocrsolname = ocrsolname;
+    fulljson.description = description;
+
+    totalparams = 0;
+    totaltables = 0;
+
+
+
+    $('#parametersdiv').find('div').each(function () {
+      try {
+        var innerDivId = $(this).attr('id');
+        innerDivId = innerDivId.replace("table", "");
+        innerDivId = parseInt(innerDivId.replace("div", ""));
+        totalparams = totalparams + 1;
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    console.log(totalparams);
+
+    var tableids = [];
+
+    for (let i = 1; i < (totalparams + 1); i++) {
+      console.log(i);
+      var tableid = "tableid" + i;
+      tableids.push(tableid);
+    }
+
+    paramsjson = {};
+
+    for (tableid in tableids) {
+      var noofparamtablerows = document.getElementById(tableids[tableid]).rows.length;
+      var paramnameinputid = "enteredpramname" + (parseInt(tableid) + 1);
+      var paramname = document.getElementById(paramnameinputid).value;
+      paramname = paramname.trim();
+      paramname = paramname.replace(/ /g, "_");
+      paramname = paramname.replace(/\//g, "");
+      paramname = paramname.replace(/-/g, "");
+
+      var parametersmapping = {};
+
+      for (let i = 1; i < (noofparamtablerows); i++) {
+        var selectedmodelnametext = "selectedmodelname" + (parseInt(tableid) + 1) + i;
+        var selectedparamtext = "selectedparamname" + (parseInt(tableid) + 1) + i;
+        var selectedmodelname = document.getElementById(selectedmodelnametext).value;
+        var selectedparameter = document.getElementById(selectedparamtext).value;
+        var json = '"' + selectedmodelname + '" : "' + selectedparameter + '"';
+        parametersmapping[selectedmodelname] = selectedparameter;
+      }
+      console.log(parametersmapping);
+      paramsjson[paramname] = parametersmapping;
+    }
+    fulljson["parameters"] = paramsjson;
+
+
+
+
+    $('#tablesdiv').find('div').each(function () {
+      try {
+        var innerDivId = $(this).attr('id');
+        innerDivId = innerDivId.replace("table", "");
+        innerDivId = parseInt(innerDivId.replace("div", ""));
+        totaltables = totaltables + 1;
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    console.log(totaltables);
+
+    var tableids = [];
+
+    for (let i = 1; i < (totaltables + 1); i++) {
+      console.log(i);
+      var tableid = "tableidintable" + i;
+      tableids.push(tableid);
+    }
+
+    tablesjson = {};
+
+    for (tableid in tableids) {
+      var noofparamtablerows = document.getElementById(tableids[tableid]).rows.length;
+      var paramnameinputid = "enteredpramnameintable" + (parseInt(tableid) + 1);
+      var paramname = document.getElementById(paramnameinputid).value;
+
+      var parametersmapping = {};
+
+      for (let i = 1; i < (noofparamtablerows); i++) {
+        var selectedmodelnametext = "selectedmodelnameintable" + (parseInt(tableid) + 1) + i;
+        var selectedparamtext = "selectedparamnameintable" + (parseInt(tableid) + 1) + i;
+        var selectedmodelname = document.getElementById(selectedmodelnametext).value;
+        var selectedparameter = document.getElementById(selectedparamtext).value;
+        var json = '"' + selectedmodelname + '" : "' + selectedparameter + '"';
+        parametersmapping[selectedmodelname] = selectedparameter;
+      }
+      console.log(parametersmapping);
+      tablesjson[paramname] = parametersmapping;
+    }
+    fulljson["tables"] = tablesjson;
+    console.log(fulljson);
+
+
+
+
+    var ocrsoljsonstring = JSON.stringify(fulljson);
+
+    var xhr = new XMLHttpRequest();
+    var url = "createocrsolution";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.setRequestHeader("ocrsolutionname", ocrsolname);
+    xhr.setRequestHeader("description", description);
+    xhr.setRequestHeader("ocrsolutionjson", ocrsoljsonstring);
+    xhr.send();
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var output = xhr.response;
+        // alert("OCR solution created");
+        window.location.href = 'ocrsolutionspage'
+      }
+    }
+  }
+
+
+
+  function updateocrsolution() {
+    var ocrsolname = document.getElementById("ocrsolnametxtfieldmodify").value;
+    var description = document.getElementById("desctxtfieldmodify").value;
+
+    var fulljson = {};
+
+    fulljson.models = selectedmodelsmodify;
+    fulljson.ocrsolname = ocrsolname;
+    fulljson.description = description;
+
+    totalparams = 0;
+    totaltables = 0;
+
+
+
+    $('#parametersdivmodify').find('div').each(function () {
+      try {
+        var innerDivId = $(this).attr('id');
+        innerDivId = innerDivId.replace("table", "");
+        innerDivId = innerDivId.replace("modify", "");
+        innerDivId = parseInt(innerDivId.replace("div", ""));
+        totalparams = totalparams + 1;
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    console.log(totalparams);
+
+    var tableids = [];
+
+    for (let i = 1; i < (totalparams + 1); i++) {
+      console.log(i);
+      var tableid = "tableid" + i + "modify";
+      tableids.push(tableid);
+    }
+
+    paramsjson = {};
+
+    for (tableid in tableids) {
+      var noofparamtablerows = document.getElementById(tableids[tableid]).rows.length;
+      var paramnameinputid = "enteredpramname" + (parseInt(tableid) + 1) + "modify";
+      var paramname = document.getElementById(paramnameinputid).value;
+
+      var parametersmapping = {};
+
+      for (let i = 1; i < (noofparamtablerows); i++) {
+        var selectedmodelnametext = "selectedmodelname" + (parseInt(tableid) + 1) + i + "modify";
+        var selectedparamtext = "selectedparamname" + (parseInt(tableid) + 1) + i + "modify";
+        var selectedmodelname = document.getElementById(selectedmodelnametext).value;
+        var selectedparameter = document.getElementById(selectedparamtext).value;
+        var json = '"' + selectedmodelname + '" : "' + selectedparameter + '"';
+        parametersmapping[selectedmodelname] = selectedparameter;
+      }
+      console.log(parametersmapping);
+      paramsjson[paramname] = parametersmapping;
+    }
+    fulljson["parameters"] = paramsjson;
+
+
+
+
+    $('#tablesdivmodify').find('div').each(function () {
+      try {
+        var innerDivId = $(this).attr('id');
+        innerDivId = innerDivId.replace("table", "");
+        innerDivId = innerDivId.replace("modify", "");
+        innerDivId = parseInt(innerDivId.replace("div", ""));
+        totaltables = totaltables + 1;
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    console.log(totaltables);
+
+    var tableids = [];
+
+    for (let i = 1; i < (totaltables + 1); i++) {
+      console.log(i);
+      var tableid = "tableidintable" + i + "modify";
+      tableids.push(tableid);
+    }
+
+    tablesjson = {};
+
+    for (tableid in tableids) {
+      var noofparamtablerows = document.getElementById(tableids[tableid]).rows.length;
+      var paramnameinputid = "enteredpramnameintable" + (parseInt(tableid) + 1) + "modify";
+      var paramname = document.getElementById(paramnameinputid).value;
+
+      var parametersmapping = {};
+
+      for (let i = 1; i < (noofparamtablerows); i++) {
+        var selectedmodelnametext = "selectedmodelnameintable" + (parseInt(tableid) + 1) + i + "modify";
+        var selectedparamtext = "selectedparamnameintable" + (parseInt(tableid) + 1) + i + "modify";
+        var selectedmodelname = document.getElementById(selectedmodelnametext).value;
+        var selectedparameter = document.getElementById(selectedparamtext).value;
+        var json = '"' + selectedmodelname + '" : "' + selectedparameter + '"';
+        parametersmapping[selectedmodelname] = selectedparameter;
+      }
+      console.log(parametersmapping);
+      tablesjson[paramname] = parametersmapping;
+    }
+    fulljson["tables"] = tablesjson;
+    console.log(fulljson);
+
+
+
+
+    var ocrsoljsonstring = JSON.stringify(fulljson);
+
+    var xhr = new XMLHttpRequest();
+    var url = "createocrsolution";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.setRequestHeader("ocrsolutionname", ocrsolname);
+    xhr.setRequestHeader("description", description);
+    xhr.setRequestHeader("ocrsolutionjson", ocrsoljsonstring);
+    xhr.send();
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var output = xhr.response;
+        alert("OCR solution created");
+        window.location.href = 'ocrsolutionspage'
+      }
+    }
+  }
+
+
+
+
+
+
+
+
+
+  function publish(fullname) {
+    // alert (modelname);
+    // alert (oButton.parentNode.parentNode.rowIndex);
+    modelname = fullname.split("$")[0];
+
+    var today = new Date();
+    var date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date + ' ' + time;
+
+    alertboxid = 'alertbox' + modelname;
+    var boxcol = document.getElementById(alertboxid).style.backgroundColor;
+    // alert (boxcol);
+    if (boxcol.toString() == "rgb(255, 230, 0)") {
+      // alert (modelname);
+      alertboxid = 'alertbox' + modelname;
+      alerticonid = 'alertbtn' + modelname;
+      alerttextid = 'alerttxt' + modelname;
+
+      document.getElementById(alertboxid).style.backgroundColor = "dimgray";
+      document.getElementById(alerticonid).style.color = "white";
+      document.getElementById(alerticonid).className = "fa fa-exclamation-circle";
+      document.getElementById(alerttextid).innerHTML = "Not published yet";
+      document.getElementById(alerttextid).style.color = "white"
+
+      var formdata = new FormData();
+      formdata.append('ocrsolution', fullname);
+
+      fetch('removeocrsolfrompublished', {
+        // mode: 'no-cors',
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            return response.text().then(function (text) {
+              // alert (text);
+              console.log(text);
+            });
+          }
+        }
+      ).catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+
+    } else {
+      // alert (modelname);
+      var deployed_date_time = "Published on " + dateTime;
+
+      alertboxid = 'alertbox' + modelname;
+      alerticonid = 'alertbtn' + modelname;
+      alerttextid = 'alerttxt' + modelname;
+
+
+      document.getElementById(alertboxid).style.backgroundColor = "#ffe600";
+      document.getElementById(alerticonid).style.color = "black";
+      document.getElementById(alerticonid).className = "fa fa-cloud-upload";
+      document.getElementById(alerttextid).innerHTML = deployed_date_time;
+      document.getElementById(alerttextid).style.color = "black"
+
+      var formdata = new FormData();
+      formdata.append('ocrsolution', fullname);
+
+      fetch('moveocrsoltopublished', {
+        // mode: 'no-cors',
+        method: 'POST',
+        body: formdata
+      }).then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          } else if (response.status == 200) {
+            return response.text().then(function (text) {
+              console.log(text);
+              var obj = JSON.parse(text);
+              var tool = obj.tool;
+              var toolid = obj.toolid;
+              var modelFileUrl = obj.modelFileUrl;
+              var returnUrl = obj.returnUrl;
+              var AspaceSolutionId = obj.AspaceSolutionId;
+              console.log(tool);
+              console.log(toolid);
+              console.log(modelFileUrl);
+              console.log(returnUrl);
+              console.log(AspaceSolutionId);
+              // alert(AspaceSolutionId);
+
+              if (AspaceSolutionId == undefined) {
+                var jsonData = [{
+                  "tool": tool,
+                  "toolId": toolid,
+                  "modelFileUrl": modelFileUrl,
+                  "returnUrl": returnUrl
+                }];
+
+                var form = document.createElement('form');
+                form.style.visibility = 'hidden';
+                form.method = 'POST';
+                form.action = 'https://demo.aspace.ai/aspace/contributeAI';
+
+                for (var obj in jsonData) {
+                  if (jsonData.hasOwnProperty(obj)) {
+                    for (var prop in jsonData[obj]) {
+                      if (jsonData[obj].hasOwnProperty(prop)) {
+                        var input = document.createElement('input');
+                        input.name = prop;
+                        input.id = prop;
+                        input.value = jsonData[obj][prop];
+                        form.appendChild(input);
+                      }
+                    }
+                  }
+                }
+                document.body.appendChild(form);
+                form.submit();
+              } else {
+                var jsonData = [{
+                  "tool": tool,
+                  "toolId": toolid,
+                  "AspaceSolutionId": AspaceSolutionId,
+                  "modelFileUrl": modelFileUrl,
+                  "returnUrl": returnUrl
+                }];
+
+                var form = document.createElement('form');
+                form.style.visibility = 'hidden';
+                form.method = 'POST';
+                form.action = 'https://demo.aspace.ai/aspace/solutiondetails';
+
+                for (var obj in jsonData) {
+                  if (jsonData.hasOwnProperty(obj)) {
+                    for (var prop in jsonData[obj]) {
+                      if (jsonData[obj].hasOwnProperty(prop)) {
+                        var input = document.createElement('input');
+                        input.name = prop;
+                        input.id = prop;
+                        input.value = jsonData[obj][prop];
+                        form.appendChild(input);
+                      }
+                    }
+                  }
+                }
+                document.body.appendChild(form);
+                form.submit();
+              }
+            });
+          }
+        }
+      ).catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+
+
+
+      // var formdata = new FormData();
+      // formdata.append('tool', 'EyeSight');
+      // formdata.append('toolId', '1234');
+
+      // fetch('https://demo.aspace.ai/aspace/checkSolutionStatus', {
+      //   // mode: 'no-cors',
+      //   method: 'POST',
+      //   body: formdata
+      // }).then(
+      //   function (response) {
+      //     if (response.status !== 200) {
+      //       console.log('Looks like there was a problem. Status Code: ' + response.status);
+      //       return;
+      //     } else if (response.status == 200) {
+      //       return response.text().then(function (text) {
+      //         var jsonobj = JSON.parse(text);
+      //         var jsonobj = JSON.parse(jsonobj);
+      //         console.log(jsonobj);
+      //         console.log(jsonobj.SolutionPublished);
+      //         deployment_status = jsonobj.SolutionPublished;
+      //         if (deployment_status == "True"){
+      //           alert ("OCR solution already deployed")
+      //         } else {
+      //           alert ("OCR solution deployed")
+      //         }
+      //       });
+      //     }
+      //   }
+      // ).catch(function (err) {
+      //   console.log('Fetch Error :-S', err);
+      // });
+    }
+  }
+
+
+  function sendtodelete(model) {
+
+    model_name = model.split("$")[0];
+
+    document.getElementById("deletetext").innerHTML = "Delete " + model + "?";
+    $("#myModal2").modal();
+
+    document.getElementById("cancelbtn").onclick = function (event) {
+      $('#myModal2').modal('hide');
+    }
+
+    document.getElementById("deletebtn").onclick = function (event) {
+      $('#myModal2').modal('hide');
+      var http = new XMLHttpRequest();
+      var url = 'deleteocrsolution';
+      var params = 'model=' + model;
+      http.open('POST', url, true);
+
+      http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+      http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+          if (http.status == 200) {
+            // alert("deleted model")
+            location.reload();
+          } else {
+            alert("failed to delete a model")
+            location.reload();
+          }
+        }
+      }
+      http.send(params);
+    }
+  }
+
+  function sendtoview(ocrsolname) {
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('POST', 'getocrsolutionmetadata', true);
+    xhr.setRequestHeader('Content-Type', "application/json;charset=UTF-8");
+    xhr.setRequestHeader("ocrsolname", ocrsolname);
+    xhr.send();
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState != 4) return;
+      if (xhr.status != 200) {
+        console.log("Status: " + xhr.responseText);
+      } else if (xhr.status == 200) {
+        response = xhr.responseText;
+        console.log(response);
+        showmodifyocrsolutionmodal(response)
+      } else {
+        console.log("Status: " + xhr.responseText);
+      }
+    };
+
+
+
+  }
+
+
+  function showmodifyocrsolutionmodal(response) {
+    var jsonobj = JSON.parse(response);
+
+    ocrsolname = jsonobj.ocrsolname;
+    description = jsonobj.description;
+    document.getElementById("ocrsolnametxtfieldmodify").value = ocrsolname;
+    document.getElementById("desctxtfieldmodify").value = description;
+
+
+    selected_models = jsonobj.models;
+    parameters = jsonobj.parameters;
+    $('#modifyocrsolutionmodel').modal('toggle');
+    fetchmodelsmodify(selected_models, parameters);
+  }
+
+  function fetchmodelsmodify(selected_models, parameters) {
+    var data = "";
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4) {
+        response = this.responseText.replace(/'/g, "\"");
+        var jsonobj = JSON.parse(response);
+        var length = jsonobj.length;
+
+        var models = [];
+        var select = document.getElementById("select_models");
+
+        for (i = 0; i < length; i++) {
+          var modelname = jsonobj[i];
+          modelname = modelname.replace(".json", "");
+          // console.log(modelname);
+          models.push(modelname);
+        }
+        // console.log(models);
+
+        first_drop_down = document.getElementById("selectedmodelname11modify");
+        for (var i = 0; i < selected_models.length; i++) {
+          var option = document.createElement("option");
+          option.text = selected_models[i];
+          first_drop_down.add(option);
+        }
+
+
+        updatetablemodify(models, selected_models, parameters);
+        // get_all_parameters_for_models(selected_models);
+        updateavailableparameters(models, selected_models, parameters);
+      }
+    });
+
+    xhr.open("POST", "fetchmodelnames");
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.send(data);
+
+  }
+
+  // function to update select models view and entered parameters views in 2nd step
+  function updatetablemodify(models, selected_models, parameters) {
+
+    // console.log(selected_models);
+    selectedmodelsmodify = selected_models;
+
+    for (model in models) {
+      var optionselect = document.createElement("option");
+      model_without_dolar = models[model];
+      model_without_dolar = model_without_dolar.substr(0, model_without_dolar.indexOf('$'));
+      optionselect.text = model_without_dolar;
+      optionselect.value = model_without_dolar;
+      optionselect.className = "options"
+      // console.log(models[model]);
+      select_models_modify.add(optionselect);
+    }
+
+    var selector = document.getElementById('select_models_modify');
+
+    for (var i = 0; i < selector.options.length; i++) {
+      selector.options[i].selected = selected_models.indexOf(selector.options[i].value) >= 0;
+    }
+
+    // console.log(parameters);
+    parameter_keys = Object.keys(parameters);
+    no_of_parameters_keys = parameter_keys.length;
+
+    for (i = 1; i < no_of_parameters_keys; i++) {
+      parameter_key_name = parameter_keys[i];
+      // alert (selectedmodelsmodify);
+      addparametermodify()
+    }
+
+    for (i = 0; i < no_of_parameters_keys; i++) {
+      enteredpramnamemodify = "enteredpramname" + (i + 1) + "modify";
+      document.getElementById(enteredpramnamemodify).value = parameter_keys[i];
+    }
+
+  }
+
+  function updateavailableparameters(models, selected_models, parameters) {
+
+    parameter_keys = Object.keys(parameters);
+    no_of_parameters_keys = parameter_keys.length;
+
+    for (i = 0; i < no_of_parameters_keys; i++) {
+      param_key = parameter_keys[i];
+      param_value = parameters[param_key];
+      no_of_rows = Object.keys(param_value).length
+      tablename = "tableid" + (i + 1) + "modify";
+
+      for (j = 1; j < no_of_rows; j++) {
+        addmodelparammodify("", tablename)
+      }
+    }
+
+    for (i = 0; i < no_of_parameters_keys; i++) {
+      param_key = parameter_keys[i];
+      param_value = parameters[param_key];
+      no_of_rows = Object.keys(param_value).length
+
+      // console.log(param_value)
+      model_name_keys = Object.keys(param_value);
+      // console.log(model_name_keys);
+
+      for (j = 0; j < no_of_rows; j++) {
+        selected_div = "selectedmodelname" + (i + 1) + (j + 1) + "modify";
+        selectedparamname = "selectedparamname" + (i + 1) + (j + 1) + "modify";
+        model_name_key = model_name_keys[j];
+        document.getElementById(selected_div).value = model_name_key;
+
+        // console.log(selectedparamname);
+
+        fill_params(model_name_key, selectedparamname, parameters)
+
+      }
+    }
+  }
+
+
+  function fill_params(model_name_key, selectedparamname, parameters_in_model) {
+    // console.log(parameters_in_model);
+    var formdata = new FormData();
+    formdata.append('selectedmodel', model_name_key);
+    fetch('getparametersfrommodels', {
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          return response.text().then(function (text) {
+            var parameters = JSON.parse(text);
+
+            for (parameter in parameters) {
+              parametername = parameters[parameter];
+              var x = document.getElementById(selectedparamname);
+              var option = document.createElement("option");
+              option.text = parametername;
+              x.add(option);
+            }
+
+            div = document.getElementById(selectedparamname);
+            divid = div.parentNode.parentNode.parentNode.parentNode.parentNode.id;
+
+
+            current_param_block = divid.replace(/\D/g, '');
+            current_param_name = "enteredpramname" + current_param_block + "modify";
+
+            current_param_text = document.getElementById(current_param_name).value;
+
+            current_model_block = selectedparamname.substring(selectedparamname.length - 9);
+            current_model_block = current_model_block.replace(/\D/g, '');
+
+            current_model_name = "selectedmodelname" + current_model_block + "modify";
+            current_model_text = document.getElementById(current_model_name).value;
+            param_to_be_selected = parameters_in_model[current_param_text][current_model_text];
+
+            document.getElementById(selectedparamname).value = param_to_be_selected;
+
+
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+  }
+
+
+  function get_all_parameters_for_models(models, parameters) {
+
+    var formdata = new FormData();
+    formdata.append('selectedmodels', models.toString());
+
+    fetch('getparametersfrommanymodels', {
+      method: 'POST',
+      body: formdata
+    }).then(
+      function (response) {
+        if (response.status !== 200) {
+          console.log('Looks like there was a problem. Status Code: ' + response.status);
+          return;
+        } else if (response.status == 200) {
+          // console.log(response.text());
+          return response.text().then(function (text) {
+            all_parameters_list = JSON.parse(text);
+            console.log(all_parameters_list);
+            console.log(parameters);
+
+            parameter_keys = Object.keys(parameters);
+            no_of_parameters_keys = parameter_keys.length;
+
+            for (i = 0; i < no_of_parameters_keys; i++) {
+              parameter_key_name = parameter_keys[i];
+
+              values = parameters[parameter_key_name]
+              console.log(values);
+
+              value_keys = Object.keys(values);
+              no_of_value_keys = value_keys.length;
+
+              console.log(no_of_value_keys);
+
+              for (j = 0; j < no_of_value_keys; j++) {
+                current_model = value_keys[j];
+                params_to_be_appended = all_parameters_list[current_model];
+                consol.log(current_model)
+                consol.log(params_to_be_appended)
+              }
+
+
+
+            }
+
+
+
+
+            // return parameters;
+          });
+        }
+      }
+    ).catch(function (err) {
+      console.log('Fetch Error :-S', err);
+    });
+
+  }
+
+
+
+  function closemodal() {
+    var select = document.getElementById("select_models_modify");
+    var length = select.options.length;
+    for (i = length - 1; i >= 0; i--) {
+      select.options[i] = null;
+    }
+    var select = document.getElementById("select_models");
+    var length = select.options.length;
+    for (i = length - 1; i >= 0; i--) {
+      select.options[i] = null;
+    }
+    $('#createocrsolutionmodel').modal('toggle');
+  }
+
+  function closemodalmodifyocrsolution() {
+    var select = document.getElementById("select_models_modify");
+    var length = select.options.length;
+    for (i = length - 1; i >= 0; i--) {
+      select.options[i] = null;
+    }
+    var select = document.getElementById("select_models");
+    var length = select.options.length;
+    for (i = length - 1; i >= 0; i--) {
+      select.options[i] = null;
+    }
+    $('#modifyocrsolutionmodel').modal('toggle');
+  }
+
+
+  setActiveMenuItem('#ocr-solutions-menu')
+</script>
+{% endblock %}

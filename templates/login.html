@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<link>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="static/styles/bootstrap.min.css" rel="stylesheet">
+	<link href="static/styles/new-ui.css" rel="stylesheet">
+</head>
+<body class="d-flex border login-screen justify-content-center">
+	<div class="d-flex flex-column mt-5 mb-auto">
+		<!-- <img src="static/images/logo.png" alt="Avatar" class="align-self-center mb-2"  width="170"> -->
+		<span class="logo large align-self-center mb-2">EY<span class="highlight">ESIGHT</span></span>
+		<h6 class="text-light align-self-center mb-5">Intelligent OCR</h6>
+		<div class="login-container d-flex flex-column mt-5 p-3 py-5" style="height : 300px">
+			<form autocomplete="off" class="d-flex flex-column flex-fill justify-content-around" onsubmit="return loginnew()">
+			    <input id="uid" type="text" placeholder="Username" name="id" required class="no-left-edge clean-slate login-input">
+			    <input id="pwd" type="password" placeholder="Password" name="password" required class="no-left-edge clean-slate login-input">
+			    <button type="submit" class="clean-slate align-self-center action-button">Login</button>
+			</form>	
+		</div>
+	</div>
+
+<!-- <div style="height:40px"></div>
+
+<center>
+	<div class="imgcontainer">
+	    <img src="static/images/logo.png" alt="Avatar" class="avatar" height="120" width="200">
+	</div>
+</center>
+
+<center>
+  <div>
+    <h2 style="color:grey;">Intelligent OCR</h2>
+  </div>
+</center>
+
+<div style="height:100px"></div>
+
+<center>
+	<form class="containerform" onsubmit="return loginnew()">
+	  <div class="container";>
+	    <input id="uid" type="text" placeholder="Enter Username" name="id" required>
+	    <input id="pwd" type="password" placeholder="Enter Password" name="password" required>
+
+	    <button type="submit">Login</button>
+	  </div>
+	</form>
+</center> -->
+
+
+<script type="text/javascript">
+	function loginnew(){
+		var data = new FormData();
+		data.append('id', document.getElementById("uid").value);
+		data.append('password', document.getElementById("pwd").value);
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', "login", true);
+		xhr.onload = function() {
+		  if (xhr.status == 200) {
+			var response = JSON.parse(this.response);
+			if (response.status == 200) {
+				//window.location.href = 'file:///C:/Users/ET437GL/Documents/EYESIGHT/EYESIGHT_final/ongoing/dashboard.html'
+				window.location.href = "dashboardpage"
+			} else {
+			  alert(response.message);
+			}
+		  } else {
+			alert("Incorrect credentials");
+		  }
+		};
+		xhr.send(data);
+		return false;
+	}
+</script>
+</body>
+</html>
